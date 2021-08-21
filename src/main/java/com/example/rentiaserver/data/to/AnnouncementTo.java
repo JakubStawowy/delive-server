@@ -3,11 +3,11 @@ import java.io.Serializable;
 
 public class AnnouncementTo implements Serializable {
 
-    protected final String fromLatitude;
-    protected final String fromLongitude;
-    protected final String toLatitude;
-    protected final String toLongitude;
-    protected final Long authorId;
+    private final String fromLatitude;
+    private final String fromLongitude;
+    private final String toLatitude;
+    private final String toLongitude;
+    private final Long authorId;
 
     public AnnouncementTo(String fromLatitude, String fromLongitude, String toLatitude, String toLongitude, Long authorId) {
         this.fromLatitude = fromLatitude;

@@ -2,7 +2,7 @@ package com.example.rentiaserver.security.filters;
 
 import com.example.rentiaserver.security.api.IAuthenticationTokenProvider;
 import com.example.rentiaserver.security.providers.UsernamePasswordAuthenticationTokenProvider;
-import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +33,7 @@ public final class JsonWebTokenFilter extends BasicAuthenticationFilter {
 
         String header = request.getHeader(AUTHORIZATION_PREFIX);
 
-        if(header==null || !header.startsWith(TOKEN_PREFIX)){
+        if (header == null || !header.startsWith(TOKEN_PREFIX)){
             chain.doFilter(request, response);
             return;
         }
@@ -41,7 +41,7 @@ public final class JsonWebTokenFilter extends BasicAuthenticationFilter {
         try {
             UsernamePasswordAuthenticationToken result = authenticationTokenProvider.getAuthenticationToken(header);
             SecurityContextHolder.getContext().setAuthentication(result);
-        } catch (ExpiredJwtException e) {
+        } catch (JwtException e) {
             logger.log(Level.INFO, e.getMessage());
             SecurityContextHolder.clearContext();
         } finally {

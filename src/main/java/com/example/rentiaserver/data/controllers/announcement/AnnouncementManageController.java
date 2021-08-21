@@ -14,7 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 
@@ -37,14 +38,14 @@ public final class AnnouncementManageController {
     public ResponseEntity<?> addDeliveryAnnouncement(@RequestBody DeliveryAnnouncementTo announcementTo) {
 
         Optional<UserPo> author = userRepository.findById(announcementTo.getAuthorId());
-
         if(author.isPresent()) {
             // TODO
             DeliveryAnnouncementPo announcement = new DeliveryAnnouncementPo(
-                    new DestinationPo(new BigDecimal(announcementTo.getFromLatitude()), new BigDecimal(announcementTo.getFromLongitude())),
-                    new DestinationPo(new BigDecimal(announcementTo.getToLatitude()), new BigDecimal(announcementTo.getToLongitude())),
+                    new DestinationPo(Double.parseDouble(announcementTo.getFromLatitude()), Double.parseDouble(announcementTo.getFromLongitude())),
+                    new DestinationPo(Double.parseDouble(announcementTo.getToLatitude()), Double.parseDouble(announcementTo.getToLongitude())),
                     author.get(),
-                    LocalDate.parse(announcementTo.getDate()));
+                    LocalDateTime.parse(announcementTo.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+            );
             announcementService.save(announcement);
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -59,8 +60,8 @@ public final class AnnouncementManageController {
         if(author.isPresent()) {
             // TODO
             NormalAnnouncementPo announcement = new NormalAnnouncementPo(
-                    new DestinationPo(new BigDecimal(announcementTo.getFromLatitude()), new BigDecimal(announcementTo.getFromLongitude())),
-                    new DestinationPo(new BigDecimal(announcementTo.getToLatitude()), new BigDecimal(announcementTo.getToLongitude())),
+                    new DestinationPo(Double.parseDouble(announcementTo.getFromLatitude()), Double.parseDouble(announcementTo.getFromLongitude())),
+                    new DestinationPo(Double.parseDouble(announcementTo.getToLatitude()), Double.parseDouble(announcementTo.getToLongitude())),
                     author.get(),
                     new BigDecimal(announcementTo.getPackageLength()),
                     new BigDecimal(announcementTo.getPackageWidth()),

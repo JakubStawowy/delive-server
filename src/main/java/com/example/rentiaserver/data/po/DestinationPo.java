@@ -1,5 +1,6 @@
 package com.example.rentiaserver.data.po;
 
+import org.springframework.data.geo.Point;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -7,20 +8,20 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "destination")
 public class DestinationPo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
-    private BigDecimal latitude;
+    private Double latitude;
 
     @NotNull
-    private BigDecimal longitude;
+    private Double longitude;
 
     @Nullable
     private String address;
-
 
     @OneToOne(mappedBy = "destinationFrom")
     private AnnouncementPo announcementFrom;
@@ -28,7 +29,7 @@ public class DestinationPo {
     @OneToOne(mappedBy = "destinationTo")
     private AnnouncementPo announcementTo;
 
-    public DestinationPo(@NotNull BigDecimal latitude, @NotNull BigDecimal longitude) {
+    public DestinationPo(@NotNull Double latitude, @NotNull Double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -43,19 +44,19 @@ public class DestinationPo {
         this.id = id;
     }
 
-    public BigDecimal getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(BigDecimal latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public BigDecimal getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(BigDecimal longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
