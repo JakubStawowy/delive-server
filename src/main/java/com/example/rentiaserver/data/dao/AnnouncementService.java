@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AnnouncementService {
@@ -42,6 +43,10 @@ public class AnnouncementService {
 
     public void deleteById(Long id) {
         announcementRepository.deleteById(id);
+    }
+
+    public Optional<AnnouncementPo> getAnnouncementById(Long id) {
+        return announcementRepository.findById(id);
     }
 }
 

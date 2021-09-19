@@ -1,9 +1,11 @@
 package com.example.rentiaserver.data.po;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import com.example.rentiaserver.delivery.po.DeliveryPo;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "delivery_announcement")

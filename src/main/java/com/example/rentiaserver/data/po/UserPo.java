@@ -1,5 +1,6 @@
 package com.example.rentiaserver.data.po;
 
+import com.example.rentiaserver.delivery.po.DeliveryPo;
 import com.example.rentiaserver.constants.TableNamesConstants;
 import com.example.rentiaserver.security.enums.UserRoles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -8,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -45,13 +45,16 @@ public class UserPo {
     private UserDetailsPo userDetails;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<FeedbackPo> feedbackSent = new HashSet<>();
+    private Set<FeedbackPo> feedbackSent;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<FeedbackPo> feedbackReceived = new HashSet<>();
+    private Set<FeedbackPo> feedbackReceived;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<AnnouncementPo> announcements = new HashSet<>();
+    private Set<AnnouncementPo> announcements;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<DeliveryPo> commissions;
 
     public UserPo(@NotEmpty String email, @NotEmpty String password, @NotNull UserRoles role, UserDetailsPo userDetails) {
         this.email = email;
@@ -166,4 +169,11 @@ public class UserPo {
         this.role = role;
     }
 
+    public Set<DeliveryPo> getCommissions() {
+        return commissions;
+    }
+
+    public void setCommissions(Set<DeliveryPo> commissions) {
+        this.commissions = commissions;
+    }
 }

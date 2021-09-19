@@ -1,11 +1,13 @@
 package com.example.rentiaserver.data.po;
 
+import com.example.rentiaserver.delivery.po.DeliveryPo;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "announcements")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class AnnouncementPo {
 
     @Id
@@ -26,6 +28,12 @@ public class AnnouncementPo {
 
     @JoinColumn(name = "created_at")
     private Date createdAt;
+
+    @OneToMany(mappedBy = "announcement", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<DeliveryPo> commissions;
+
+    @OneToMany(mappedBy = "announcement", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<AnnouncementPackagePo> packages;
 
     public AnnouncementPo(DestinationPo destinationFrom, DestinationPo destinationTo, UserPo author) {
         this.destinationFrom = destinationFrom;
@@ -78,6 +86,22 @@ public class AnnouncementPo {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Set<DeliveryPo> getCommissions() {
+        return commissions;
+    }
+
+    public void setCommissions(Set<DeliveryPo> commissions) {
+        this.commissions = commissions;
+    }
+
+    public Set<AnnouncementPackagePo> getPackages() {
+        return packages;
+    }
+
+    public void setPackages(Set<AnnouncementPackagePo> packages) {
+        this.packages = packages;
     }
 }
 

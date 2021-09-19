@@ -6,10 +6,10 @@ import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.security.api.IAuthorizeService;
 import com.example.rentiaserver.security.api.ITokenProvider;
-import com.example.rentiaserver.security.to.LoginTo;
+import com.example.rentiaserver.security.to.LoginResponseTo;
+import com.example.rentiaserver.security.to.ResponseTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
@@ -30,18 +30,15 @@ public final class LoginController {
     }
 
     @PostMapping(value = EndpointConstants.LOGIN_ENDPOINT)
-    public ResponseEntity<LoginTo> loginUser(@RequestParam("email") String email, @RequestParam("password") String password) {
+    public ResponseTo loginUser(@RequestParam("email") String email, @RequestParam("password") String password) {
         UserPo user;
         if ((user = authorizeService.authorizeUserWithEmailAndPassword(email, password)) != null) {
             user.setLogged(true);
             userRepository.save(user);
-            return new ResponseEntity<>(new LoginTo(
-                    user.getId(),
-                    tokenProvider.generateUserToken(user),
-                    user.getRoles()
-                    ), HttpStatus.OK
+            return new LoginResponseTo(true, HttpStatus.OK, user.getId(),
+                    tokenProvider.generateUserToken(user), user.getRoles(),true
             );
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseTo(false, "Wrong email or password", HttpStatus.NOT_FOUND);
     }
 }

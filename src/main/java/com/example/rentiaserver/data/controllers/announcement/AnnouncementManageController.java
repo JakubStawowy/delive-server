@@ -1,6 +1,7 @@
 package com.example.rentiaserver.data.controllers.announcement;
 
 import com.example.rentiaserver.data.dao.AnnouncementService;
+import com.example.rentiaserver.data.dao.PackageRepository;
 import com.example.rentiaserver.data.dao.UserRepository;
 import com.example.rentiaserver.data.to.AnnouncementTo;
 import com.example.rentiaserver.data.to.DeliveryAnnouncementTo;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
@@ -27,11 +30,13 @@ public final class AnnouncementManageController {
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/announcements";
     private final UserRepository userRepository;
     private final AnnouncementService announcementService;
+    private final PackageRepository packageRepository;
 
     @Autowired
-    public AnnouncementManageController(UserRepository userRepository, AnnouncementService announcementService) {
+    public AnnouncementManageController(UserRepository userRepository, AnnouncementService announcementService, PackageRepository packageRepository) {
         this.userRepository = userRepository;
         this.announcementService = announcementService;
+        this.packageRepository = packageRepository;
     }
 
     @PostMapping(value = EndpointConstants.ADD_DELIVERY_ANNOUNCEMENTS_ENDPOINT)
@@ -58,16 +63,21 @@ public final class AnnouncementManageController {
         Optional<UserPo> author = userRepository.findById(announcementTo.getAuthorId());
 
         if(author.isPresent()) {
-            // TODO
             NormalAnnouncementPo announcement = new NormalAnnouncementPo(
                     new DestinationPo(Double.parseDouble(announcementTo.getFromLatitude()), Double.parseDouble(announcementTo.getFromLongitude())),
                     new DestinationPo(Double.parseDouble(announcementTo.getToLatitude()), Double.parseDouble(announcementTo.getToLongitude())),
-                    author.get(),
-                    new BigDecimal(announcementTo.getPackageLength()),
-                    new BigDecimal(announcementTo.getPackageWidth()),
-                    new BigDecimal(announcementTo.getPackageHeight())
+                    author.get()
             );
             announcementService.save(announcement);
+            Set<PackagePo> packagePos = new HashSet<>();
+            announcementTo.getPackages().forEach(packageTo ->
+                packagePos.add(new AnnouncementPackagePo(
+                        new BigDecimal(packageTo.getPackageLength()),
+                        new BigDecimal(packageTo.getPackageWidth()),
+                        new BigDecimal(packageTo.getPackageHeight()),
+                        announcement
+                )));
+            packageRepository.saveAll(packagePos);
 
             return new ResponseEntity<>(HttpStatus.OK);
         }

@@ -4,6 +4,7 @@ import com.example.rentiaserver.data.dao.UserRepository;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.security.to.ResponseTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,21 +25,15 @@ public final class RegisterController {
     }
 
     @PostMapping(value = EndpointConstants.REGISTER_USER_ENDPOINT, consumes = "application/json")
-    public ResponseEntity<String> registerUser(@RequestBody UserPo user) {
+    public ResponseTo registerUser(@RequestBody UserPo user) {
         if(userRepository.getUserByEmail(user.getEmail()).isPresent()) {
-            return new ResponseEntity<>(
-                "User with email: " + user.getEmail() + " already exists",
-                    HttpStatus.CONFLICT
-            );
+            return new ResponseTo(false, "User with this email already exists", HttpStatus.CONFLICT);
         }
         String salt = BCrypt.gensalt();
         String hashedPassword = BCrypt.hashpw(user.getPassword(), salt);
         user.setPassword(hashedPassword);
         user.setSalt(salt);
         userRepository.save(user);
-        return new ResponseEntity<>(
-            "User " + user.getUserDetails().getName() + " " + user.getUserDetails().getSurname() + " registered successfully",
-                HttpStatus.OK
-        );
+        return new ResponseTo(true, "User registered successfully", HttpStatus.OK);
     }
 }
