@@ -5,19 +5,15 @@ import java.util.Set;
 public class AnnouncementTo implements Serializable {
 
     private final Long announcementId;
-    private final String fromLatitude;
-    private final String fromLongitude;
-    private final String toLatitude;
-    private final String toLongitude;
+    private final DestinationTo destinationFrom;
+    private final DestinationTo destinationTo;
     private final Set<PackageTo> packages;
     private final Long authorId;
 
-    public AnnouncementTo(Long announcementId, String fromLatitude, String fromLongitude, String toLatitude, String toLongitude, Set<PackageTo> packages, Long authorId) {
+    public AnnouncementTo(Long announcementId, DestinationTo destinationFrom, DestinationTo destinationTo, Set<PackageTo> packages, Long authorId) {
         this.announcementId = announcementId;
-        this.fromLatitude = fromLatitude;
-        this.fromLongitude = fromLongitude;
-        this.toLatitude = toLatitude;
-        this.toLongitude = toLongitude;
+        this.destinationFrom = destinationFrom;
+        this.destinationTo = destinationTo;
         this.packages = packages;
         this.authorId = authorId;
     }
@@ -26,27 +22,19 @@ public class AnnouncementTo implements Serializable {
         return announcementId;
     }
 
-    public String getFromLatitude() {
-        return fromLatitude;
+    public DestinationTo getDestinationFrom() {
+        return destinationFrom;
     }
 
-    public String getFromLongitude() {
-        return fromLongitude;
-    }
-
-    public String getToLatitude() {
-        return toLatitude;
-    }
-
-    public String getToLongitude() {
-        return toLongitude;
-    }
-
-    public Long getAuthorId() {
-        return authorId;
+    public DestinationTo getDestinationTo() {
+        return destinationTo;
     }
 
     public Set<PackageTo> getPackages() {
         return packages;
+    }
+
+    public Long getAuthorId() {
+        return authorId;
     }
 }

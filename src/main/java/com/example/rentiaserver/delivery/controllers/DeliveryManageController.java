@@ -1,6 +1,7 @@
 package com.example.rentiaserver.delivery.controllers;
 
 import com.example.rentiaserver.delivery.dao.DeliveryRepository;
+import com.example.rentiaserver.delivery.enums.DeliveryState;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
 import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.data.dao.AnnouncementService;
@@ -43,5 +44,11 @@ public class DeliveryManageController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/change")
+    public void changeDeliveryState(@RequestParam String actionName, @RequestParam Long deliveryId) {
+        DeliveryState state = DeliveryState.getNextStateAfterAction(actionName);
+        state.getAction().startAction(deliveryRepository, deliveryId);
     }
 }

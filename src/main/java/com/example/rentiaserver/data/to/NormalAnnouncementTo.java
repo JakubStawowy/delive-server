@@ -5,7 +5,7 @@ import java.util.Set;
 public class NormalAnnouncementTo extends AnnouncementTo {
 
 
-    public NormalAnnouncementTo(Long announcementId, String fromLatitude, String fromLongitude, String toLatitude, String toLongitude, Set<PackageTo> packages, Long authorId) {
-        super(announcementId, fromLatitude, fromLongitude, toLatitude, toLongitude, packages, authorId);
+    public NormalAnnouncementTo(Long announcementId, DestinationTo destinationFrom, DestinationTo destinationTo, Set<PackageTo> packages, Long authorId) {
+        super(announcementId, destinationFrom, destinationTo, packages, authorId);
     }
 }

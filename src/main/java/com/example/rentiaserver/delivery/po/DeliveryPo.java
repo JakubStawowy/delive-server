@@ -25,6 +25,9 @@ public class DeliveryPo {
     @JoinColumn(name = "created_at", updatable = false)
     private Date createdAt;
 
+    @JoinColumn(name = "finished_at", updatable = false)
+    private Date finishedAt;
+
     @JoinColumn(name = "state")
     @Enumerated(EnumType.STRING)
     private DeliveryState deliveryState;
@@ -80,5 +83,13 @@ public class DeliveryPo {
 
     public void setDeliveryState(DeliveryState commissionState) {
         this.deliveryState = commissionState;
+    }
+
+    public Date getFinishedAt() {
+        return finishedAt;
+    }
+
+    public void setFinishedAt(Date finishedAt) {
+        this.finishedAt = finishedAt;
     }
 }

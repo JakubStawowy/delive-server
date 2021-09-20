@@ -6,8 +6,8 @@ public class DeliveryAnnouncementTo extends AnnouncementTo {
 
     private final String date;
 
-    public DeliveryAnnouncementTo(Long announcementId, String fromLatitude, String fromLongitude, String toLatitude, String toLongitude, Set<PackageTo> packages, Long authorId, String date) {
-        super(announcementId, fromLatitude, fromLongitude, toLatitude, toLongitude, packages, authorId);
+    public DeliveryAnnouncementTo(Long announcementId, DestinationTo destinationFrom, DestinationTo destinationTo, Set<PackageTo> packages, Long authorId, String date) {
+        super(announcementId, destinationFrom, destinationTo, packages, authorId);
         this.date = date;
     }
 

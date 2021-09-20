@@ -46,8 +46,8 @@ public final class AnnouncementManageController {
         if(author.isPresent()) {
             // TODO
             DeliveryAnnouncementPo announcement = new DeliveryAnnouncementPo(
-                    new DestinationPo(Double.parseDouble(announcementTo.getFromLatitude()), Double.parseDouble(announcementTo.getFromLongitude())),
-                    new DestinationPo(Double.parseDouble(announcementTo.getToLatitude()), Double.parseDouble(announcementTo.getToLongitude())),
+                    new DestinationPo(announcementTo.getDestinationFrom().getLatitude(), announcementTo.getDestinationFrom().getLongitude()),
+                    new DestinationPo(announcementTo.getDestinationTo().getLatitude(), announcementTo.getDestinationTo().getLongitude()),
                     author.get(),
                     LocalDateTime.parse(announcementTo.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
             );
@@ -64,8 +64,8 @@ public final class AnnouncementManageController {
 
         if(author.isPresent()) {
             NormalAnnouncementPo announcement = new NormalAnnouncementPo(
-                    new DestinationPo(Double.parseDouble(announcementTo.getFromLatitude()), Double.parseDouble(announcementTo.getFromLongitude())),
-                    new DestinationPo(Double.parseDouble(announcementTo.getToLatitude()), Double.parseDouble(announcementTo.getToLongitude())),
+                    new DestinationPo(announcementTo.getDestinationFrom().getLatitude(), announcementTo.getDestinationFrom().getLongitude()),
+                    new DestinationPo(announcementTo.getDestinationTo().getLatitude(), announcementTo.getDestinationTo().getLongitude()),
                     author.get()
             );
             announcementService.save(announcement);

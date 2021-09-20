@@ -1,6 +1,7 @@
 package com.example.rentiaserver.data.helpers;
 
 import com.example.rentiaserver.data.to.DeliveryAnnouncementTo;
+import com.example.rentiaserver.data.to.DestinationTo;
 import com.example.rentiaserver.data.to.NormalAnnouncementTo;
 import com.example.rentiaserver.data.po.DeliveryAnnouncementPo;
 import com.example.rentiaserver.data.po.NormalAnnouncementPo;
@@ -16,10 +17,16 @@ public final class AnnouncementToCreatorHelper {
                 packagePo.getPackageLength().toString(), packagePo.getPackageWidth().toString(), packagePo.getPackageHeight().toString())));
         return new DeliveryAnnouncementTo(
                 deliveryAnnouncement.getId(),
-                deliveryAnnouncement.getDestinationFrom().getLatitude().toString(),
-                deliveryAnnouncement.getDestinationFrom().getLongitude().toString(),
-                deliveryAnnouncement.getDestinationTo().getLatitude().toString(),
-                deliveryAnnouncement.getDestinationTo().getLongitude().toString(),
+                new DestinationTo(
+                        deliveryAnnouncement.getDestinationFrom().getLatitude(),
+                        deliveryAnnouncement.getDestinationFrom().getLongitude(),
+                        null
+                ),
+                new DestinationTo(
+                        deliveryAnnouncement.getDestinationTo().getLatitude(),
+                        deliveryAnnouncement.getDestinationTo().getLongitude(),
+                        null
+                ),
                 packageTos,
                 deliveryAnnouncement.getAuthor().getId(),
                 deliveryAnnouncement.getDate().toString());
@@ -31,10 +38,16 @@ public final class AnnouncementToCreatorHelper {
                 packagePo.getPackageLength().toString(), packagePo.getPackageWidth().toString(), packagePo.getPackageHeight().toString())));
         return new NormalAnnouncementTo(
                 normalAnnouncement.getId(),
-                normalAnnouncement.getDestinationFrom().getLatitude().toString(),
-                normalAnnouncement.getDestinationFrom().getLongitude().toString(),
-                normalAnnouncement.getDestinationTo().getLatitude().toString(),
-                normalAnnouncement.getDestinationTo().getLongitude().toString(),
+                new DestinationTo(
+                        normalAnnouncement.getDestinationFrom().getLatitude(),
+                        normalAnnouncement.getDestinationFrom().getLongitude(),
+                        null
+                ),
+                new DestinationTo(
+                        normalAnnouncement.getDestinationTo().getLatitude(),
+                        normalAnnouncement.getDestinationTo().getLongitude(),
+                        null
+                ),
                 packageTos,
                 normalAnnouncement.getAuthor().getId()
                 );
