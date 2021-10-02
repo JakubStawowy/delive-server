@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
@@ -29,14 +31,15 @@ public final class UserLoaderController {
 
     @GetMapping({EndpointConstants.INDEX_ENDPOINT, EndpointConstants.INDEX_ENDPOINT_SLASH})
     public List<UserTo> getUsers(){
-        List<UserTo> users = new ArrayList<>();
-        userRepository.findAll().forEach(user -> users.add(new UserTo(user)));
-        return users;
+        return StreamSupport.stream(userRepository.findAll().spliterator(), false)
+                .map(UserTo::new)
+                .collect(Collectors.toList());
     }
 
-    @GetMapping(EndpointConstants.USER_ENDPOINT)
-    public ResponseEntity<UserTo> getUser(@PathVariable("id") Long id){
-        Optional<UserPo> optionalUser = userRepository.findById(id);
-        return optionalUser.map(user -> new ResponseEntity<>(new UserTo(user), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @GetMapping("/details")
+    public ResponseEntity<UserTo> getUser(@RequestParam Long userId){
+        return userRepository.findById(userId)
+                .map(user -> new ResponseEntity<>(new UserTo(user), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

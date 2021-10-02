@@ -3,6 +3,8 @@ package com.example.rentiaserver.data.po;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -34,6 +36,9 @@ public class AnnouncementPo {
 
     @OneToMany(mappedBy = "announcement", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<AnnouncementPackagePo> packages;
+
+    @NotNull
+    private LocalDateTime date;
 
     public AnnouncementPo(DestinationPo destinationFrom, DestinationPo destinationTo, UserPo author) {
         this.destinationFrom = destinationFrom;
@@ -102,6 +107,14 @@ public class AnnouncementPo {
 
     public void setPackages(Set<AnnouncementPackagePo> packages) {
         this.packages = packages;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 }
 

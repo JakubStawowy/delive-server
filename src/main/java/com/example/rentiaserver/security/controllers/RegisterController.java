@@ -26,9 +26,11 @@ public final class RegisterController {
 
     @PostMapping(value = EndpointConstants.REGISTER_USER_ENDPOINT, consumes = "application/json")
     public ResponseTo registerUser(@RequestBody UserPo user) {
-        if(userRepository.getUserByEmail(user.getEmail()).isPresent()) {
-            return new ResponseTo(false, "User with this email already exists", HttpStatus.CONFLICT);
-        }
+        return userRepository.getUserByEmail(user.getEmail()).map(userPo -> new ResponseTo(false, "User with this email already exists", HttpStatus.CONFLICT))
+                .orElse(saveUser(user));
+    }
+
+    private ResponseTo saveUser(UserPo user) {
         String salt = BCrypt.gensalt();
         String hashedPassword = BCrypt.hashpw(user.getPassword(), salt);
         user.setPassword(hashedPassword);

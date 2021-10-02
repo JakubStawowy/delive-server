@@ -29,16 +29,15 @@ public final class UserManageController {
 
     @PutMapping(path = EndpointConstants.EDIT_USER_ENDPOINT, consumes = "application/json")
     public ResponseEntity<?> editUser(@RequestBody UserDetailsPo details, @PathVariable("id") Long id) {
-        Optional<UserPo> optionalUser = userRepository.findById(id);
-        if(optionalUser.isPresent()) {
-            UserPo user = optionalUser.get();
-            details.setId(user.getUserDetails().getId());
-            user.setUserDetails(details);
-            Logger.getGlobal().log(Level.INFO, details.getName());
-            Logger.getGlobal().log(Level.INFO, user.getUserDetails().getName());
-            userRepository.save(optionalUser.get());
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return userRepository.findById(id)
+                .map(userPo -> editUser(userPo, details))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    private ResponseEntity<?> editUser(UserPo user, UserDetailsPo userDetailsPo) {
+        userDetailsPo.setId(user.getUserDetails().getId());
+        user.setUserDetails(userDetailsPo);
+        userRepository.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

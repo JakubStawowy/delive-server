@@ -9,13 +9,15 @@ public class AnnouncementTo implements Serializable {
     private final DestinationTo destinationTo;
     private final Set<PackageTo> packages;
     private final Long authorId;
+    private final String date;
 
-    public AnnouncementTo(Long announcementId, DestinationTo destinationFrom, DestinationTo destinationTo, Set<PackageTo> packages, Long authorId) {
+    public AnnouncementTo(Long announcementId, DestinationTo destinationFrom, DestinationTo destinationTo, Set<PackageTo> packages, Long authorId, String date) {
         this.announcementId = announcementId;
         this.destinationFrom = destinationFrom;
         this.destinationTo = destinationTo;
         this.packages = packages;
         this.authorId = authorId;
+        this.date = date;
     }
 
     public Long getAnnouncementId() {
@@ -36,5 +38,9 @@ public class AnnouncementTo implements Serializable {
 
     public Long getAuthorId() {
         return authorId;
+    }
+
+    public String getDate() {
+        return date;
     }
 }

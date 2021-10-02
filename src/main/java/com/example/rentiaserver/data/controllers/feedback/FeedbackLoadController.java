@@ -2,13 +2,13 @@ package com.example.rentiaserver.data.controllers.feedback;
 
 import com.example.rentiaserver.data.dao.FeedbackRepository;
 import com.example.rentiaserver.data.to.FeedbackTo;
-import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
@@ -23,19 +23,11 @@ public class FeedbackLoadController {
         this.feedbackRepository = feedbackRepository;
     }
 
-    @GetMapping({EndpointConstants.INDEX_ENDPOINT, EndpointConstants.INDEX_ENDPOINT_SLASH})
-    public List<FeedbackTo> getAllFeedback() {
-        List<FeedbackTo> result = new ArrayList<>();
-        feedbackRepository.findAll().forEach(feedback -> result.add(new FeedbackTo(feedback)));
-        return result;
-    }
-
-
-    @GetMapping(EndpointConstants.USER_FEEDBACK_ENDPOINT)
-    public List<FeedbackTo> getUserFeedback(@PathVariable("id") Long id) {
-        List<FeedbackTo> result = new ArrayList<>();
-        feedbackRepository.getFeedbacksByUserId(id).forEach(feedback -> result.add(new FeedbackTo(feedback)));
-
-        return result;
+    @GetMapping("/user")
+    public List<FeedbackTo> getUserFeedback(@RequestParam Long userId) {
+        return feedbackRepository.getFeedbacksByUserId(userId)
+                .stream()
+                .map(FeedbackTo::new)
+                .collect(Collectors.toList());
     }
 }

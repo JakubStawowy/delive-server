@@ -3,6 +3,7 @@ package com.example.rentiaserver.delivery.controllers;
 import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.data.to.PackageTo;
 import com.example.rentiaserver.delivery.dao.MessageDao;
+import com.example.rentiaserver.delivery.helpers.MessageToCreateHelper;
 import com.example.rentiaserver.delivery.po.MessagePo;
 import com.example.rentiaserver.delivery.to.MessageTo;
 import com.example.rentiaserver.delivery.to.OutgoingMessageTo;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
@@ -29,56 +31,12 @@ public class MessageLoadController {
     }
 
     @GetMapping("/sent")
-    public List<MessageTo> loadMessagesSent(@RequestParam(value = "userId") Long userId) {
-        List<MessageTo> messageTos = new ArrayList<>();
-
-        messageDao.findAllBySender(userId).forEach(messagePo -> {
-            Set<PackageTo> packages = new HashSet<>();
-            messagePo.getPackages().forEach(singlePackage -> packages.add(new PackageTo(
-                    singlePackage.getPackageLength().toString(),
-                    singlePackage.getPackageWidth().toString(),
-                    singlePackage.getPackageHeight().toString()
-            )));
-            messageTos.add(new OutgoingMessageTo(
-                    messagePo.getAnnouncementPo().getId(),
-                    messagePo.getSender().getId(),
-                    messagePo.getReceiver().getId(),
-                    messagePo.getMessage(),
-                    messagePo.getId(),
-                    messagePo.getCreatedAt(),
-                    messagePo.getMessageType().name(),
-                    messagePo.isReplied(),
-                    packages
-            ));
-        });
-
-        return messageTos;
+    public List<MessageTo> loadMessagesSent(@RequestParam Long userId) {
+        return messageDao.findAllBySender(userId).stream().map(MessageToCreateHelper::create).collect(Collectors.toList());
     }
 
     @GetMapping("/received")
-    public List<MessageTo> loadMessagesReceived(@RequestParam(value = "userId") Long userId) {
-        List<MessageTo> messageTos = new ArrayList<>();
-
-        messageDao.findAllByReceiver(userId).forEach(messagePo -> {
-            Set<PackageTo> packages = new HashSet<>();
-            messagePo.getPackages().forEach(singlePackage -> packages.add(new PackageTo(
-                    singlePackage.getPackageLength().toString(),
-                    singlePackage.getPackageWidth().toString(),
-                    singlePackage.getPackageHeight().toString()
-            )));
-            messageTos.add(new OutgoingMessageTo(
-                    messagePo.getAnnouncementPo().getId(),
-                    messagePo.getSender().getId(),
-                    messagePo.getReceiver().getId(),
-                    messagePo.getMessage(),
-                    messagePo.getId(),
-                    messagePo.getCreatedAt(),
-                    messagePo.getMessageType().name(),
-                    messagePo.isReplied(),
-                    packages
-            ));
-        });
-
-        return messageTos;
+    public List<MessageTo> loadMessagesReceived(@RequestParam Long userId) {
+        return messageDao.findAllByReceiver(userId).stream().map(MessageToCreateHelper::create).collect(Collectors.toList());
     }
 }

@@ -26,12 +26,13 @@ public final class LogoutController {
 
     @PutMapping(value = EndpointConstants.LOGOUT_ENDPOINT)
     public ResponseEntity<?> logout(@RequestParam("id") Long id) {
-        Optional<UserPo> user = userRepository.findById(id);
-        if(user.isPresent()) {
-            user.get().setLogged(false);
-            userRepository.save(user.get());
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Optional<UserPo> optionalUserPo = userRepository.findById(id);
+        return optionalUserPo.map(this::saveUser).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    private ResponseEntity<?> saveUser(UserPo user) {
+        user.setLogged(false);
+        userRepository.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

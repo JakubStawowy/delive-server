@@ -1,20 +1,15 @@
 package com.example.rentiaserver.delivery.controllers;
 
 import com.example.rentiaserver.constants.ApplicationConstants;
-import com.example.rentiaserver.data.po.AnnouncementPo;
-import com.example.rentiaserver.data.po.DestinationPo;
-import com.example.rentiaserver.data.to.AnnouncementTo;
-import com.example.rentiaserver.data.to.DestinationTo;
-import com.example.rentiaserver.data.to.PackageTo;
+import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
 import com.example.rentiaserver.delivery.dao.DeliveryRepository;
+import com.example.rentiaserver.delivery.helpers.DeliveryToCreateHelper;
 import com.example.rentiaserver.delivery.to.DeliveryTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
@@ -32,78 +27,13 @@ public class DeliveryLoadController {
 
     @GetMapping("/deliverer")
     public List<DeliveryTo> getUserDeliveries(@RequestParam Long userId) {
-        List<DeliveryTo> result = new ArrayList<>();
-        deliveryRepository.findAllByDeliverer(userId).forEach(deliveryPo -> {
-            AnnouncementPo announcementPo = deliveryPo.getAnnouncement();
-            DestinationPo destinationFrom = announcementPo.getDestinationFrom();
-            DestinationPo destinationTo = announcementPo.getDestinationTo();
-            Set<PackageTo> packages = new HashSet<>();
-            announcementPo.getPackages().forEach(singlePackage -> packages.add(new PackageTo(
-                    singlePackage.getPackageLength().toString(),
-                    singlePackage.getPackageWidth().toString(),
-                    singlePackage.getPackageHeight().toString()
-            )));
-            result.add(new DeliveryTo(
-                    deliveryPo.getId(),
-                    userId,
-                    deliveryPo.getCreatedAt().toString(),
-                    new AnnouncementTo(
-                            announcementPo.getId(),
-                            new DestinationTo(
-                                    destinationFrom.getLatitude(),
-                                    destinationFrom.getLongitude(),
-                                    null
-                            ),
-                            new DestinationTo(
-                                    destinationTo.getLatitude(),
-                                    destinationTo.getLongitude(),
-                                    null
-                            ),
-                            packages,
-                            announcementPo.getAuthor().getId()
-                    ),
-                    deliveryPo.getDeliveryState().name()
-            ));
-        });
-        return result;
+        return deliveryRepository.findAllByDeliverer(userId)
+                .stream().map(DeliveryToCreateHelper::create).collect(Collectors.toList());
     }
 
     @GetMapping("/principal")
     public List<DeliveryTo> getAllByPrincipal(@RequestParam Long userId) {
-        List<DeliveryTo> result = new ArrayList<>();
-        deliveryRepository.findAllByPrincipal(userId).forEach(deliveryPo -> {
-            AnnouncementPo announcementPo = deliveryPo.getAnnouncement();
-            DestinationPo destinationFrom = announcementPo.getDestinationFrom();
-            DestinationPo destinationTo = announcementPo.getDestinationTo();
-            Set<PackageTo> packages = new HashSet<>();
-            announcementPo.getPackages().forEach(singlePackage -> packages.add(new PackageTo(
-                    singlePackage.getPackageLength().toString(),
-                    singlePackage.getPackageWidth().toString(),
-                    singlePackage.getPackageHeight().toString()
-            )));
-            result.add(new DeliveryTo(
-                    deliveryPo.getId(),
-                    userId,
-                    deliveryPo.getCreatedAt().toString(),
-                    new AnnouncementTo(
-                            announcementPo.getId(),
-                            new DestinationTo(
-                                    destinationFrom.getLatitude(),
-                                    destinationFrom.getLongitude(),
-                                    null
-                            ),
-                            new DestinationTo(
-                                    destinationTo.getLatitude(),
-                                    destinationTo.getLongitude(),
-                                    null
-                            ),
-                            packages,
-                            announcementPo.getAuthor().getId()
-                    ),
-                    deliveryPo.getDeliveryState().name()
-            ));
-        });
-        return result;
+        return deliveryRepository.findAllByPrincipal(userId)
+                .stream().map(DeliveryToCreateHelper::create).collect(Collectors.toList());
     }
-
 }

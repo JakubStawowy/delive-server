@@ -4,10 +4,7 @@ import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.data.dao.AnnouncementService;
 import com.example.rentiaserver.data.dao.PackageRepository;
 import com.example.rentiaserver.data.dao.UserRepository;
-import com.example.rentiaserver.data.po.AnnouncementPo;
-import com.example.rentiaserver.data.po.MessagePackagePo;
-import com.example.rentiaserver.data.po.PackagePo;
-import com.example.rentiaserver.data.po.UserPo;
+import com.example.rentiaserver.data.po.*;
 import com.example.rentiaserver.delivery.dao.DeliveryRepository;
 import com.example.rentiaserver.delivery.dao.MessageDao;
 import com.example.rentiaserver.delivery.enums.MessageType;
@@ -106,10 +103,23 @@ public class MessageSendController {
 
             if (incomingMessageTo.isConsent()) {
                 messageType = MessageType.CONSENT;
+                AnnouncementPo announcementPo = optionalAnnouncementPo.get();
+                Set<AnnouncementPackagePo> packages = new HashSet<>();
+                optionalRepliedMessage.get().getPackages().forEach(packagePo -> {
+                    packages.add(new AnnouncementPackagePo(
+                            packagePo.getPackageLength(),
+                            packagePo.getPackageWidth(),
+                            packagePo.getPackageHeight(),
+                            announcementPo
+                    ));
+                });
+                packageRepository.saveAll(packages);
+
                 deliveryRepository.save(new DeliveryPo(
                         optionalReceiverPo.get(),
-                        optionalAnnouncementPo.get()
+                        announcementPo
                 ));
+
             }
             else {
                 messageType = MessageType.DISCORD;

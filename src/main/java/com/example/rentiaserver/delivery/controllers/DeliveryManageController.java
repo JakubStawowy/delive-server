@@ -48,7 +48,7 @@ public class DeliveryManageController {
 
     @PutMapping("/change")
     public void changeDeliveryState(@RequestParam String actionName, @RequestParam Long deliveryId) {
-        DeliveryState state = DeliveryState.getNextStateAfterAction(actionName);
-        state.getAction().startAction(deliveryRepository, deliveryId);
+        DeliveryState.getNextStateAfterAction(actionName).getAction()
+                .startAction(deliveryRepository, deliveryId);
     }
 }

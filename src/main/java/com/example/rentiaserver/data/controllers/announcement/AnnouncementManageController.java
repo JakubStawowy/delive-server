@@ -4,8 +4,6 @@ import com.example.rentiaserver.data.dao.AnnouncementService;
 import com.example.rentiaserver.data.dao.PackageRepository;
 import com.example.rentiaserver.data.dao.UserRepository;
 import com.example.rentiaserver.data.to.AnnouncementTo;
-import com.example.rentiaserver.data.to.DeliveryAnnouncementTo;
-import com.example.rentiaserver.data.to.NormalAnnouncementTo;
 import com.example.rentiaserver.data.po.*;
 import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
@@ -40,54 +38,40 @@ public final class AnnouncementManageController {
     }
 
     @PostMapping(value = EndpointConstants.ADD_DELIVERY_ANNOUNCEMENTS_ENDPOINT)
-    public ResponseEntity<?> addDeliveryAnnouncement(@RequestBody DeliveryAnnouncementTo announcementTo) {
-
-        Optional<UserPo> author = userRepository.findById(announcementTo.getAuthorId());
-        if(author.isPresent()) {
-            // TODO
-            DeliveryAnnouncementPo announcement = new DeliveryAnnouncementPo(
-                    new DestinationPo(announcementTo.getDestinationFrom().getLatitude(), announcementTo.getDestinationFrom().getLongitude()),
-                    new DestinationPo(announcementTo.getDestinationTo().getLatitude(), announcementTo.getDestinationTo().getLongitude()),
-                    author.get(),
-                    LocalDateTime.parse(announcementTo.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-            );
-            announcementService.save(announcement);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public void addDeliveryAnnouncement(@RequestBody AnnouncementTo announcementTo) {
+        userRepository.findById(announcementTo.getAuthorId()).ifPresent(author -> announcementService.save(new DeliveryAnnouncementPo(
+                new DestinationPo(announcementTo.getDestinationFrom().getLatitude(), announcementTo.getDestinationFrom().getLongitude()),
+                new DestinationPo(announcementTo.getDestinationTo().getLatitude(), announcementTo.getDestinationTo().getLongitude()),
+                author,
+                LocalDateTime.parse(announcementTo.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+        )));
     }
 
     @PostMapping(value = EndpointConstants.ADD_NORMAL_ANNOUNCEMENTS_ENDPOINT)
-    public ResponseEntity<?> addNormalAnnouncement(@RequestBody NormalAnnouncementTo announcementTo) {
+    public void addNormalAnnouncement(@RequestBody AnnouncementTo announcementTo) {
+        userRepository.findById(announcementTo.getAuthorId()).ifPresent(author -> saveAnnouncementWithPackages(author, announcementTo));
+    }
 
-        Optional<UserPo> author = userRepository.findById(announcementTo.getAuthorId());
+    @PutMapping(value = EndpointConstants.EDIT_ANNOUNCEMENT_ENDPOINT)
+    public void editAnnouncement(@RequestBody AnnouncementTo announcementTransferObject, @PathVariable("id") Long id) {
+        // TODO
+    }
 
-        if(author.isPresent()) {
-            NormalAnnouncementPo announcement = new NormalAnnouncementPo(
-                    new DestinationPo(announcementTo.getDestinationFrom().getLatitude(), announcementTo.getDestinationFrom().getLongitude()),
-                    new DestinationPo(announcementTo.getDestinationTo().getLatitude(), announcementTo.getDestinationTo().getLongitude()),
-                    author.get()
-            );
-            announcementService.save(announcement);
-            Set<PackagePo> packagePos = new HashSet<>();
-            announcementTo.getPackages().forEach(packageTo ->
+    private void saveAnnouncementWithPackages(UserPo author, AnnouncementTo announcementTo) {
+        NormalAnnouncementPo announcement = new NormalAnnouncementPo(
+                new DestinationPo(announcementTo.getDestinationFrom().getLatitude(), announcementTo.getDestinationFrom().getLongitude()),
+                new DestinationPo(announcementTo.getDestinationTo().getLatitude(), announcementTo.getDestinationTo().getLongitude()),
+                author
+        );
+        announcementService.save(announcement);
+        Set<PackagePo> packagePos = new HashSet<>();
+        announcementTo.getPackages().forEach(packageTo ->
                 packagePos.add(new AnnouncementPackagePo(
                         new BigDecimal(packageTo.getPackageLength()),
                         new BigDecimal(packageTo.getPackageWidth()),
                         new BigDecimal(packageTo.getPackageHeight()),
                         announcement
                 )));
-            packageRepository.saveAll(packagePos);
-
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @PutMapping(value = EndpointConstants.EDIT_ANNOUNCEMENT_ENDPOINT, consumes = "application/json")
-    public ResponseEntity<?> editAnnouncement(@RequestBody AnnouncementTo announcementTransferObject, @PathVariable("id") Long id) {
-
-        // TODO
-        return null;
+        packageRepository.saveAll(packagePos);
     }
 }

@@ -26,15 +26,9 @@ public final class AnnouncementRemoveController {
     }
 
     @DeleteMapping(value = EndpointConstants.REMOVE_ANNOUNCEMENT_ENDPOINT)
-    public ResponseEntity<Boolean> removeAnnouncement(@PathVariable("id") Long id, @RequestParam("userId") Long userId, @RequestParam("password") String password) {
-        try {
-            if(authorizeService.authorizeUserWithIdAndPassword(userId, password)) {
-                announcementService.deleteById(id);
-                return new ResponseEntity<>(true, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
-        } catch (EmptyResultDataAccessException ignored) {
-            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+    public void removeAnnouncement(@PathVariable("id") Long id, @RequestParam("userId") Long userId, @RequestParam("password") String password) {
+        if(authorizeService.authorizeUserWithIdAndPassword(userId, password)) {
+            announcementService.deleteById(id);
         }
     }
 }

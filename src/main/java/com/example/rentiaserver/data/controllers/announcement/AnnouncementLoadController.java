@@ -1,9 +1,9 @@
 package com.example.rentiaserver.data.controllers.announcement;
 
 import com.example.rentiaserver.data.dao.AnnouncementService;
-import com.example.rentiaserver.data.to.DeliveryAnnouncementTo;
+import com.example.rentiaserver.data.po.AnnouncementPo;
+import com.example.rentiaserver.data.to.*;
 import com.example.rentiaserver.constants.ApplicationConstants;
-import com.example.rentiaserver.data.to.NormalAnnouncementTo;
 import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
 import com.example.rentiaserver.data.po.DeliveryAnnouncementPo;
 import com.example.rentiaserver.data.po.NormalAnnouncementPo;
@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
@@ -28,18 +30,23 @@ public final class AnnouncementLoadController {
     }
 
     @GetMapping("/delivery")
-    public List<DeliveryAnnouncementTo> getDeliveryAnnouncements() {
+    public List<AnnouncementTo> getDeliveryAnnouncements() {
         List<DeliveryAnnouncementPo> announcements = announcementService.getAllDeliveryAnnouncements();
-        List<DeliveryAnnouncementTo> announcementTransferObjects = new LinkedList<>();
+        List<AnnouncementTo> announcementTransferObjects = new LinkedList<>();
         announcements.forEach(announcement -> announcementTransferObjects.add(AnnouncementToCreatorHelper.create(announcement)));
         return announcementTransferObjects;
     }
 
     @GetMapping("/normal")
-    public List<NormalAnnouncementTo> getNormalAnnouncements() {
+    public List<AnnouncementTo> getNormalAnnouncements() {
         List<NormalAnnouncementPo> announcements = announcementService.getAllNormalAnnouncements();
-        List<NormalAnnouncementTo> announcementTransferObjects = new LinkedList<>();
+        List<AnnouncementTo> announcementTransferObjects = new LinkedList<>();
         announcements.forEach(announcement -> announcementTransferObjects.add(AnnouncementToCreatorHelper.create(announcement)));
         return announcementTransferObjects;
+    }
+
+    @GetMapping("/announcement")
+    public AnnouncementTo getAnnouncementById(@RequestParam Long announcementId) {
+        return announcementService.getAnnouncementById(announcementId).map(AnnouncementToCreatorHelper::create).orElse(null);
     }
 }
