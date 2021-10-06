@@ -1,17 +1,22 @@
 package com.example.rentiaserver.data.to;
 
-import java.io.Serializable;
+import com.example.rentiaserver.data.api.BaseEntityTo;
 
-public class DestinationTo implements Serializable {
+public class DestinationTo extends BaseEntityTo {
 
     private final Double latitude;
     private final Double longitude;
     private final String address;
+    private final String locality;
+    private final String country;
 
-    public DestinationTo(Double latitude, Double longitude, String address) {
+    public DestinationTo(Long id, String createdAt, Double latitude, Double longitude, String address, String locality, String country) {
+        super(id, createdAt);
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
+        this.locality = locality;
+        this.country = country;
     }
 
     public Double getLatitude() {
@@ -24,5 +29,13 @@ public class DestinationTo implements Serializable {
 
     public String getAddress() {
         return address;
+    }
+
+    public String getLocality() {
+        return locality;
+    }
+
+    public String getCountry() {
+        return country;
     }
 }

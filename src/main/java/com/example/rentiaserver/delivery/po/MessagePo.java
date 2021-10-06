@@ -1,21 +1,17 @@
 package com.example.rentiaserver.delivery.po;
 
-import com.example.rentiaserver.data.po.AnnouncementPackagePo;
+import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.data.po.MessagePackagePo;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.delivery.enums.MessageType;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "MESSAGES")
-public class MessagePo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class MessagePo extends BaseEntityPo {
 
     private String message;
 
@@ -35,9 +31,6 @@ public class MessagePo {
     @JoinColumn(name = "MESSAGE_TYPE")
     private MessageType messageType;
 
-    @JoinColumn(name = "created_at", updatable = false)
-    private Date createdAt;
-
     @OneToMany(mappedBy = "message", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<MessagePackagePo> packages;
 
@@ -51,9 +44,9 @@ public class MessagePo {
         this.messageType = messageType;
     }
 
-    @PrePersist
+    @Override
     public void init() {
-        createdAt = new Date(System.currentTimeMillis());
+        super.init();
         replied = false;
     }
 
@@ -66,14 +59,6 @@ public class MessagePo {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public AnnouncementPo getAnnouncementPo() {
@@ -106,14 +91,6 @@ public class MessagePo {
 
     public void setMessageType(MessageType messageType) {
         this.messageType = messageType;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
     public boolean isReplied() {

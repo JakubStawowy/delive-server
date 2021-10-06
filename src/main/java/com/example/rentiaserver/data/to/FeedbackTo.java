@@ -1,10 +1,11 @@
 package com.example.rentiaserver.data.to;
 
+import com.example.rentiaserver.data.api.BaseEntityTo;
 import com.example.rentiaserver.data.po.FeedbackPo;
 
 import java.io.Serializable;
 
-public class FeedbackTo implements Serializable {
+public class FeedbackTo extends BaseEntityTo {
 
     private final String content;
     private final String createdAt;
@@ -14,17 +15,19 @@ public class FeedbackTo implements Serializable {
     private final Long authorId;
 
     public FeedbackTo(FeedbackPo feedback) {
+        super(feedback.getId(), String.valueOf(feedback.getCreatedAt()));
         content = feedback.getContent();
-        createdAt = feedback.getCreatedAt().toString();
+        createdAt = String.valueOf(feedback.getCreatedAt());
         rate = feedback.getRate().ordinal();
         authorName = feedback.getAuthor().getUserDetails().getName();
         authorSurname = feedback.getAuthor().getUserDetails().getSurname();
         authorId = feedback.getAuthor().getId();
     }
 
-    public FeedbackTo(String content, String createdAt, int rate, String authorName, String authorSurname, Long authorId) {
+    public FeedbackTo(Long id, String createdAt, String content, String createdAt1, int rate, String authorName, String authorSurname, Long authorId) {
+        super(id, createdAt);
         this.content = content;
-        this.createdAt = createdAt;
+        this.createdAt = createdAt1;
         this.rate = rate;
         this.authorName = authorName;
         this.authorSurname = authorSurname;

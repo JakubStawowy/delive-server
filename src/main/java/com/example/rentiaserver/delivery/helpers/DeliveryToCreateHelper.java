@@ -8,8 +8,8 @@ public class DeliveryToCreateHelper {
     public static DeliveryTo create(DeliveryPo deliveryPo) {
         return new DeliveryTo(
                 deliveryPo.getId(),
+                String.valueOf(deliveryPo.getCreatedAt()),
                 deliveryPo.getUser().getId(),
-                deliveryPo.getCreatedAt().toString(),
                 AnnouncementToCreatorHelper.create(deliveryPo.getAnnouncement()),
                 deliveryPo.getDeliveryState().name()
         );

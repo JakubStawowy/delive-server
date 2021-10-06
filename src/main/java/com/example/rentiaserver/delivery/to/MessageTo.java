@@ -1,15 +1,16 @@
 package com.example.rentiaserver.delivery.to;
 
-import java.io.Serializable;
+import com.example.rentiaserver.data.api.BaseEntityTo;
 
-public class MessageTo implements Serializable {
+public abstract class MessageTo extends BaseEntityTo {
 
     private final Long announcementId;
     private final Long senderId;
     private final Long receiverId;
     private final String message;
 
-    public MessageTo(Long announcementId, Long senderId, Long receiverId, String message) {
+    public MessageTo(Long id, String createdAt, Long announcementId, Long senderId, Long receiverId, String message) {
+        super(id, createdAt);
         this.announcementId = announcementId;
         this.senderId = senderId;
         this.receiverId = receiverId;

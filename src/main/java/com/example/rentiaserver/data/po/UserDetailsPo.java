@@ -1,17 +1,14 @@
 package com.example.rentiaserver.data.po;
 
 import com.example.rentiaserver.constants.TableNamesConstants;
+import com.example.rentiaserver.data.api.BaseEntityPo;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = TableNamesConstants.USER_DETAILS_TABLE_NAME)
-public class UserDetailsPo {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class UserDetailsPo extends BaseEntityPo {
 
     @NotEmpty
     private String name;
@@ -44,14 +41,6 @@ public class UserDetailsPo {
 
     public void setUser(UserPo user) {
         this.user = user;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {

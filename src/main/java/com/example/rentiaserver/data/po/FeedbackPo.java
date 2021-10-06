@@ -1,19 +1,16 @@
 package com.example.rentiaserver.data.po;
 
+import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.data.enums.FeedbackRate;
 import com.example.rentiaserver.constants.TableNamesConstants;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
 
 @Entity
 @Table(name = TableNamesConstants.FEEDBACK_TABLE_NAME)
-public class FeedbackPo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class FeedbackPo extends BaseEntityPo {
 
     @NotEmpty
     private String content;
@@ -21,10 +18,6 @@ public class FeedbackPo {
     @NotNull
     @Enumerated(EnumType.STRING)
     private FeedbackRate rate;
-
-    @NotNull
-    @Column(name = "created_at")
-    private Timestamp createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "author_id")
@@ -42,23 +35,6 @@ public class FeedbackPo {
     }
 
     public FeedbackPo() {
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    @PrePersist
-    public void setCreatedAt() {
-        createdAt = new Timestamp(System.currentTimeMillis());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getContent() {

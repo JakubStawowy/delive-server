@@ -31,6 +31,7 @@ public final class UserLoaderController {
 
     @GetMapping({EndpointConstants.INDEX_ENDPOINT, EndpointConstants.INDEX_ENDPOINT_SLASH})
     public List<UserTo> getUsers(){
+
         return StreamSupport.stream(userRepository.findAll().spliterator(), false)
                 .map(UserTo::new)
                 .collect(Collectors.toList());

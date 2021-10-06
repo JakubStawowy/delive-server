@@ -1,22 +1,20 @@
 package com.example.rentiaserver.data.po;
 
+import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
 import com.example.rentiaserver.constants.TableNamesConstants;
+import com.example.rentiaserver.finance.po.UserWalletPo;
 import com.example.rentiaserver.security.enums.UserRoles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = TableNamesConstants.USER_TABLE_NAME)
-public class UserPo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class UserPo extends BaseEntityPo {
 
     @NotEmpty
     @Column(unique = true)
@@ -30,10 +28,6 @@ public class UserPo {
     private UserRoles role;
 
     @NotNull
-    @Column(name = "created_at")
-    private Date createdAt;
-
-    @NotNull
     private Boolean logged;
 
     @NotNull
@@ -43,6 +37,10 @@ public class UserPo {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_details_id", referencedColumnName = "id")
     private UserDetailsPo userDetails;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_wallet_id", referencedColumnName = "id")
+    private UserWalletPo userWallet;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<FeedbackPo> feedbackSent;
@@ -56,19 +54,32 @@ public class UserPo {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<DeliveryPo> commissions;
 
-    public UserPo(@NotEmpty String email, @NotEmpty String password, @NotNull UserRoles role, UserDetailsPo userDetails) {
+    @ManyToMany
+    @JoinTable(
+            name = "users_announcements",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "announcement_id")
+    )
+    private Set<AnnouncementPo> relatedAnnouncements;
+
+    public UserPo(@NotEmpty String email,
+                  @NotEmpty String password,
+                  @NotNull UserRoles role,
+                  UserDetailsPo userDetails,
+                  UserWalletPo userWallet) {
         this.email = email;
         this.password = password;
         this.userDetails = userDetails;
         this.role = role;
+        this.userWallet = userWallet;
     }
 
     public UserPo() {
     }
 
-    @PrePersist
-    public void setCreatedAt() {
-        createdAt = new Date(System.currentTimeMillis());
+    @Override
+    public void init() {
+        super.init();
         logged = false;
         role = UserRoles.ROLE_USER;
     }
@@ -95,14 +106,6 @@ public class UserPo {
 
     public void setRoles(UserRoles role) {
         this.role = role;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
     }
 
     public Set<AnnouncementPo> getAnnouncements() {
@@ -137,14 +140,6 @@ public class UserPo {
         this.userDetails = userDetails;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -175,5 +170,21 @@ public class UserPo {
 
     public void setCommissions(Set<DeliveryPo> commissions) {
         this.commissions = commissions;
+    }
+
+    public Set<AnnouncementPo> getRelatedAnnouncements() {
+        return relatedAnnouncements;
+    }
+
+    public void setRelatedAnnouncements(Set<AnnouncementPo> relatedAnnouncements) {
+        this.relatedAnnouncements = relatedAnnouncements;
+    }
+
+    public UserWalletPo getUserWallet() {
+        return userWallet;
+    }
+
+    public void setUserWallet(UserWalletPo userWallet) {
+        this.userWallet = userWallet;
     }
 }

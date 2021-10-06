@@ -1,7 +1,6 @@
 package com.example.rentiaserver.data.controllers.announcement;
 
 import com.example.rentiaserver.data.dao.AnnouncementService;
-import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.data.to.*;
 import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController

@@ -9,18 +9,20 @@ import java.util.stream.Collectors;
 public class MessageToCreateHelper {
     public static OutgoingMessageTo create(MessagePo messagePo) {
         return new OutgoingMessageTo(
+                messagePo.getId(),
+                String.valueOf(messagePo.getCreatedAt()),
                 messagePo.getAnnouncementPo().getId(),
                 messagePo.getSender().getId(),
                 messagePo.getReceiver().getId(),
                 messagePo.getMessage(),
-                messagePo.getId(),
-                messagePo.getCreatedAt(),
                 messagePo.getMessageType().name(),
                 messagePo.isReplied(),
                 messagePo.getPackages().stream().map(messagePackagePo -> new PackageTo(
-                        messagePackagePo.getPackageLength().toString(),
-                        messagePackagePo.getPackageWidth().toString(),
-                        messagePackagePo.getPackageHeight().toString()
+                        messagePackagePo.getId(),
+                        String.valueOf(messagePackagePo.getCreatedAt()),
+                        String.valueOf(messagePackagePo.getPackageLength()),
+                        String.valueOf(messagePackagePo.getPackageWidth()),
+                        String.valueOf(messagePackagePo.getPackageHeight())
                 )).collect(Collectors.toSet())
         );
     }

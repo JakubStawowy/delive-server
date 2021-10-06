@@ -1,25 +1,23 @@
 package com.example.rentiaserver.data.po;
 
+import com.example.rentiaserver.data.api.BaseEntityPo;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "package")
+@Table(name = "PACKAGES")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class PackagePo {
+public class PackagePo extends BaseEntityPo {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotNull
+    @Column(name = "PACKAGE_LENGTH", nullable = false)
     private BigDecimal packageLength;
 
-    @NotNull
+    @Column(name = "PACKAGE_WIDTH", nullable = false)
     private BigDecimal packageWidth;
 
-    @NotNull
+    @Column(name = "PACKAGE_HEIGHT", nullable = false)
     private BigDecimal packageHeight;
 
     public PackagePo(@NotNull BigDecimal packageLength, @NotNull BigDecimal packageWidth, @NotNull BigDecimal packageHeight) {
@@ -29,14 +27,6 @@ public class PackagePo {
     }
 
     public PackagePo() {}
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public BigDecimal getPackageLength() {
         return packageLength;

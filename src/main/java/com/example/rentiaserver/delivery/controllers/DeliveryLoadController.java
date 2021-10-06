@@ -1,8 +1,7 @@
 package com.example.rentiaserver.delivery.controllers;
 
 import com.example.rentiaserver.constants.ApplicationConstants;
-import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
-import com.example.rentiaserver.delivery.dao.DeliveryRepository;
+import com.example.rentiaserver.delivery.dao.DeliveryDao;
 import com.example.rentiaserver.delivery.helpers.DeliveryToCreateHelper;
 import com.example.rentiaserver.delivery.to.DeliveryTo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +17,10 @@ public class DeliveryLoadController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/delivery";
 
-    private final DeliveryRepository deliveryRepository;
+    private final DeliveryDao deliveryRepository;
 
     @Autowired
-    public DeliveryLoadController(DeliveryRepository deliveryRepository) {
+    public DeliveryLoadController(DeliveryDao deliveryRepository) {
         this.deliveryRepository = deliveryRepository;
     }
 

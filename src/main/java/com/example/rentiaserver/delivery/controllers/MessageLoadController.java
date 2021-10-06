@@ -32,7 +32,9 @@ public class MessageLoadController {
 
     @GetMapping("/sent")
     public List<MessageTo> loadMessagesSent(@RequestParam Long userId) {
-        return messageDao.findAllBySender(userId).stream().map(MessageToCreateHelper::create).collect(Collectors.toList());
+        return messageDao.findAllBySender(userId)
+                .stream()
+                .map(MessageToCreateHelper::create).collect(Collectors.toList());
     }
 
     @GetMapping("/received")

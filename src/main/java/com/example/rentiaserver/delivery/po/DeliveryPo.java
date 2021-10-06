@@ -1,18 +1,17 @@
 package com.example.rentiaserver.delivery.po;
 
+import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.delivery.enums.DeliveryState;
 import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.data.po.UserPo;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "delivery")
-public class DeliveryPo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class DeliveryPo extends BaseEntityPo {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id")
@@ -21,9 +20,6 @@ public class DeliveryPo {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "announcement_id")
     private AnnouncementPo announcement;
-
-    @JoinColumn(name = "created_at", updatable = false)
-    private Date createdAt;
 
     @JoinColumn(name = "finished_at", updatable = false)
     private Date finishedAt;
@@ -39,18 +35,10 @@ public class DeliveryPo {
 
     public DeliveryPo() {}
 
-    @PrePersist
+    @Override
     public void init() {
-        createdAt = new Date(System.currentTimeMillis());
+        super.init();
         deliveryState = DeliveryState.REGISTERED;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public UserPo getUser() {
@@ -67,14 +55,6 @@ public class DeliveryPo {
 
     public void setAnnouncement(AnnouncementPo announcement) {
         this.announcement = announcement;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
     public DeliveryState getDeliveryState() {

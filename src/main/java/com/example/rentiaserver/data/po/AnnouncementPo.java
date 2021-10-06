@@ -1,20 +1,19 @@
 package com.example.rentiaserver.data.po;
 
+import com.example.rentiaserver.data.api.BaseEntityPo;
+import com.example.rentiaserver.data.enums.AnnouncementType;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "announcements")
-public class AnnouncementPo {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class AnnouncementPo extends BaseEntityPo {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "destination_from_id")
@@ -28,9 +27,6 @@ public class AnnouncementPo {
     @JoinColumn(name = "author_id")
     private UserPo author;
 
-    @JoinColumn(name = "created_at")
-    private Date createdAt;
-
     @OneToMany(mappedBy = "announcement", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<DeliveryPo> commissions;
 
@@ -40,26 +36,31 @@ public class AnnouncementPo {
     @NotNull
     private LocalDateTime date;
 
-    public AnnouncementPo(DestinationPo destinationFrom, DestinationPo destinationTo, UserPo author) {
+    @Enumerated(EnumType.STRING)
+    private AnnouncementType announcementType;
+
+    @ManyToMany(mappedBy = "relatedAnnouncements")
+    Set<UserPo> associatedUsers;
+
+    private BigDecimal amount;
+
+    public AnnouncementPo(DestinationPo destinationFrom, DestinationPo destinationTo, UserPo author, AnnouncementType announcementType, BigDecimal amount) {
         this.destinationFrom = destinationFrom;
         this.destinationTo = destinationTo;
         this.author = author;
+        this.announcementType = announcementType;
+        this.amount = amount;
+    }
+
+    public AnnouncementPo(DestinationPo destinationFrom, DestinationPo destinationTo, UserPo author, LocalDateTime date, AnnouncementType announcementType) {
+        this.destinationFrom = destinationFrom;
+        this.destinationTo = destinationTo;
+        this.author = author;
+        this.date = date;
+        this.announcementType = announcementType;
     }
 
     public AnnouncementPo() {}
-
-    @PrePersist
-    public void init() {
-        createdAt = new Date(System.currentTimeMillis());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public DestinationPo getDestinationFrom() {
         return destinationFrom;
@@ -115,6 +116,30 @@ public class AnnouncementPo {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public AnnouncementType getAnnouncementType() {
+        return announcementType;
+    }
+
+    public void setAnnouncementType(AnnouncementType announcementType) {
+        this.announcementType = announcementType;
+    }
+
+    public Set<UserPo> getAssociatedUsers() {
+        return associatedUsers;
+    }
+
+    public void setAssociatedUsers(Set<UserPo> associatedUsers) {
+        this.associatedUsers = associatedUsers;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 }
 

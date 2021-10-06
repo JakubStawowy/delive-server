@@ -6,10 +6,10 @@ import java.util.Set;
 
 public class IncomingPackageMessageTo extends MessageTo {
 
-    private Set<PackageTo> packages;
+    private final Set<PackageTo> packages;
 
-    public IncomingPackageMessageTo(Long announcementId, Long senderId, Long receiverId, String message, Set<PackageTo> packages) {
-        super(announcementId, senderId, receiverId, message);
+    public IncomingPackageMessageTo(Long id, String createdAt, Long announcementId, Long senderId, Long receiverId, String message, Set<PackageTo> packages) {
+        super(id, createdAt, announcementId, senderId, receiverId, message);
         this.packages = packages;
     }
 

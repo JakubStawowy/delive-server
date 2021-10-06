@@ -4,12 +4,14 @@ import com.example.rentiaserver.data.dao.UserRepository;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.finance.po.UserWalletPo;
 import com.example.rentiaserver.security.to.ResponseTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
@@ -35,6 +37,8 @@ public final class RegisterController {
         String hashedPassword = BCrypt.hashpw(user.getPassword(), salt);
         user.setPassword(hashedPassword);
         user.setSalt(salt);
+        UserWalletPo userWalletPo = new UserWalletPo("EUR", new BigDecimal("0.0"));
+        user.setUserWallet(userWalletPo);
         userRepository.save(user);
         return new ResponseTo(true, "User registered successfully", HttpStatus.OK);
     }

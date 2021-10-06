@@ -33,6 +33,10 @@ public class AnnouncementService {
         return normalAnnouncementRepository.findAll();
     }
 
+    public void save(AnnouncementPo announcementPo) {
+        announcementRepository.save(announcementPo);
+    }
+
     public void save(DeliveryAnnouncementPo deliveryAnnouncement) {
         deliveryAnnouncementRepository.save(deliveryAnnouncement);
     }

@@ -1,5 +1,6 @@
 package com.example.rentiaserver.data.po;
 
+import com.example.rentiaserver.data.enums.AnnouncementType;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
 
 import javax.persistence.*;
@@ -13,7 +14,7 @@ public class DeliveryAnnouncementPo extends AnnouncementPo {
 
 
     public DeliveryAnnouncementPo(DestinationPo destinationFrom, DestinationPo destinationTo, UserPo author, @NotNull LocalDateTime date) {
-        super(destinationFrom, destinationTo, author);
+        super(destinationFrom, destinationTo, author, date, AnnouncementType.DELIVERY);
     }
 
     public DeliveryAnnouncementPo() {}

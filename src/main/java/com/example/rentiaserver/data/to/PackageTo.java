@@ -1,14 +1,15 @@
 package com.example.rentiaserver.data.to;
 
-import java.io.Serializable;
+import com.example.rentiaserver.data.api.BaseEntityTo;
 
-public class PackageTo implements Serializable {
+public class PackageTo extends BaseEntityTo {
 
     private final String packageLength;
     private final String packageWidth;
     private final String packageHeight;
 
-    public PackageTo(String packageLength, String packageWidth, String packageHeight) {
+    public PackageTo(Long id, String createdAt, String packageLength, String packageWidth, String packageHeight) {
+        super(id, createdAt);
         this.packageLength = packageLength;
         this.packageWidth = packageWidth;
         this.packageHeight = packageHeight;
