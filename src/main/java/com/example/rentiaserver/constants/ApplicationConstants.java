@@ -13,5 +13,9 @@ public class ApplicationConstants {
 //        public static final String LOCALHOST_ORIGIN = "http://192.168.2.103:3000";
         private Origins() {}
     }
+
+    public static class Sql {
+        public static final String ORDER_BY_CREATED_AT_PREFIX = "ORDER BY CREATED_AT DESC";
+    }
     private ApplicationConstants() {}
 }

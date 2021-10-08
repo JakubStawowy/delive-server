@@ -7,30 +7,29 @@ import com.example.rentiaserver.data.po.UserPo;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 
 @Entity
-@Table(name = "delivery")
+@Table(name = "DELIVERIES")
 public class DeliveryPo extends BaseEntityPo {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id")
-    private UserPo user;
+    @JoinColumn(name = "USER_ID")
+    private UserPo userPo;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "announcement_id")
-    private AnnouncementPo announcement;
+    @JoinColumn(name = "ANNOUNCEMENT_ID")
+    private AnnouncementPo announcementPo;
 
-    @JoinColumn(name = "finished_at", updatable = false)
+    @JoinColumn(name = "FINISHED_AT", updatable = false)
     private Date finishedAt;
 
-    @JoinColumn(name = "state")
+    @JoinColumn(name = "STATE")
     @Enumerated(EnumType.STRING)
     private DeliveryState deliveryState;
 
-    public DeliveryPo(UserPo user, AnnouncementPo announcement) {
-        this.user = user;
-        this.announcement = announcement;
+    public DeliveryPo(UserPo userPo, AnnouncementPo announcementPo) {
+        this.userPo = userPo;
+        this.announcementPo = announcementPo;
     }
 
     public DeliveryPo() {}
@@ -41,28 +40,20 @@ public class DeliveryPo extends BaseEntityPo {
         deliveryState = DeliveryState.REGISTERED;
     }
 
-    public UserPo getUser() {
-        return user;
+    public UserPo getUserPo() {
+        return userPo;
     }
 
-    public void setUser(UserPo user) {
-        this.user = user;
+    public void setUserPo(UserPo userPo) {
+        this.userPo = userPo;
     }
 
-    public AnnouncementPo getAnnouncement() {
-        return announcement;
+    public AnnouncementPo getAnnouncementPo() {
+        return announcementPo;
     }
 
-    public void setAnnouncement(AnnouncementPo announcement) {
-        this.announcement = announcement;
-    }
-
-    public DeliveryState getDeliveryState() {
-        return deliveryState;
-    }
-
-    public void setDeliveryState(DeliveryState commissionState) {
-        this.deliveryState = commissionState;
+    public void setAnnouncementPo(AnnouncementPo announcementPo) {
+        this.announcementPo = announcementPo;
     }
 
     public Date getFinishedAt() {
@@ -71,5 +62,13 @@ public class DeliveryPo extends BaseEntityPo {
 
     public void setFinishedAt(Date finishedAt) {
         this.finishedAt = finishedAt;
+    }
+
+    public DeliveryState getDeliveryState() {
+        return deliveryState;
+    }
+
+    public void setDeliveryState(DeliveryState deliveryState) {
+        this.deliveryState = deliveryState;
     }
 }

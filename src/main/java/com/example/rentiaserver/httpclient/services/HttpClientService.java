@@ -13,7 +13,7 @@ import java.util.Map;
 @Service
 public class HttpClientService {
 
-    private static final long REQUEST_TIMEOUT = 5000;
+    private static final long REQUEST_TIMEOUT = 10000;
 
     public HttpResponse<String> getHttpResponse(String baseUri, Map<String, String> params) throws IOException, InterruptedException {
 

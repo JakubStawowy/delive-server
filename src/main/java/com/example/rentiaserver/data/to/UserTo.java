@@ -17,12 +17,12 @@ public class UserTo extends BaseEntityTo {
 
     public UserTo(UserPo user) {
         super(user.getId(), String.valueOf(user.getCreatedAt()));
-        name = user.getUserDetails().getName();
-        surname = user.getUserDetails().getSurname();
+        name = user.getName();
+        surname = user.getSurname();
         email = user.getEmail();
-        role = user.getRoles();
-        phone = user.getUserDetails().getPhone();
-        UserWalletPo userWalletPo = user.getUserWallet();
+        role = user.getRole();
+        phone = user.getPhone();
+        UserWalletPo userWalletPo = user.getUserWalletPo();
         userWallet = new UserWalletTo(userWalletPo.getId(), String.valueOf(userWalletPo.getCreatedAt()),
                 String.valueOf(userWalletPo.getBalance()), userWalletPo.getCurrency());
     }

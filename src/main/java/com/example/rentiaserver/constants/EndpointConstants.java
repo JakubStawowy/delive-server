@@ -21,6 +21,6 @@ public class EndpointConstants {
     public static final String DELETE_FEEDBACK_ENDPOINT = "/{id}/delete";
     public static final String EDIT_FEEDBACK_ENDPOINT = "/{id}/edit";
     public static final String USER_ENDPOINT = "/{id}";
-    public static final String EDIT_USER_ENDPOINT = "/{id}/edit";
+    public static final String EDIT_USER_ENDPOINT = "/edit";
     private EndpointConstants() {}
 }

@@ -4,16 +4,15 @@ import com.example.rentiaserver.data.api.BaseEntityPo;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "destination")
-public class DestinationPo extends BaseEntityPo {
+@Table(name = "LOCATIONS")
+public class LocationPo extends BaseEntityPo {
 
-    @NotNull
+    @Column(nullable = false)
     private Double latitude;
 
-    @NotNull
+    @Column(nullable = false)
     private Double longitude;
 
     @Nullable
@@ -25,13 +24,13 @@ public class DestinationPo extends BaseEntityPo {
     @Nullable
     private String country;
 
-    @OneToOne(mappedBy = "destinationFrom")
-    private AnnouncementPo announcementFrom;
+    @OneToOne(mappedBy = "initialLocationPo")
+    private AnnouncementPo announcementFromPo;
 
-    @OneToOne(mappedBy = "destinationTo")
-    private AnnouncementPo announcementTo;
+    @OneToOne(mappedBy = "finalLocationPo")
+    private AnnouncementPo announcementToPo;
 
-    public DestinationPo(@NotNull Double latitude, @NotNull Double longitude, @Nullable String address, @Nullable String locality, @Nullable String country) {
+    public LocationPo(Double latitude, Double longitude, @Nullable String address, @Nullable String locality, @Nullable String country) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
@@ -39,7 +38,7 @@ public class DestinationPo extends BaseEntityPo {
         this.country = country;
     }
 
-    public DestinationPo() {}
+    public LocationPo() {}
 
     public Double getLatitude() {
         return latitude;
@@ -84,19 +83,19 @@ public class DestinationPo extends BaseEntityPo {
         this.country = country;
     }
 
-    public AnnouncementPo getAnnouncementFrom() {
-        return announcementFrom;
+    public AnnouncementPo getAnnouncementFromPo() {
+        return announcementFromPo;
     }
 
-    public void setAnnouncementFrom(AnnouncementPo announcementFrom) {
-        this.announcementFrom = announcementFrom;
+    public void setAnnouncementFromPo(AnnouncementPo announcementFromPo) {
+        this.announcementFromPo = announcementFromPo;
     }
 
-    public AnnouncementPo getAnnouncementTo() {
-        return announcementTo;
+    public AnnouncementPo getAnnouncementToPo() {
+        return announcementToPo;
     }
 
-    public void setAnnouncementTo(AnnouncementPo announcementTo) {
-        this.announcementTo = announcementTo;
+    public void setAnnouncementToPo(AnnouncementPo announcementToPo) {
+        this.announcementToPo = announcementToPo;
     }
 }

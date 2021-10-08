@@ -2,36 +2,35 @@ package com.example.rentiaserver.data.po;
 
 import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.data.enums.FeedbackRate;
-import com.example.rentiaserver.constants.TableNamesConstants;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = TableNamesConstants.FEEDBACK_TABLE_NAME)
+@Table(name = "FEEDBACK")
 public class FeedbackPo extends BaseEntityPo {
 
-    @NotEmpty
+    @Column(nullable = false)
     private String content;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private FeedbackRate rate;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "author_id")
-    private UserPo author;
+    @JoinColumn(name = "AUTHOR_ID", nullable = false)
+    private UserPo authorPo;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id")
-    private UserPo user;
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private UserPo userPo;
 
-    public FeedbackPo(@NotEmpty String content, @NotNull FeedbackRate rate, UserPo author, UserPo user) {
+    public FeedbackPo(String content, FeedbackRate rate, UserPo authorPo, UserPo userPo) {
         this.content = content;
         this.rate = rate;
-        this.author = author;
-        this.user = user;
+        this.authorPo = authorPo;
+        this.userPo = userPo;
     }
 
     public FeedbackPo() {
@@ -53,19 +52,19 @@ public class FeedbackPo extends BaseEntityPo {
         this.rate = rate;
     }
 
-    public UserPo getAuthor() {
-        return author;
+    public UserPo getAuthorPo() {
+        return authorPo;
     }
 
-    public void setAuthor(UserPo author) {
-        this.author = author;
+    public void setAuthorPo(UserPo authorPo) {
+        this.authorPo = authorPo;
     }
 
-    public UserPo getUser() {
-        return user;
+    public UserPo getUserPo() {
+        return userPo;
     }
 
-    public void setUser(UserPo user) {
-        this.user = user;
+    public void setUserPo(UserPo userPo) {
+        this.userPo = userPo;
     }
 }

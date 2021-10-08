@@ -18,6 +18,6 @@ public class StartDeliveryAction extends ChangeDeliveryStateAction {
 
     @Override
     protected String getMessage(UserPo receiver) {
-        return "Hi " + receiver.getUserDetails().getName()+ "! Your delivery has started";
+        return "Hi " + receiver.getName()+ "! Your delivery has started";
     }
 }

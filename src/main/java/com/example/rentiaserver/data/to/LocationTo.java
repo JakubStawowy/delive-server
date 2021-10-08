@@ -2,7 +2,7 @@ package com.example.rentiaserver.data.to;
 
 import com.example.rentiaserver.data.api.BaseEntityTo;
 
-public class DestinationTo extends BaseEntityTo {
+public class LocationTo extends BaseEntityTo {
 
     private final Double latitude;
     private final Double longitude;
@@ -10,7 +10,7 @@ public class DestinationTo extends BaseEntityTo {
     private final String locality;
     private final String country;
 
-    public DestinationTo(Long id, String createdAt, Double latitude, Double longitude, String address, String locality, String country) {
+    public LocationTo(Long id, String createdAt, Double latitude, Double longitude, String address, String locality, String country) {
         super(id, createdAt);
         this.latitude = latitude;
         this.longitude = longitude;

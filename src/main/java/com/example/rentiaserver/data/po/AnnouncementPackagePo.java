@@ -1,30 +1,29 @@
 package com.example.rentiaserver.data.po;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "announcement_package")
+@Table(name = "ANNOUNCEMENT_PACKAGES")
 public class AnnouncementPackagePo extends PackagePo {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "announcement_id")
-    private AnnouncementPo announcement;
+    @JoinColumn(name = "ANNOUNCEMENT_ID", nullable = false)
+    private AnnouncementPo announcementPo;
 
-    public AnnouncementPackagePo(@NotNull BigDecimal packageLength, @NotNull BigDecimal packageWidth, @NotNull BigDecimal packageHeight, AnnouncementPo announcement) {
+    public AnnouncementPackagePo(BigDecimal packageLength, BigDecimal packageWidth, BigDecimal packageHeight, AnnouncementPo announcementPo) {
         super(packageLength, packageWidth, packageHeight);
-        this.announcement = announcement;
+        this.announcementPo = announcementPo;
     }
 
     public AnnouncementPackagePo() {
     }
 
-    public AnnouncementPo getAnnouncement() {
-        return announcement;
+    public AnnouncementPo getAnnouncementPo() {
+        return announcementPo;
     }
 
-    public void setAnnouncement(AnnouncementPo announcement) {
-        this.announcement = announcement;
+    public void setAnnouncementPo(AnnouncementPo announcementPo) {
+        this.announcementPo = announcementPo;
     }
 }

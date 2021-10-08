@@ -10,10 +10,10 @@ public abstract class BaseEntityPo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
-    @Column(name = "is_editable", nullable = false)
+    @Column(name = "IS_EDITABLE", nullable = false)
     protected boolean isEditable;
 
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "CREATED_AT", updatable = false)
     protected Date createdAt;
 
     @Version

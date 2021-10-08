@@ -5,117 +5,89 @@ import com.example.rentiaserver.data.enums.AnnouncementType;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table(name = "announcements")
+@Table(name = "ANNOUNCEMENTS")
 public class AnnouncementPo extends BaseEntityPo {
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "destination_from_id")
-    private DestinationPo destinationFrom;
+    @JoinColumn(name = "INITIAL_LOCATION_ID", nullable = false)
+    private LocationPo initialLocationPo;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "destination_to_id")
-    private DestinationPo destinationTo;
+    @JoinColumn(name = "FINAL_LOCATION_ID", nullable = false)
+    private LocationPo finalLocationPo;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "author_id")
-    private UserPo author;
+    @JoinColumn(name = "AUTHOR_ID", nullable = false)
+    private UserPo authorPo;
 
-    @OneToMany(mappedBy = "announcement", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<DeliveryPo> commissions;
+    @OneToMany(mappedBy = "announcementPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<DeliveryPo> deliveryPos;
 
-    @OneToMany(mappedBy = "announcement", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<AnnouncementPackagePo> packages;
-
-    @NotNull
-    private LocalDateTime date;
+    @OneToMany(mappedBy = "announcementPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<AnnouncementPackagePo> packagesPos;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private AnnouncementType announcementType;
 
     @ManyToMany(mappedBy = "relatedAnnouncements")
-    Set<UserPo> associatedUsers;
+    Set<UserPo> associatedUserPos;
 
+    @Column(nullable = false)
     private BigDecimal amount;
 
-    public AnnouncementPo(DestinationPo destinationFrom, DestinationPo destinationTo, UserPo author, AnnouncementType announcementType, BigDecimal amount) {
-        this.destinationFrom = destinationFrom;
-        this.destinationTo = destinationTo;
-        this.author = author;
+    public AnnouncementPo(LocationPo initialLocationPo, LocationPo finalLocationPo, UserPo authorPo, AnnouncementType announcementType, BigDecimal amount) {
+        this.initialLocationPo = initialLocationPo;
+        this.finalLocationPo = finalLocationPo;
+        this.authorPo = authorPo;
         this.announcementType = announcementType;
         this.amount = amount;
     }
 
-    public AnnouncementPo(DestinationPo destinationFrom, DestinationPo destinationTo, UserPo author, LocalDateTime date, AnnouncementType announcementType) {
-        this.destinationFrom = destinationFrom;
-        this.destinationTo = destinationTo;
-        this.author = author;
-        this.date = date;
-        this.announcementType = announcementType;
-    }
-
     public AnnouncementPo() {}
 
-    public DestinationPo getDestinationFrom() {
-        return destinationFrom;
+    public LocationPo getInitialLocationPo() {
+        return initialLocationPo;
     }
 
-    public void setDestinationFrom(DestinationPo destinationFrom) {
-        this.destinationFrom = destinationFrom;
+    public void setInitialLocationPo(LocationPo initialLocationPo) {
+        this.initialLocationPo = initialLocationPo;
     }
 
-    public DestinationPo getDestinationTo() {
-        return destinationTo;
+    public LocationPo getFinalLocationPo() {
+        return finalLocationPo;
     }
 
-    public void setDestinationTo(DestinationPo destinationTo) {
-        this.destinationTo = destinationTo;
+    public void setFinalLocationPo(LocationPo finalLocationPo) {
+        this.finalLocationPo = finalLocationPo;
     }
 
-    public UserPo getAuthor() {
-        return author;
+    public UserPo getAuthorPo() {
+        return authorPo;
     }
 
-    public void setAuthor(UserPo author) {
-        this.author = author;
+    public void setAuthorPo(UserPo authorPo) {
+        this.authorPo = authorPo;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Set<DeliveryPo> getDeliveryPos() {
+        return deliveryPos;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setDeliveryPos(Set<DeliveryPo> deliveryPos) {
+        this.deliveryPos = deliveryPos;
     }
 
-    public Set<DeliveryPo> getCommissions() {
-        return commissions;
+    public Set<AnnouncementPackagePo> getPackagesPos() {
+        return packagesPos;
     }
 
-    public void setCommissions(Set<DeliveryPo> commissions) {
-        this.commissions = commissions;
-    }
-
-    public Set<AnnouncementPackagePo> getPackages() {
-        return packages;
-    }
-
-    public void setPackages(Set<AnnouncementPackagePo> packages) {
-        this.packages = packages;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setPackagesPos(Set<AnnouncementPackagePo> packagesPos) {
+        this.packagesPos = packagesPos;
     }
 
     public AnnouncementType getAnnouncementType() {
@@ -126,12 +98,12 @@ public class AnnouncementPo extends BaseEntityPo {
         this.announcementType = announcementType;
     }
 
-    public Set<UserPo> getAssociatedUsers() {
-        return associatedUsers;
+    public Set<UserPo> getAssociatedUserPos() {
+        return associatedUserPos;
     }
 
-    public void setAssociatedUsers(Set<UserPo> associatedUsers) {
-        this.associatedUsers = associatedUsers;
+    public void setAssociatedUserPos(Set<UserPo> associatedUserPos) {
+        this.associatedUserPos = associatedUserPos;
     }
 
     public BigDecimal getAmount() {

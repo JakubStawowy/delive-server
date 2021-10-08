@@ -2,76 +2,71 @@ package com.example.rentiaserver.data.po;
 
 import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
-import com.example.rentiaserver.constants.TableNamesConstants;
 import com.example.rentiaserver.finance.po.UserWalletPo;
 import com.example.rentiaserver.security.enums.UserRoles;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
-@Table(name = TableNamesConstants.USER_TABLE_NAME)
+@Table(name = "USERS")
 public class UserPo extends BaseEntityPo {
 
     @NotEmpty
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @NotEmpty
+    @Column(nullable = false)
     private String password;
 
-    @NotNull
+    private String name;
+    private String surname;
+    private String phone;
+    private String image;
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private UserRoles role;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean logged;
 
-    @NotNull
-    @JsonIgnore
+    @Column(nullable = false)
     private String salt;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_details_id", referencedColumnName = "id")
-    private UserDetailsPo userDetails;
+    @JoinColumn(name = "USER_WALLET_ID", referencedColumnName = "ID", nullable = false)
+    private UserWalletPo userWalletPo;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_wallet_id", referencedColumnName = "id")
-    private UserWalletPo userWallet;
-
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "authorPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<FeedbackPo> feedbackSent;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<FeedbackPo> feedbackReceived;
 
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<AnnouncementPo> announcements;
+    @OneToMany(mappedBy = "authorPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<AnnouncementPo> announcementPos;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<DeliveryPo> commissions;
+    @OneToMany(mappedBy = "userPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<DeliveryPo> deliveryPos;
 
     @ManyToMany
     @JoinTable(
-            name = "users_announcements",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "announcement_id")
+            name = "USERS_ANNOUNCEMENTS",
+            joinColumns = @JoinColumn(name = "USER_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ANNOUNCEMENT_ID")
     )
     private Set<AnnouncementPo> relatedAnnouncements;
 
-    public UserPo(@NotEmpty String email,
-                  @NotEmpty String password,
-                  @NotNull UserRoles role,
-                  UserDetailsPo userDetails,
-                  UserWalletPo userWallet) {
+    public UserPo(String email,
+                  String password,
+                  UserRoles role,
+                  UserWalletPo userWalletPo) {
         this.email = email;
         this.password = password;
-        this.userDetails = userDetails;
         this.role = role;
-        this.userWallet = userWallet;
+        this.userWalletPo = userWalletPo;
     }
 
     public UserPo() {
@@ -82,62 +77,6 @@ public class UserPo extends BaseEntityPo {
         super.init();
         logged = false;
         role = UserRoles.ROLE_USER;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
-    public Boolean getLogged() {
-        return logged;
-    }
-
-    public void setLogged(Boolean logged) {
-        this.logged = logged;
-    }
-
-    public UserRoles getRoles() {
-        return role;
-    }
-
-    public void setRoles(UserRoles role) {
-        this.role = role;
-    }
-
-    public Set<AnnouncementPo> getAnnouncements() {
-        return announcements;
-    }
-
-    public void setAnnouncements(Set<AnnouncementPo> announcements) {
-        this.announcements = announcements;
-    }
-
-    public Set<FeedbackPo> getFeedbackSent() {
-        return feedbackSent;
-    }
-
-    public void setFeedbackSent(Set<FeedbackPo> feedbackSent) {
-        this.feedbackSent = feedbackSent;
-    }
-
-    public Set<FeedbackPo> getFeedbackReceived() {
-        return feedbackReceived;
-    }
-
-    public void setFeedbackReceived(Set<FeedbackPo> feedbackReceived) {
-        this.feedbackReceived = feedbackReceived;
-    }
-
-    public UserDetailsPo getUserDetails() {
-        return userDetails;
-    }
-
-    public void setUserDetails(UserDetailsPo userDetails) {
-        this.userDetails = userDetails;
     }
 
     public String getEmail() {
@@ -156,6 +95,38 @@ public class UserPo extends BaseEntityPo {
         this.password = password;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public UserRoles getRole() {
         return role;
     }
@@ -164,12 +135,60 @@ public class UserPo extends BaseEntityPo {
         this.role = role;
     }
 
-    public Set<DeliveryPo> getCommissions() {
-        return commissions;
+    public Boolean getLogged() {
+        return logged;
     }
 
-    public void setCommissions(Set<DeliveryPo> commissions) {
-        this.commissions = commissions;
+    public void setLogged(Boolean logged) {
+        this.logged = logged;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public UserWalletPo getUserWalletPo() {
+        return userWalletPo;
+    }
+
+    public void setUserWalletPo(UserWalletPo userWalletPo) {
+        this.userWalletPo = userWalletPo;
+    }
+
+    public Set<FeedbackPo> getFeedbackSent() {
+        return feedbackSent;
+    }
+
+    public void setFeedbackSent(Set<FeedbackPo> feedbackSent) {
+        this.feedbackSent = feedbackSent;
+    }
+
+    public Set<FeedbackPo> getFeedbackReceived() {
+        return feedbackReceived;
+    }
+
+    public void setFeedbackReceived(Set<FeedbackPo> feedbackReceived) {
+        this.feedbackReceived = feedbackReceived;
+    }
+
+    public Set<AnnouncementPo> getAnnouncementPos() {
+        return announcementPos;
+    }
+
+    public void setAnnouncementPos(Set<AnnouncementPo> announcementPos) {
+        this.announcementPos = announcementPos;
+    }
+
+    public Set<DeliveryPo> getDeliveryPos() {
+        return deliveryPos;
+    }
+
+    public void setDeliveryPos(Set<DeliveryPo> deliveryPos) {
+        this.deliveryPos = deliveryPos;
     }
 
     public Set<AnnouncementPo> getRelatedAnnouncements() {
@@ -178,13 +197,5 @@ public class UserPo extends BaseEntityPo {
 
     public void setRelatedAnnouncements(Set<AnnouncementPo> relatedAnnouncements) {
         this.relatedAnnouncements = relatedAnnouncements;
-    }
-
-    public UserWalletPo getUserWallet() {
-        return userWallet;
-    }
-
-    public void setUserWallet(UserWalletPo userWallet) {
-        this.userWallet = userWallet;
     }
 }

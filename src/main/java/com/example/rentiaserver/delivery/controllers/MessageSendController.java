@@ -134,7 +134,7 @@ public class MessageSendController {
 
     private void associateSenderWithAnnouncement(MessagePo messagePo, AnnouncementPo announcementPo) {
         Set<AnnouncementPackagePo> packages = new HashSet<>();
-        messagePo.getPackages().forEach(packagePo ->
+        messagePo.getPackagePos().forEach(packagePo ->
                 packages.add(new AnnouncementPackagePo(
                         packagePo.getPackageLength(),
                         packagePo.getPackageWidth(),
@@ -142,7 +142,7 @@ public class MessageSendController {
                         announcementPo
                 )));
         packageRepository.saveAll(packages);
-        UserPo sender = messagePo.getSender();
+        UserPo sender = messagePo.getSenderPo();
         sender.getRelatedAnnouncements().add(announcementPo);
         userRepository.save(sender);
     }

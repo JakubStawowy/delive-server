@@ -32,25 +32,16 @@ public final class AnnouncementManageController {
     private final UserRepository userRepository;
     private final AnnouncementService announcementService;
     private final PackageRepository packageRepository;
-    private final DeliveryDao deliveryRepository;
     private final PositionStackReverseGeocodeService geocoderService;
 
     @Autowired
     public AnnouncementManageController(UserRepository userRepository, AnnouncementService announcementService,
-                                        PackageRepository packageRepository, DeliveryDao deliveryRepository
-                                        , PositionStackReverseGeocodeService geocoderService
+                                        PackageRepository packageRepository, PositionStackReverseGeocodeService geocoderService
     ) {
         this.userRepository = userRepository;
         this.announcementService = announcementService;
         this.packageRepository = packageRepository;
-        this.deliveryRepository = deliveryRepository;
         this.geocoderService = geocoderService;
-    }
-
-    @PostMapping(value = EndpointConstants.ADD_DELIVERY_ANNOUNCEMENTS_ENDPOINT)
-    public void addDeliveryAnnouncement(@RequestBody AnnouncementTo announcementTo) {
-        userRepository.findById(announcementTo.getAuthorId()).ifPresent(author -> saveAnnouncementWithDelivery(author, announcementTo));
-
     }
 
     @PostMapping(value = EndpointConstants.ADD_NORMAL_ANNOUNCEMENTS_ENDPOINT)
@@ -77,16 +68,16 @@ public final class AnnouncementManageController {
                 announcementTo.getDestinationTo().getLongitude(),
                 announcementTo.getDestinationTo().getLatitude());
 
-        NormalAnnouncementPo announcement = new NormalAnnouncementPo(
-                new DestinationPo(
+        AnnouncementPo announcement = new AnnouncementPo(
+                new LocationPo(
                         announcementTo.getDestinationFrom().getLatitude(),
                         announcementTo.getDestinationFrom().getLongitude(),
                         String.valueOf(addressFromJson.get("name")),
                         String.valueOf(addressFromJson.get("locality")),
                         String.valueOf(addressFromJson.get("country"))),
-                new DestinationPo(
-                        announcementTo.getDestinationFrom().getLatitude(),
-                        announcementTo.getDestinationFrom().getLongitude(),
+                new LocationPo(
+                        announcementTo.getDestinationTo().getLatitude(),
+                        announcementTo.getDestinationTo().getLongitude(),
                         String.valueOf(addressToJson.get("name")),
                         String.valueOf(addressToJson.get("locality")),
                         String.valueOf(addressToJson.get("country"))),
@@ -106,14 +97,14 @@ public final class AnnouncementManageController {
         packageRepository.saveAll(packagePos);
     }
 
-    private void saveAnnouncementWithDelivery(UserPo author, AnnouncementTo announcementTo) {
-        DeliveryAnnouncementPo announcementPo = new DeliveryAnnouncementPo(
-                new DestinationPo(announcementTo.getDestinationFrom().getLatitude(), announcementTo.getDestinationFrom().getLongitude(), null, null, null),
-                new DestinationPo(announcementTo.getDestinationTo().getLatitude(), announcementTo.getDestinationTo().getLongitude(), null, null, null),
-                author,
-                LocalDateTime.parse(announcementTo.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-        );
-        announcementService.save(announcementPo);
-        deliveryRepository.save(new DeliveryPo(author, announcementPo));
-    }
+//    private void saveAnnouncementWithDelivery(UserPo author, AnnouncementTo announcementTo) {
+//        DeliveryAnnouncementPo announcementPo = new DeliveryAnnouncementPo(
+//                new LocationPo(announcementTo.getDestinationFrom().getLatitude(), announcementTo.getDestinationFrom().getLongitude(), null, null, null),
+//                new LocationPo(announcementTo.getDestinationTo().getLatitude(), announcementTo.getDestinationTo().getLongitude(), null, null, null),
+//                author,
+//                LocalDateTime.parse(announcementTo.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+//        );
+//        announcementService.save(announcementPo);
+//        deliveryRepository.save(new DeliveryPo(author, announcementPo));
+//    }
 }

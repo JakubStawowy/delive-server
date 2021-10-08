@@ -1,19 +1,19 @@
 package com.example.rentiaserver.data.helpers;
 
 import com.example.rentiaserver.data.po.AnnouncementPo;
-import com.example.rentiaserver.data.po.DestinationPo;
+import com.example.rentiaserver.data.po.LocationPo;
 import com.example.rentiaserver.data.to.*;
 
 import java.util.stream.Collectors;
 
 public final class AnnouncementToCreatorHelper {
     public static AnnouncementTo create(AnnouncementPo announcementPo) {
-        DestinationPo destinationFrom = announcementPo.getDestinationFrom();
-        DestinationPo destinationTo = announcementPo.getDestinationTo();
+        LocationPo destinationFrom = announcementPo.getInitialLocationPo();
+        LocationPo destinationTo = announcementPo.getFinalLocationPo();
         return new AnnouncementTo(
                 announcementPo.getId(),
                 String.valueOf(announcementPo.getCreatedAt()),
-                new DestinationTo(
+                new LocationTo(
                         destinationFrom.getId(),
                         String.valueOf(destinationFrom.getCreatedAt()),
                         destinationFrom.getLatitude(),
@@ -22,7 +22,7 @@ public final class AnnouncementToCreatorHelper {
                         destinationFrom.getLocality(),
                         destinationFrom.getCountry()
                 ),
-                new DestinationTo(
+                new LocationTo(
                         destinationTo.getId(),
                         String.valueOf(destinationTo.getCreatedAt()),
                         destinationTo.getLatitude(),
@@ -31,15 +31,14 @@ public final class AnnouncementToCreatorHelper {
                         destinationTo.getLocality(),
                         destinationTo.getCountry()
                 ),
-                announcementPo.getPackages().stream().map(packagePo -> new PackageTo(
+                announcementPo.getPackagesPos().stream().map(packagePo -> new PackageTo(
                         packagePo.getId(),
                         String.valueOf(packagePo.getCreatedAt()),
                         String.valueOf(packagePo.getPackageLength()),
                         String.valueOf(packagePo.getPackageWidth()),
                         String.valueOf(packagePo.getPackageHeight())
                 )).collect(Collectors.toSet()),
-                announcementPo.getAuthor().getId(),
-                announcementPo.getDate() != null ? announcementPo.getDate().toString() : null,
+                announcementPo.getAuthorPo().getId(),
                 announcementPo.getAmount() != null ? announcementPo.getAmount().toString() : null
         );
     }

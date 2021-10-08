@@ -22,7 +22,8 @@ public abstract class ChangeDeliveryStateAction {
 
     private void startAction(DeliveryPo deliveryPo, DeliveryService deliveryService, MessageService messageService) {
         changeState(deliveryService, messageService, deliveryPo);
-        AnnouncementPo announcementPo = deliveryPo.getAnnouncement();
-        announcementPo.getAssociatedUsers().forEach(userPo -> messageService.saveMessage(getMessage(deliveryPo.getUser()), announcementPo, deliveryPo.getUser(), userPo, MessageType.INFO));
+        AnnouncementPo announcementPo = deliveryPo.getAnnouncementPo();
+        announcementPo.getAssociatedUserPos().forEach(userPo -> messageService.saveMessage(getMessage(
+                deliveryPo.getUserPo()), announcementPo, deliveryPo.getUserPo(), userPo, MessageType.INFO));
     }
 }

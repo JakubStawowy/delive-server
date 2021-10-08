@@ -9,8 +9,8 @@ public class DeliveryToCreateHelper {
         return new DeliveryTo(
                 deliveryPo.getId(),
                 String.valueOf(deliveryPo.getCreatedAt()),
-                deliveryPo.getUser().getId(),
-                AnnouncementToCreatorHelper.create(deliveryPo.getAnnouncement()),
+                deliveryPo.getUserPo().getId(),
+                AnnouncementToCreatorHelper.create(deliveryPo.getAnnouncementPo()),
                 deliveryPo.getDeliveryState().name()
         );
     }

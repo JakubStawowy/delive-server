@@ -21,36 +21,35 @@ public class MessagePo extends BaseEntityPo {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "SENDER_ID")
-    private UserPo sender;
+    private UserPo senderPo;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "RECEIVER_ID")
-    private UserPo receiver;
+    private UserPo receiverPo;
 
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "MESSAGE_TYPE")
     private MessageType messageType;
 
-    @OneToMany(mappedBy = "message", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<MessagePackagePo> packages;
+    @OneToMany(mappedBy = "messagePo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<MessagePackagePo> packagePos;
 
     private boolean replied;
 
-    public MessagePo(String message, AnnouncementPo announcementPo, UserPo sender, UserPo receiver, MessageType messageType) {
+    public MessagePo(String message, AnnouncementPo announcementPo, UserPo senderPo, UserPo receiverPo, MessageType messageType) {
         this.message = message;
         this.announcementPo = announcementPo;
-        this.sender = sender;
-        this.receiver = receiver;
+        this.senderPo = senderPo;
+        this.receiverPo = receiverPo;
         this.messageType = messageType;
     }
+
+    public MessagePo() {}
 
     @Override
     public void init() {
         super.init();
         replied = false;
-    }
-
-    public MessagePo() {
     }
 
     public String getMessage() {
@@ -69,20 +68,20 @@ public class MessagePo extends BaseEntityPo {
         this.announcementPo = announcementPo;
     }
 
-    public UserPo getSender() {
-        return sender;
+    public UserPo getSenderPo() {
+        return senderPo;
     }
 
-    public void setSender(UserPo sender) {
-        this.sender = sender;
+    public void setSenderPo(UserPo senderPo) {
+        this.senderPo = senderPo;
     }
 
-    public UserPo getReceiver() {
-        return receiver;
+    public UserPo getReceiverPo() {
+        return receiverPo;
     }
 
-    public void setReceiver(UserPo receiver) {
-        this.receiver = receiver;
+    public void setReceiverPo(UserPo receiverPo) {
+        this.receiverPo = receiverPo;
     }
 
     public MessageType getMessageType() {
@@ -93,19 +92,19 @@ public class MessagePo extends BaseEntityPo {
         this.messageType = messageType;
     }
 
+    public Set<MessagePackagePo> getPackagePos() {
+        return packagePos;
+    }
+
+    public void setPackagePos(Set<MessagePackagePo> packagePos) {
+        this.packagePos = packagePos;
+    }
+
     public boolean isReplied() {
         return replied;
     }
 
-    public void setReplied(boolean archived) {
-        this.replied = archived;
-    }
-
-    public Set<MessagePackagePo> getPackages() {
-        return packages;
-    }
-
-    public void setPackages(Set<MessagePackagePo> packages) {
-        this.packages = packages;
+    public void setReplied(boolean replied) {
+        this.replied = replied;
     }
 }

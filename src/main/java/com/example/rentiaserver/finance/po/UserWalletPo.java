@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Table(name = "USER_WALLET")
 public class UserWalletPo extends BaseEntityPo {
 
-    @OneToOne(mappedBy = "userWallet")
+    @OneToOne(mappedBy = "userWalletPo")
     private UserPo user;
 
     @Column(nullable = false)

@@ -25,7 +25,7 @@ public class FeedbackLoadController {
 
     @GetMapping("/user")
     public List<FeedbackTo> getUserFeedback(@RequestParam Long userId) {
-        return feedbackRepository.getFeedbacksByUserId(userId)
+        return feedbackRepository.getFeedbackPosByUserPoId(userId)
                 .stream()
                 .map(FeedbackTo::new)
                 .collect(Collectors.toList());

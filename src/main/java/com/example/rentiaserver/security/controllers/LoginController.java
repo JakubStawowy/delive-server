@@ -36,7 +36,7 @@ public final class LoginController {
             user.setLogged(true);
             userRepository.save(user);
             return new LoginResponseTo(true, HttpStatus.OK, user.getId(),
-                    tokenProvider.generateUserToken(user), user.getRoles(),true
+                    tokenProvider.generateUserToken(user), user.getRole(),true
             );
         }
         return new ResponseTo(false, "Wrong email or password", HttpStatus.NOT_FOUND);

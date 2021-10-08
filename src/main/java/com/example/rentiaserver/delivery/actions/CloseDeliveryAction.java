@@ -15,16 +15,16 @@ public class CloseDeliveryAction extends ChangeDeliveryStateAction {
 
     @Override
     protected void changeState(DeliveryService deliveryService, MessageService messageService, DeliveryPo deliveryPo) {
-        AnnouncementPo announcementPo = deliveryPo.getAnnouncement();
+        AnnouncementPo announcementPo = deliveryPo.getAnnouncementPo();
         BigDecimal amount = announcementPo.getAmount();
-        UserPo deliverer = deliveryPo.getUser();
+        UserPo deliverer = deliveryPo.getUserPo();
         BigDecimal delivererWalletBalance = deliverer
-                .getUserWallet()
+                .getUserWalletPo()
                 .getBalance();
-        UserPo principal = announcementPo.getAuthor();
-        BigDecimal principalBalance = principal.getUserWallet().getBalance();
-        deliverer.getUserWallet().setBalance(delivererWalletBalance.add(amount));
-        principal.getUserWallet().setBalance(principalBalance.subtract(amount));
+        UserPo principal = announcementPo.getAuthorPo();
+        BigDecimal principalBalance = principal.getUserWalletPo().getBalance();
+        deliverer.getUserWalletPo().setBalance(delivererWalletBalance.add(amount));
+        principal.getUserWalletPo().setBalance(principalBalance.subtract(amount));
         deliveryService.save(deliverer, principal);
         deliveryPo.setDeliveryState(DeliveryState.CLOSED);
         deliveryService.save(deliveryPo);
@@ -33,6 +33,6 @@ public class CloseDeliveryAction extends ChangeDeliveryStateAction {
 
     @Override
     protected String getMessage(UserPo receiver) {
-        return "Hi " + receiver.getUserDetails().getName() + " delivery closed";
+        return "Hi " + receiver.getName() + " delivery closed";
     }
 }

@@ -38,7 +38,7 @@ public final class RegisterController {
         user.setPassword(hashedPassword);
         user.setSalt(salt);
         UserWalletPo userWalletPo = new UserWalletPo("EUR", new BigDecimal("0.0"));
-        user.setUserWallet(userWalletPo);
+        user.setUserWalletPo(userWalletPo);
         userRepository.save(user);
         return new ResponseTo(true, "User registered successfully", HttpStatus.OK);
     }

@@ -23,11 +23,11 @@ public class JsonWebTokenProvider implements ITokenProvider {
     public String generateUserToken(final UserPo user) {
 
         Key signingKey = new SecretKeySpec(TokenKeyConstants.KEY.getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS512.getJcaName());
-        String name = user.getUserDetails().getName()+" "+user.getUserDetails().getSurname();
+        String name = user.getName() + " " + user.getSurname();
 
         return Jwts.builder()
                 .setSubject(user.getEmail())
-                .claim(ROLE_PREFIX, user.getRoles())
+                .claim(ROLE_PREFIX, user.getRole())
                 .claim(USERNAME_PREFIX, name)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TIMEOUT))

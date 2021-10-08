@@ -3,8 +3,6 @@ package com.example.rentiaserver.data.to;
 import com.example.rentiaserver.data.api.BaseEntityTo;
 import com.example.rentiaserver.data.po.FeedbackPo;
 
-import java.io.Serializable;
-
 public class FeedbackTo extends BaseEntityTo {
 
     private final String content;
@@ -19,9 +17,9 @@ public class FeedbackTo extends BaseEntityTo {
         content = feedback.getContent();
         createdAt = String.valueOf(feedback.getCreatedAt());
         rate = feedback.getRate().ordinal();
-        authorName = feedback.getAuthor().getUserDetails().getName();
-        authorSurname = feedback.getAuthor().getUserDetails().getSurname();
-        authorId = feedback.getAuthor().getId();
+        authorName = feedback.getAuthorPo().getName();
+        authorSurname = feedback.getAuthorPo().getSurname();
+        authorId = feedback.getAuthorPo().getId();
     }
 
     public FeedbackTo(Long id, String createdAt, String content, String createdAt1, int rate, String authorName, String authorSurname, Long authorId) {

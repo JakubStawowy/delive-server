@@ -20,7 +20,7 @@ public class PackagePo extends BaseEntityPo {
     @Column(name = "PACKAGE_HEIGHT", nullable = false)
     private BigDecimal packageHeight;
 
-    public PackagePo(@NotNull BigDecimal packageLength, @NotNull BigDecimal packageWidth, @NotNull BigDecimal packageHeight) {
+    public PackagePo(BigDecimal packageLength, BigDecimal packageWidth, BigDecimal packageHeight) {
         this.packageLength = packageLength;
         this.packageWidth = packageWidth;
         this.packageHeight = packageHeight;

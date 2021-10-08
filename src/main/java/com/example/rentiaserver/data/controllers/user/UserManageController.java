@@ -2,17 +2,13 @@ package com.example.rentiaserver.data.controllers.user;
 
 import com.example.rentiaserver.data.dao.UserRepository;
 import com.example.rentiaserver.data.po.UserPo;
-import com.example.rentiaserver.data.po.UserDetailsPo;
 import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.data.to.UserTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
@@ -27,16 +23,15 @@ public final class UserManageController {
         this.userRepository = userRepository;
     }
 
-    @PutMapping(path = EndpointConstants.EDIT_USER_ENDPOINT, consumes = "application/json")
-    public ResponseEntity<?> editUser(@RequestBody UserDetailsPo details, @PathVariable("id") Long id) {
-        return userRepository.findById(id)
-                .map(userPo -> editUser(userPo, details))
+    @PutMapping(path = EndpointConstants.EDIT_USER_ENDPOINT)
+    public ResponseEntity<?> editUser(@RequestBody UserTo userTo) {
+        return userRepository.findById(userTo.getId())
+                .map(userPo -> editUser(userPo, userTo))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    private ResponseEntity<?> editUser(UserPo user, UserDetailsPo userDetailsPo) {
-        userDetailsPo.setId(user.getUserDetails().getId());
-        user.setUserDetails(userDetailsPo);
+    private ResponseEntity<?> editUser(UserPo user, UserTo userTo) {
+        // TODO
         userRepository.save(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }

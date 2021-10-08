@@ -3,30 +3,29 @@ package com.example.rentiaserver.data.po;
 import com.example.rentiaserver.delivery.po.MessagePo;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "message_package")
+@Table(name = "MESSAGE_PACKAGES")
 public class MessagePackagePo extends PackagePo {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "message_id")
-    private MessagePo message;
+    @JoinColumn(name = "MESSAGE_ID", nullable = false)
+    private MessagePo messagePo;
 
-    public MessagePackagePo(@NotNull BigDecimal packageLength, @NotNull BigDecimal packageWidth, @NotNull BigDecimal packageHeight, MessagePo message) {
+    public MessagePackagePo(BigDecimal packageLength, BigDecimal packageWidth, BigDecimal packageHeight, MessagePo messagePo) {
         super(packageLength, packageWidth, packageHeight);
-        this.message = message;
+        this.messagePo = messagePo;
     }
 
     public MessagePackagePo() {
     }
 
-    public MessagePo getMessage() {
-        return message;
+    public MessagePo getMessagePo() {
+        return messagePo;
     }
 
-    public void setMessage(MessagePo message) {
-        this.message = message;
+    public void setMessagePo(MessagePo messagePo) {
+        this.messagePo = messagePo;
     }
 }

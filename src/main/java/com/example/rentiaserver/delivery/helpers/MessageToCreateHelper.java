@@ -12,12 +12,12 @@ public class MessageToCreateHelper {
                 messagePo.getId(),
                 String.valueOf(messagePo.getCreatedAt()),
                 messagePo.getAnnouncementPo().getId(),
-                messagePo.getSender().getId(),
-                messagePo.getReceiver().getId(),
+                messagePo.getSenderPo().getId(),
+                messagePo.getReceiverPo().getId(),
                 messagePo.getMessage(),
                 messagePo.getMessageType().name(),
                 messagePo.isReplied(),
-                messagePo.getPackages().stream().map(messagePackagePo -> new PackageTo(
+                messagePo.getPackagePos().stream().map(messagePackagePo -> new PackageTo(
                         messagePackagePo.getId(),
                         String.valueOf(messagePackagePo.getCreatedAt()),
                         String.valueOf(messagePackagePo.getPackageLength()),
