@@ -1,6 +1,7 @@
-package com.example.rentiaserver.data.po;
+package com.example.rentiaserver.maps.po;
 
 import com.example.rentiaserver.data.api.BaseEntityPo;
+import com.example.rentiaserver.data.po.AnnouncementPo;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;

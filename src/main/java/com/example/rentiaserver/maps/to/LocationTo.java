@@ -1,4 +1,4 @@
-package com.example.rentiaserver.data.to;
+package com.example.rentiaserver.maps.to;
 
 import com.example.rentiaserver.data.api.BaseEntityTo;
 

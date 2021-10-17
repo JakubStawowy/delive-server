@@ -3,8 +3,6 @@ package com.example.rentiaserver.security.to;
 import com.example.rentiaserver.security.enums.UserRoles;
 import org.springframework.http.HttpStatus;
 
-import java.io.Serializable;
-
 public class LoginResponseTo extends ResponseTo {
 
     private final Long userId;

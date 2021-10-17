@@ -1,9 +1,9 @@
 package com.example.rentiaserver.data.controllers.user;
 
-import com.example.rentiaserver.data.dao.UserRepository;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.data.services.UserService;
 import com.example.rentiaserver.data.to.UserTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,23 +16,23 @@ import org.springframework.web.bind.annotation.*;
 public final class UserManageController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/users";
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public UserManageController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserManageController(UserService userService) {
+        this.userService = userService;
     }
 
     @PutMapping(path = EndpointConstants.EDIT_USER_ENDPOINT)
     public ResponseEntity<?> editUser(@RequestBody UserTo userTo) {
-        return userRepository.findById(userTo.getId())
+        return userService.findUserById(userTo.getId())
                 .map(userPo -> editUser(userPo, userTo))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     private ResponseEntity<?> editUser(UserPo user, UserTo userTo) {
         // TODO
-        userRepository.save(user);
+        userService.saveUser(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

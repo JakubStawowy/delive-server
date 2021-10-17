@@ -1,9 +1,11 @@
 package com.example.rentiaserver.delivery.services;
 
-import com.example.rentiaserver.data.dao.UserRepository;
 import com.example.rentiaserver.data.po.UserPo;
+import com.example.rentiaserver.data.services.UserService;
 import com.example.rentiaserver.delivery.dao.DeliveryDao;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
+import com.example.rentiaserver.maps.services.DistanceService;
+import com.example.rentiaserver.maps.to.LocationTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +16,18 @@ import java.util.Optional;
 public class DeliveryService {
 
     private final DeliveryDao deliveryDao;
-    private final UserRepository userRepository;
+    private final UserService userService;
+    private final DistanceService distanceService;
 
     @Autowired
-    public DeliveryService(DeliveryDao deliveryDao, UserRepository userRepository) {
+    public DeliveryService(DeliveryDao deliveryDao, UserService userService, DistanceService distanceService) {
         this.deliveryDao = deliveryDao;
-        this.userRepository = userRepository;
+        this.userService = userService;
+        this.distanceService = distanceService;
     }
 
     public Optional<UserPo> findUserById(Long id) {
-        return userRepository.findById(id);
+        return userService.findUserById(id);
     }
 
     public Optional<DeliveryPo> findDeliveryById(Long id) {
@@ -31,10 +35,14 @@ public class DeliveryService {
     }
 
     public void save(UserPo deliverer, UserPo principal) {
-        userRepository.saveAll(Arrays.asList(deliverer, principal));
+        userService.saveAllUsers(Arrays.asList(deliverer, principal));
     }
 
     public void save(DeliveryPo deliveryPo) {
         deliveryDao.save(deliveryPo);
+    }
+
+    public double getDistance(LocationTo initialLocation, LocationTo finalLocation) {
+        return distanceService.getDistance(initialLocation, finalLocation);
     }
 }

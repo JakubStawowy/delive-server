@@ -1,12 +1,11 @@
 package com.example.rentiaserver.data.controllers.feedback;
 
-import com.example.rentiaserver.data.dao.FeedbackRepository;
+import com.example.rentiaserver.data.services.UserService;
 import com.example.rentiaserver.data.to.FeedbackTo;
 import com.example.rentiaserver.constants.ApplicationConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,16 +15,16 @@ import java.util.stream.Collectors;
 public class FeedbackLoadController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/feedback";
-    private final FeedbackRepository feedbackRepository;
+    private final UserService userService;
 
     @Autowired
-    public FeedbackLoadController(FeedbackRepository feedbackRepository) {
-        this.feedbackRepository = feedbackRepository;
+    public FeedbackLoadController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/user")
     public List<FeedbackTo> getUserFeedback(@RequestParam Long userId) {
-        return feedbackRepository.getFeedbackPosByUserPoId(userId)
+        return userService.getFeedbackPosByUserPoId(userId)
                 .stream()
                 .map(FeedbackTo::new)
                 .collect(Collectors.toList());

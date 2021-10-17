@@ -2,12 +2,9 @@ package com.example.rentiaserver.data.controllers.announcement;
 
 import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
-import com.example.rentiaserver.data.dao.AnnouncementService;
+import com.example.rentiaserver.data.services.AnnouncementService;
 import com.example.rentiaserver.security.api.IAuthorizeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
@@ -27,7 +24,7 @@ public final class AnnouncementRemoveController {
 
     @DeleteMapping(value = EndpointConstants.REMOVE_ANNOUNCEMENT_ENDPOINT)
     public void removeAnnouncement(@PathVariable("id") Long id, @RequestParam("userId") Long userId, @RequestParam("password") String password) {
-        if(authorizeService.authorizeUserWithIdAndPassword(userId, password)) {
+        if (authorizeService.authorizeUserWithIdAndPassword(userId, password)) {
             announcementService.deleteById(id);
         }
     }

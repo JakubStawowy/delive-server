@@ -1,9 +1,9 @@
 package com.example.rentiaserver.security.controllers;
 
-import com.example.rentiaserver.data.dao.UserRepository;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.data.services.UserService;
 import com.example.rentiaserver.finance.po.UserWalletPo;
 import com.example.rentiaserver.security.to.ResponseTo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +19,16 @@ import java.math.BigDecimal;
 public final class RegisterController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public RegisterController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public RegisterController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping(value = EndpointConstants.REGISTER_USER_ENDPOINT, consumes = "application/json")
     public ResponseTo registerUser(@RequestBody UserPo user) {
-        return userRepository.getUserByEmail(user.getEmail()).map(userPo -> new ResponseTo(false, "User with this email already exists", HttpStatus.CONFLICT))
+        return userService.getUserByEmail(user.getEmail()).map(userPo -> new ResponseTo(false, "User with this email already exists", HttpStatus.CONFLICT))
                 .orElse(saveUser(user));
     }
 
@@ -39,7 +39,7 @@ public final class RegisterController {
         user.setSalt(salt);
         UserWalletPo userWalletPo = new UserWalletPo("EUR", new BigDecimal("0.0"));
         user.setUserWalletPo(userWalletPo);
-        userRepository.save(user);
+        userService.saveUser(user);
         return new ResponseTo(true, "User registered successfully", HttpStatus.OK);
     }
 }

@@ -1,7 +1,7 @@
 package com.example.rentiaserver.security.controllers;
 
-import com.example.rentiaserver.data.dao.UserRepository;
 import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.data.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.*;
 public final class RegisterValidationController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/validate";
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public RegisterValidationController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public RegisterValidationController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/email")
     public Boolean checkIfEmailExists(@RequestParam("email") String email) {
-        return userRepository.getUserByEmail(email).isPresent();
+        return userService.getUserByEmail(email).isPresent();
     }
 }

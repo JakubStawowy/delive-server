@@ -1,9 +1,6 @@
 package com.example.rentiaserver.delivery.enums;
 
-import com.example.rentiaserver.delivery.actions.CloseDeliveryAction;
-import com.example.rentiaserver.delivery.actions.FinishDeliveryAction;
-import com.example.rentiaserver.delivery.actions.RestartDeliveryAction;
-import com.example.rentiaserver.delivery.actions.StartDeliveryAction;
+import com.example.rentiaserver.delivery.actions.*;
 import com.example.rentiaserver.delivery.api.ChangeDeliveryStateAction;
 
 public enum DeliveryState {
@@ -12,6 +9,8 @@ public enum DeliveryState {
     STARTED(new StartDeliveryAction()),
     FINISHED(new FinishDeliveryAction()),
     CLOSED(new CloseDeliveryAction()),
+    TO_ACCEPT(new AcceptDeliveryAction()),
+    TO_DISCARD(new RestartDeliveryAction()),
     RESTARTED(new RestartDeliveryAction());
 
     private final ChangeDeliveryStateAction action;
@@ -29,6 +28,10 @@ public enum DeliveryState {
             return CLOSED;
         if ("restart".equals(action))
             return RESTARTED;
+        if ("toAccept".equals(action))
+            return TO_ACCEPT;
+        if ("toDiscard".equals(action))
+            return TO_DISCARD;
         throw new IllegalArgumentException("Wrong action name");
     }
 

@@ -1,9 +1,9 @@
 package com.example.rentiaserver.security.controllers;
 
-import com.example.rentiaserver.data.dao.UserRepository;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.data.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,22 +17,22 @@ import java.util.Optional;
 public final class LogoutController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public LogoutController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public LogoutController(UserService userService) {
+        this.userService = userService;
     }
 
     @PutMapping(value = EndpointConstants.LOGOUT_ENDPOINT)
     public ResponseEntity<?> logout(@RequestParam("id") Long id) {
-        Optional<UserPo> optionalUserPo = userRepository.findById(id);
+        Optional<UserPo> optionalUserPo = userService.findUserById(id);
         return optionalUserPo.map(this::saveUser).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     private ResponseEntity<?> saveUser(UserPo user) {
         user.setLogged(false);
-        userRepository.save(user);
+        userService.saveUser(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

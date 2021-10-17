@@ -1,15 +1,12 @@
 package com.example.rentiaserver.data.controllers.announcement;
 
-import com.example.rentiaserver.data.dao.AnnouncementService;
-import com.example.rentiaserver.data.dao.PackageRepository;
-import com.example.rentiaserver.data.dao.UserRepository;
-import com.example.rentiaserver.data.enums.AnnouncementType;
+import com.example.rentiaserver.data.services.AnnouncementService;
+import com.example.rentiaserver.data.services.UserService;
 import com.example.rentiaserver.data.to.AnnouncementTo;
 import com.example.rentiaserver.data.po.*;
 import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
-import com.example.rentiaserver.delivery.dao.DeliveryDao;
-import com.example.rentiaserver.delivery.po.DeliveryPo;
+import com.example.rentiaserver.maps.po.LocationPo;
 import com.example.rentiaserver.maps.services.PositionStackReverseGeocodeService;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -18,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,24 +24,20 @@ import java.util.Set;
 public final class AnnouncementManageController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/announcements";
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final AnnouncementService announcementService;
-    private final PackageRepository packageRepository;
     private final PositionStackReverseGeocodeService geocoderService;
 
     @Autowired
-    public AnnouncementManageController(UserRepository userRepository, AnnouncementService announcementService,
-                                        PackageRepository packageRepository, PositionStackReverseGeocodeService geocoderService
-    ) {
-        this.userRepository = userRepository;
+    public AnnouncementManageController(UserService userService, AnnouncementService announcementService, PositionStackReverseGeocodeService geocoderService) {
+        this.userService = userService;
         this.announcementService = announcementService;
-        this.packageRepository = packageRepository;
         this.geocoderService = geocoderService;
     }
 
     @PostMapping(value = EndpointConstants.ADD_NORMAL_ANNOUNCEMENTS_ENDPOINT)
     public void addNormalAnnouncement(@RequestBody AnnouncementTo announcementTo) {
-        userRepository.findById(announcementTo.getAuthorId()).ifPresent(author -> {
+        userService.findUserById(announcementTo.getAuthorId()).ifPresent(author -> {
             try {
                 saveAnnouncementWithPackages(author, announcementTo);
             } catch (InterruptedException | ParseException | IOException e) {
@@ -82,8 +73,9 @@ public final class AnnouncementManageController {
                         String.valueOf(addressToJson.get("locality")),
                         String.valueOf(addressToJson.get("country"))),
                 author,
-                AnnouncementType.NORMAL,
-                new BigDecimal(announcementTo.getAmount())
+                new BigDecimal(announcementTo.getAmount()),
+                announcementTo.isRequireTransportWithClient()
+
         );
         announcementService.save(announcement);
         Set<PackagePo> packagePos = new HashSet<>();
@@ -94,17 +86,6 @@ public final class AnnouncementManageController {
                         new BigDecimal(packageTo.getPackageHeight()),
                         announcement
                 )));
-        packageRepository.saveAll(packagePos);
+        announcementService.saveAllPackages(packagePos);
     }
-
-//    private void saveAnnouncementWithDelivery(UserPo author, AnnouncementTo announcementTo) {
-//        DeliveryAnnouncementPo announcementPo = new DeliveryAnnouncementPo(
-//                new LocationPo(announcementTo.getDestinationFrom().getLatitude(), announcementTo.getDestinationFrom().getLongitude(), null, null, null),
-//                new LocationPo(announcementTo.getDestinationTo().getLatitude(), announcementTo.getDestinationTo().getLongitude(), null, null, null),
-//                author,
-//                LocalDateTime.parse(announcementTo.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-//        );
-//        announcementService.save(announcementPo);
-//        deliveryRepository.save(new DeliveryPo(author, announcementPo));
-//    }
 }

@@ -16,6 +16,7 @@ public class CloseDeliveryAction extends ChangeDeliveryStateAction {
     @Override
     protected void changeState(DeliveryService deliveryService, MessageService messageService, DeliveryPo deliveryPo) {
         AnnouncementPo announcementPo = deliveryPo.getAnnouncementPo();
+        announcementPo.setArchived(true);
         BigDecimal amount = announcementPo.getAmount();
         UserPo deliverer = deliveryPo.getUserPo();
         BigDecimal delivererWalletBalance = deliverer

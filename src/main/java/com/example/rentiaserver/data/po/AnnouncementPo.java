@@ -1,8 +1,8 @@
 package com.example.rentiaserver.data.po;
 
 import com.example.rentiaserver.data.api.BaseEntityPo;
-import com.example.rentiaserver.data.enums.AnnouncementType;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
+import com.example.rentiaserver.maps.po.LocationPo;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -30,25 +30,30 @@ public class AnnouncementPo extends BaseEntityPo {
     @OneToMany(mappedBy = "announcementPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<AnnouncementPackagePo> packagesPos;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private AnnouncementType announcementType;
-
-    @ManyToMany(mappedBy = "relatedAnnouncements")
-    Set<UserPo> associatedUserPos;
-
     @Column(nullable = false)
     private BigDecimal amount;
 
-    public AnnouncementPo(LocationPo initialLocationPo, LocationPo finalLocationPo, UserPo authorPo, AnnouncementType announcementType, BigDecimal amount) {
+    @Column(nullable = false)
+    private boolean archived;
+
+    @Column(nullable = false)
+    private boolean requireTransportWithClient;
+
+    public AnnouncementPo(LocationPo initialLocationPo, LocationPo finalLocationPo, UserPo authorPo, BigDecimal amount, boolean requireTransportWithClient) {
         this.initialLocationPo = initialLocationPo;
         this.finalLocationPo = finalLocationPo;
         this.authorPo = authorPo;
-        this.announcementType = announcementType;
         this.amount = amount;
+        this.requireTransportWithClient = requireTransportWithClient;
     }
 
     public AnnouncementPo() {}
+
+    @Override
+    public void init() {
+        super.init();
+        archived = false;
+    }
 
     public LocationPo getInitialLocationPo() {
         return initialLocationPo;
@@ -90,28 +95,28 @@ public class AnnouncementPo extends BaseEntityPo {
         this.packagesPos = packagesPos;
     }
 
-    public AnnouncementType getAnnouncementType() {
-        return announcementType;
-    }
-
-    public void setAnnouncementType(AnnouncementType announcementType) {
-        this.announcementType = announcementType;
-    }
-
-    public Set<UserPo> getAssociatedUserPos() {
-        return associatedUserPos;
-    }
-
-    public void setAssociatedUserPos(Set<UserPo> associatedUserPos) {
-        this.associatedUserPos = associatedUserPos;
-    }
-
     public BigDecimal getAmount() {
         return amount;
     }
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
+    public boolean isRequireTransportWithClient() {
+        return requireTransportWithClient;
+    }
+
+    public void setRequireTransportWithClient(boolean requireTransportWithClient) {
+        this.requireTransportWithClient = requireTransportWithClient;
     }
 }
 

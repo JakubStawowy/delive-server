@@ -1,11 +1,9 @@
 package com.example.rentiaserver.delivery.controllers;
 
 import com.example.rentiaserver.constants.ApplicationConstants;
-import com.example.rentiaserver.data.dao.AnnouncementService;
-import com.example.rentiaserver.data.dao.PackageRepository;
-import com.example.rentiaserver.data.dao.UserRepository;
-import com.example.rentiaserver.data.enums.AnnouncementType;
+import com.example.rentiaserver.data.services.AnnouncementService;
 import com.example.rentiaserver.data.po.*;
+import com.example.rentiaserver.data.services.UserService;
 import com.example.rentiaserver.delivery.dao.DeliveryDao;
 import com.example.rentiaserver.delivery.enums.MessageType;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
@@ -17,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -28,47 +27,45 @@ public class MessageSendController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/messages";
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final AnnouncementService announcementService;
     private final MessageService messageService;
     private final DeliveryDao deliveryRepository;
-    private final PackageRepository packageRepository;
 
     @Autowired
     public MessageSendController(
-            UserRepository userRepository,
+            UserService userService,
             AnnouncementService announcementService,
             MessageService messageService,
-            DeliveryDao deliveryRepository,
-            PackageRepository packageRepository
+            DeliveryDao deliveryRepository
     ) {
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.announcementService = announcementService;
         this.messageService = messageService;
         this.deliveryRepository = deliveryRepository;
-        this.packageRepository = packageRepository;
     }
 
     @PostMapping("/register/normal")
     public void registerMessageNormal(@RequestBody IncomingMessageTo incomingMessageTo) {
         Optional<AnnouncementPo> optionalAnnouncementPo = announcementService.getAnnouncementById(incomingMessageTo.getAnnouncementId());
-        Optional<UserPo> optionalSenderPo = userRepository.findById(incomingMessageTo.getSenderId());
-        Optional<UserPo> optionalReceiverPo = userRepository.findById(incomingMessageTo.getReceiverId());
-        if (optionalAnnouncementPo.isPresent() && optionalSenderPo.isPresent() && optionalReceiverPo.isPresent()) {
-            messageService.saveMessage(
-                    incomingMessageTo.getMessage(),
-                    optionalAnnouncementPo.get(),
-                    optionalSenderPo.get(),
-                    optionalReceiverPo.get(),
-                    MessageType.REQUEST);
-        }
+        Optional<UserPo> optionalSenderPo = userService.findUserById(incomingMessageTo.getSenderId());
+        Optional<UserPo> optionalReceiverPo = userService.findUserById(incomingMessageTo.getReceiverId());
+        optionalAnnouncementPo.flatMap(announcementPo -> optionalSenderPo).flatMap(senderPo -> optionalReceiverPo)
+                .ifPresent(receiver -> messageService.saveMessage(
+                        new MessagePo(
+                                incomingMessageTo.getMessage(),
+                                optionalAnnouncementPo.get(),
+                                optionalSenderPo.get(),
+                                optionalReceiverPo.get(),
+                                MessageType.REQUEST)));
     }
 
+    @Deprecated
     @PostMapping("/register/delivery")
     public void registerMessageDelivery(@RequestBody IncomingPackageMessageTo incomingMessageTo) {
         Optional<AnnouncementPo> optionalAnnouncementPo = announcementService.getAnnouncementById(incomingMessageTo.getAnnouncementId());
-        Optional<UserPo> optionalSenderPo = userRepository.findById(incomingMessageTo.getSenderId());
-        Optional<UserPo> optionalReceiverPo = userRepository.findById(incomingMessageTo.getReceiverId());
+        Optional<UserPo> optionalSenderPo = userService.findUserById(incomingMessageTo.getSenderId());
+        Optional<UserPo> optionalReceiverPo = userService.findUserById(incomingMessageTo.getReceiverId());
         if (optionalAnnouncementPo.isPresent() && optionalSenderPo.isPresent() && optionalReceiverPo.isPresent()) {
 
             MessagePo message = new MessagePo(
@@ -86,15 +83,15 @@ public class MessageSendController {
                     new BigDecimal(singlePackage.getPackageHeight()),
                     message
             )));
-            packageRepository.saveAll(packages);
+            announcementService.saveAllPackages(packages);
         }
     }
 
     @PostMapping("/reply")
     public void replyOnMessage(@RequestBody IncomingMessageTo incomingMessageTo) {
         Optional<AnnouncementPo> optionalAnnouncementPo = announcementService.getAnnouncementById(incomingMessageTo.getAnnouncementId());
-        Optional<UserPo> optionalSenderPo = userRepository.findById(incomingMessageTo.getSenderId());
-        Optional<UserPo> optionalReceiverPo = userRepository.findById(incomingMessageTo.getReceiverId());
+        Optional<UserPo> optionalSenderPo = userService.findUserById(incomingMessageTo.getSenderId());
+        Optional<UserPo> optionalReceiverPo = userService.findUserById(incomingMessageTo.getReceiverId());
         Optional<MessagePo> optionalRepliedMessage = messageService.findById(incomingMessageTo.getReplyMessageId());
         if (optionalAnnouncementPo.isPresent() && optionalSenderPo.isPresent() && optionalReceiverPo.isPresent() && optionalRepliedMessage.isPresent()) {
 
@@ -103,17 +100,10 @@ public class MessageSendController {
             if (incomingMessageTo.isConsent()) {
                 messageType = MessageType.CONSENT;
                 AnnouncementPo announcementPo = optionalAnnouncementPo.get();
-                if (AnnouncementType.NORMAL.equals(announcementPo.getAnnouncementType())) {
-                    deliveryRepository.save(new DeliveryPo(
-                            optionalReceiverPo.get(),
-                            announcementPo
-                    ));
-                } else if (AnnouncementType.DELIVERY.equals(announcementPo.getAnnouncementType())) {
-                    optionalRepliedMessage.ifPresent(repliedMessage -> associateSenderWithAnnouncement(repliedMessage, announcementPo));
-                }
-                else {
-                    throw new IllegalArgumentException();
-                }
+                deliveryRepository.save(new DeliveryPo(
+                        optionalReceiverPo.get(),
+                        announcementPo
+                ));
             }
             else {
                 messageType = MessageType.DISCORD;
@@ -121,29 +111,13 @@ public class MessageSendController {
 
             MessagePo repliedMessage = optionalRepliedMessage.get();
             repliedMessage.setReplied(true);
-            messageService.saveMessage(repliedMessage);
-            messageService.saveMessage(
+            messageService.saveAllMessages(Arrays.asList(repliedMessage, new MessagePo(
                     incomingMessageTo.getMessage(),
                     optionalAnnouncementPo.get(),
                     optionalSenderPo.get(),
                     optionalReceiverPo.get(),
                     messageType
-            );
+            )));
         }
-    }
-
-    private void associateSenderWithAnnouncement(MessagePo messagePo, AnnouncementPo announcementPo) {
-        Set<AnnouncementPackagePo> packages = new HashSet<>();
-        messagePo.getPackagePos().forEach(packagePo ->
-                packages.add(new AnnouncementPackagePo(
-                        packagePo.getPackageLength(),
-                        packagePo.getPackageWidth(),
-                        packagePo.getPackageHeight(),
-                        announcementPo
-                )));
-        packageRepository.saveAll(packages);
-        UserPo sender = messagePo.getSenderPo();
-        sender.getRelatedAnnouncements().add(announcementPo);
-        userRepository.save(sender);
     }
 }

@@ -1,8 +1,9 @@
 package com.example.rentiaserver.data.helpers;
 
 import com.example.rentiaserver.data.po.AnnouncementPo;
-import com.example.rentiaserver.data.po.LocationPo;
+import com.example.rentiaserver.maps.po.LocationPo;
 import com.example.rentiaserver.data.to.*;
+import com.example.rentiaserver.maps.to.LocationTo;
 
 import java.util.stream.Collectors;
 
@@ -39,7 +40,8 @@ public final class AnnouncementToCreatorHelper {
                         String.valueOf(packagePo.getPackageHeight())
                 )).collect(Collectors.toSet()),
                 announcementPo.getAuthorPo().getId(),
-                announcementPo.getAmount() != null ? announcementPo.getAmount().toString() : null
+                announcementPo.getAmount() != null ? announcementPo.getAmount().toString() : null,
+                announcementPo.isRequireTransportWithClient()
         );
     }
 }

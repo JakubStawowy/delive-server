@@ -5,6 +5,7 @@ import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.delivery.dao.DeliveryDao;
 import com.example.rentiaserver.delivery.enums.MessageType;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
+import com.example.rentiaserver.delivery.po.MessagePo;
 import com.example.rentiaserver.delivery.services.DeliveryService;
 import com.example.rentiaserver.delivery.services.MessageService;
 
@@ -23,7 +24,7 @@ public abstract class ChangeDeliveryStateAction {
     private void startAction(DeliveryPo deliveryPo, DeliveryService deliveryService, MessageService messageService) {
         changeState(deliveryService, messageService, deliveryPo);
         AnnouncementPo announcementPo = deliveryPo.getAnnouncementPo();
-        announcementPo.getAssociatedUserPos().forEach(userPo -> messageService.saveMessage(getMessage(
-                deliveryPo.getUserPo()), announcementPo, deliveryPo.getUserPo(), userPo, MessageType.INFO));
+        messageService.saveMessage(new MessagePo(getMessage(
+                    deliveryPo.getUserPo()), announcementPo, deliveryPo.getUserPo(), announcementPo.getAuthorPo(), MessageType.INFO));
     }
 }

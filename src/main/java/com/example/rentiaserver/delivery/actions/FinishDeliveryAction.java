@@ -10,6 +10,7 @@ import com.example.rentiaserver.delivery.services.MessageService;
 public class FinishDeliveryAction extends ChangeDeliveryStateAction {
     @Override
     protected void changeState(DeliveryService deliveryService, MessageService messageService, DeliveryPo deliveryPo) {
+
         deliveryPo.setDeliveryState(DeliveryState.FINISHED);
         deliveryService.save(deliveryPo);
     }

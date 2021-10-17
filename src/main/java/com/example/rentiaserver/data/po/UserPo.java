@@ -51,14 +51,6 @@ public class UserPo extends BaseEntityPo {
     @OneToMany(mappedBy = "userPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<DeliveryPo> deliveryPos;
 
-    @ManyToMany
-    @JoinTable(
-            name = "USERS_ANNOUNCEMENTS",
-            joinColumns = @JoinColumn(name = "USER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "ANNOUNCEMENT_ID")
-    )
-    private Set<AnnouncementPo> relatedAnnouncements;
-
     public UserPo(String email,
                   String password,
                   UserRoles role,
@@ -191,11 +183,4 @@ public class UserPo extends BaseEntityPo {
         this.deliveryPos = deliveryPos;
     }
 
-    public Set<AnnouncementPo> getRelatedAnnouncements() {
-        return relatedAnnouncements;
-    }
-
-    public void setRelatedAnnouncements(Set<AnnouncementPo> relatedAnnouncements) {
-        this.relatedAnnouncements = relatedAnnouncements;
-    }
 }

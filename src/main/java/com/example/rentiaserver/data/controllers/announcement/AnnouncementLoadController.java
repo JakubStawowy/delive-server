@@ -1,6 +1,6 @@
 package com.example.rentiaserver.data.controllers.announcement;
 
-import com.example.rentiaserver.data.dao.AnnouncementService;
+import com.example.rentiaserver.data.services.AnnouncementService;
 import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.data.to.*;
 import com.example.rentiaserver.constants.ApplicationConstants;
@@ -27,9 +27,9 @@ public final class AnnouncementLoadController {
 
     @GetMapping("/all")
     public List<AnnouncementTo> getAllAnnouncements() {
-        List<AnnouncementPo> announcements = announcementService.getAllAnnouncements();
         List<AnnouncementTo> announcementTransferObjects = new LinkedList<>();
-        announcements.forEach(announcement -> announcementTransferObjects.add(AnnouncementToCreatorHelper.create(announcement)));
+        announcementService.getAllAnnouncements()
+                .forEach(announcement -> announcementTransferObjects.add(AnnouncementToCreatorHelper.create(announcement)));
         return announcementTransferObjects;
     }
 

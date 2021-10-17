@@ -20,12 +20,12 @@ public class MessageService {
         this.messageDao = messageDao;
     }
 
-    public void saveMessage(String message, AnnouncementPo announcementPo, UserPo sender, UserPo receiver, MessageType messageType) {
-        messageDao.save(new MessagePo(message, announcementPo, sender, receiver, messageType));
-    }
-
     public void saveMessage(MessagePo messagePo) {
         messageDao.save(messagePo);
+    }
+
+    public void saveAllMessages(Iterable<MessagePo> messagePos) {
+        messageDao.saveAll(messagePos);
     }
 
     public Optional<MessagePo> findById(Long id) {
