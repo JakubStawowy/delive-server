@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
-@RequestMapping(value = DeliveryManageController.BASE_ENDPOINT)
+@RequestMapping(value = DeliveryLoadController.BASE_ENDPOINT)
 public class DeliveryLoadController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/delivery";

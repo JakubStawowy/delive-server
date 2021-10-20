@@ -5,6 +5,7 @@ import com.example.rentiaserver.data.po.UserPo;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Entity
 @Table(name = "USER_WALLET")
@@ -18,6 +19,12 @@ public class UserWalletPo extends BaseEntityPo {
 
     @Column(nullable = false)
     private BigDecimal balance;
+
+    @OneToMany(mappedBy = "contractorWalletPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<TransferPo> contractorTransferPos;
+
+    @OneToMany(mappedBy = "principalWalletPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<TransferPo> principalTransferPos;
 
     public UserWalletPo(String currency, BigDecimal balance) {
         this.currency = currency;
@@ -49,5 +56,21 @@ public class UserWalletPo extends BaseEntityPo {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public Set<TransferPo> getContractorTransferPos() {
+        return contractorTransferPos;
+    }
+
+    public void setContractorTransferPos(Set<TransferPo> contractorTransferPos) {
+        this.contractorTransferPos = contractorTransferPos;
+    }
+
+    public Set<TransferPo> getPrincipalTransferPos() {
+        return principalTransferPos;
+    }
+
+    public void setPrincipalTransferPos(Set<TransferPo> principalTransferPos) {
+        this.principalTransferPos = principalTransferPos;
     }
 }
