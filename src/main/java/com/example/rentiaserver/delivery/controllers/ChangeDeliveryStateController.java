@@ -10,11 +10,13 @@ import com.example.rentiaserver.delivery.services.DeliveryService;
 import com.example.rentiaserver.finance.po.TransferPo;
 import com.example.rentiaserver.finance.po.UserWalletPo;
 import com.example.rentiaserver.maps.to.LocationTo;
+import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
@@ -86,6 +88,30 @@ public class ChangeDeliveryStateController {
             deliveryPo.setDeliveryState(DeliveryState.CLOSED);
             deliveryService.save(deliveryPo);
         });
+    }
+
+    @GetMapping("/actionName")
+    public Set<String> getNextActionNames(@RequestParam DeliveryState deliveryState, @RequestParam Long announcementAuthorId,
+                                    @RequestParam Long delivererId, HttpServletRequest request) {
+        final Long loggedUserId = JsonWebTokenHelper.getRequesterId(request);
+        final boolean isUserPrincipal = announcementAuthorId.compareTo(loggedUserId) == 0;
+        final boolean isUserDeliverer = delivererId.compareTo(loggedUserId) == 0;
+        if (DeliveryState.REGISTERED.equals(deliveryState) && isUserDeliverer) {
+            return Collections.singleton("start");
+        }
+        if (DeliveryState.STARTED.equals(deliveryState) && isUserDeliverer) {
+            return Collections.singleton("finish");
+        }
+        if (DeliveryState.FINISHED.equals(deliveryState) && isUserPrincipal) {
+            return Collections.singleton("close");
+        }
+        if (DeliveryState.TO_ACCEPT.equals(deliveryState) && isUserPrincipal) {
+            return new HashSet<>(Arrays.asList("accept", "discard"));
+        }
+        if (DeliveryState.CLOSED.equals(deliveryState)) {
+            return Collections.singleton("-");
+        }
+        return Collections.singleton("waiting");
     }
 
     private void completeTransfer(DeliveryPo deliveryPo) {

@@ -1,7 +1,6 @@
 package com.example.rentiaserver.security.filters;
 
-import com.example.rentiaserver.security.api.IAuthenticationTokenProvider;
-import com.example.rentiaserver.security.providers.UsernamePasswordAuthenticationTokenProvider;
+import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import io.jsonwebtoken.JwtException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,14 +17,12 @@ import java.util.logging.Logger;
 
 public final class JsonWebTokenFilter extends BasicAuthenticationFilter {
 
-    private final IAuthenticationTokenProvider<UsernamePasswordAuthenticationToken> authenticationTokenProvider;
     private static final String AUTHORIZATION_PREFIX = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer ";
     private static final Logger logger = Logger.getLogger(JsonWebTokenFilter.class.getName());
 
     public JsonWebTokenFilter(final AuthenticationManager authenticationManager) {
         super(authenticationManager);
-        authenticationTokenProvider = new UsernamePasswordAuthenticationTokenProvider();
     }
 
     @Override
@@ -39,7 +36,7 @@ public final class JsonWebTokenFilter extends BasicAuthenticationFilter {
         }
 
         try {
-            UsernamePasswordAuthenticationToken result = authenticationTokenProvider.getAuthenticationToken(header);
+            UsernamePasswordAuthenticationToken result = JsonWebTokenHelper.getAuthenticationToken(header);
             SecurityContextHolder.getContext().setAuthentication(result);
         } catch (JwtException e) {
             logger.log(Level.INFO, e.getMessage());

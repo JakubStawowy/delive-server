@@ -4,9 +4,11 @@ import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.delivery.dao.DeliveryDao;
 import com.example.rentiaserver.delivery.helpers.DeliveryToCreateHelper;
 import com.example.rentiaserver.delivery.to.DeliveryTo;
+import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,14 +27,14 @@ public class DeliveryLoadController {
     }
 
     @GetMapping("/deliverer")
-    public List<DeliveryTo> getUserDeliveries(@RequestParam Long userId) {
-        return deliveryRepository.findAllByDeliverer(userId)
+    public List<DeliveryTo> getUserDeliveries(HttpServletRequest request) {
+        return deliveryRepository.findAllByDeliverer(JsonWebTokenHelper.getRequesterId(request))
                 .stream().map(DeliveryToCreateHelper::create).collect(Collectors.toList());
     }
 
     @GetMapping("/principal")
-    public List<DeliveryTo> getAllByPrincipal(@RequestParam Long userId) {
-        return deliveryRepository.findAllByPrincipal(userId)
+    public List<DeliveryTo> getAllByPrincipal(HttpServletRequest request) {
+        return deliveryRepository.findAllByPrincipal(JsonWebTokenHelper.getRequesterId(request))
                 .stream().map(DeliveryToCreateHelper::create).collect(Collectors.toList());
     }
 }

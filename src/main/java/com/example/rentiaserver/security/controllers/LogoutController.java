@@ -4,11 +4,13 @@ import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.data.services.UserService;
+import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
@@ -25,8 +27,8 @@ public final class LogoutController {
     }
 
     @PutMapping(value = EndpointConstants.LOGOUT_ENDPOINT)
-    public ResponseEntity<?> logout(@RequestParam("id") Long id) {
-        Optional<UserPo> optionalUserPo = userService.findUserById(id);
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        Optional<UserPo> optionalUserPo = userService.findUserById(JsonWebTokenHelper.getRequesterId(request));
         return optionalUserPo.map(this::saveUser).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 

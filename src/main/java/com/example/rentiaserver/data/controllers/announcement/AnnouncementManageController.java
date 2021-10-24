@@ -8,11 +8,13 @@ import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.maps.po.LocationPo;
 import com.example.rentiaserver.maps.services.PositionStackReverseGeocodeService;
+import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -36,8 +38,9 @@ public final class AnnouncementManageController {
     }
 
     @PostMapping(value = EndpointConstants.ADD_NORMAL_ANNOUNCEMENTS_ENDPOINT)
-    public void addNormalAnnouncement(@RequestBody AnnouncementTo announcementTo) {
-        userService.findUserById(announcementTo.getAuthorId()).ifPresent(author -> {
+    public void addNormalAnnouncement(@RequestBody AnnouncementTo announcementTo, HttpServletRequest request) {
+
+        userService.findUserById(JsonWebTokenHelper.getRequesterId(request)).ifPresent(author -> {
             try {
                 saveAnnouncementWithPackages(author, announcementTo);
             } catch (InterruptedException | ParseException | IOException e) {

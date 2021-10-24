@@ -1,5 +1,6 @@
 package com.example.rentiaserver.delivery.services;
 
+import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.data.services.UserService;
 import com.example.rentiaserver.delivery.dao.DeliveryDao;
@@ -36,6 +37,10 @@ public class DeliveryService {
 
     public Optional<DeliveryPo> findDeliveryById(Long id) {
         return deliveryDao.findById(id);
+    }
+
+    public Optional<DeliveryPo> findDeliveryByAnnouncementPoAndUserPo(AnnouncementPo announcementPo, UserPo userPo) {
+        return deliveryDao.findByAnnouncementPoAndUserPo(announcementPo, userPo);
     }
 
     public void save(UserPo userPo) {

@@ -17,5 +17,12 @@ public class ApplicationConstants {
     public static class Sql {
         public static final String ORDER_BY_CREATED_AT_PREFIX = "ORDER BY CREATED_AT DESC";
     }
+
+    public static class Security {
+        public static final String ROLE_PREFIX = "role";
+        public static final String ID_PREFIX = "userId";
+        private Security() {}
+    }
+
     private ApplicationConstants() {}
 }
