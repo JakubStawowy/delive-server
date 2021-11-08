@@ -20,10 +20,16 @@ public class PackagePo extends BaseEntityPo {
     @Column(name = "PACKAGE_HEIGHT", nullable = false)
     private BigDecimal packageHeight;
 
-    public PackagePo(BigDecimal packageLength, BigDecimal packageWidth, BigDecimal packageHeight) {
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ANNOUNCEMENT_ID", nullable = false)
+    private AnnouncementPo announcementPo;
+
+    public PackagePo(BigDecimal packageLength, BigDecimal packageWidth, BigDecimal packageHeight, AnnouncementPo announcementPo) {
         this.packageLength = packageLength;
         this.packageWidth = packageWidth;
         this.packageHeight = packageHeight;
+        this.announcementPo = announcementPo;
     }
 
     public PackagePo() {}
@@ -50,6 +56,14 @@ public class PackagePo extends BaseEntityPo {
 
     public void setPackageHeight(BigDecimal packageHeight) {
         this.packageHeight = packageHeight;
+    }
+
+    public AnnouncementPo getAnnouncementPo() {
+        return announcementPo;
+    }
+
+    public void setAnnouncementPo(AnnouncementPo announcementPo) {
+        this.announcementPo = announcementPo;
     }
 
 }

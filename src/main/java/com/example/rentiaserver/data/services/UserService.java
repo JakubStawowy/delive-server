@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.rentiaserver.constants.ApplicationConstants.Sql.ORDER_BY_CREATED_AT_PREFIX;
+import static com.example.rentiaserver.constants.ApplicationConstants.Sql.ORDER_BY_CREATED_AT;
 
 @Service
 public class UserService {
@@ -68,7 +68,7 @@ interface UserDao extends CrudRepository<UserPo, Long> {
 
 @Repository
 interface FeedbackDao extends CrudRepository<FeedbackPo, Long> {
-    @Query(value = "SELECT * FROM FEEDBACK WHERE USER_ID = ?1 " + ORDER_BY_CREATED_AT_PREFIX
+    @Query(value = "SELECT * FROM FEEDBACK WHERE USER_ID = ?1 " + ORDER_BY_CREATED_AT
             , nativeQuery = true)
     List<FeedbackPo> getFeedbackPosByUserPoId(Long id);
 }

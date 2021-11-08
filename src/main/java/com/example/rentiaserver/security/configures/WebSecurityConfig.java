@@ -19,19 +19,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         new JsonWebTokenFilter(authenticationManager()),
                         UsernamePasswordAuthenticationFilter.class
                 )
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
-//                .antMatchers(HttpMethod.POST, "/api/register").permitAll()
-//                .antMatchers(HttpMethod.GET, "/swagger*").permitAll()
-//                .antMatchers(HttpMethod.GET, "/test").permitAll()
-//                .antMatchers(HttpMethod.GET, "/api/validate/**").permitAll()
-//                .antMatchers(HttpMethod.GET, "/v2/*").permitAll()
-//                .antMatchers(HttpMethod.PUT, "/api/announcements/{id}/block").hasRole(UserRoles.ROLE_ADMIN.getValueWithoutPrefix())
-//                .antMatchers(HttpMethod.PUT, "/api/announcements/{id}/unlock").hasRole(UserRoles.ROLE_ADMIN.getValueWithoutPrefix())
-//                .antMatchers(HttpMethod.GET, "/api/announcements/blocked").hasRole(UserRoles.ROLE_ADMIN.getValueWithoutPrefix())
-//                .anyRequest()
-//                .authenticated();
-            .authorizeRequests()
-                .anyRequest().permitAll();
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/logout").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/register").permitAll()
+                .antMatchers(HttpMethod.GET, "/swagger*").permitAll()
+                .antMatchers(HttpMethod.GET, "/test").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/validate/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/v2/*").permitAll()
+                .antMatchers(HttpMethod.PUT, "/api/announcements/{id}/block").hasRole(UserRoles.ROLE_ADMIN.getValueWithoutPrefix())
+                .antMatchers(HttpMethod.PUT, "/api/announcements/{id}/unlock").hasRole(UserRoles.ROLE_ADMIN.getValueWithoutPrefix())
+                .antMatchers(HttpMethod.GET, "/api/announcements/blocked").hasRole(UserRoles.ROLE_ADMIN.getValueWithoutPrefix())
+                .anyRequest()
+                .authenticated();
     }
 }

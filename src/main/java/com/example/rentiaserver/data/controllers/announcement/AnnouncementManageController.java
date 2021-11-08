@@ -12,6 +12,7 @@ import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +24,7 @@ import java.util.Set;
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
 @RequestMapping(value = AnnouncementManageController.BASE_ENDPOINT)
-public final class AnnouncementManageController {
+public class AnnouncementManageController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/announcements";
     private final UserService userService;
@@ -38,23 +39,64 @@ public final class AnnouncementManageController {
     }
 
     @PostMapping(value = EndpointConstants.ADD_NORMAL_ANNOUNCEMENTS_ENDPOINT)
-    public void addNormalAnnouncement(@RequestBody AnnouncementTo announcementTo, HttpServletRequest request) {
+    @Transactional
+    public void saveAnnouncement(@RequestBody AnnouncementTo announcementTo, HttpServletRequest request) {
 
         userService.findUserById(JsonWebTokenHelper.getRequesterId(request)).ifPresent(author -> {
             try {
-                saveAnnouncementWithPackages(author, announcementTo);
+                if (announcementTo.getId() != null) {
+                    announcementService.getAnnouncementById(announcementTo.getId()).ifPresent(announcementPo -> {
+                        try {
+                            editAnnouncement(announcementPo, announcementTo);
+                        } catch (InterruptedException | ParseException | IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+                else {
+                    addAnnouncement(author, announcementTo);
+                }
             } catch (InterruptedException | ParseException | IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         });
     }
 
-    @PutMapping(value = EndpointConstants.EDIT_ANNOUNCEMENT_ENDPOINT)
-    public void editAnnouncement(@RequestBody AnnouncementTo announcementTransferObject, @PathVariable("id") Long id) {
-        // TODO
+    private void editAnnouncement(AnnouncementPo announcementPo, AnnouncementTo announcementTo) throws InterruptedException, ParseException, IOException {
+        JSONObject addressFromJson = geocoderService.getAddressFromCoordinates(
+                announcementTo.getDestinationFrom().getLongitude(),
+                announcementTo.getDestinationFrom().getLatitude());
+        JSONObject addressToJson = geocoderService.getAddressFromCoordinates(
+                announcementTo.getDestinationTo().getLongitude(),
+                announcementTo.getDestinationTo().getLatitude());
+
+        announcementPo.getInitialLocationPo().setLatitude(announcementTo.getDestinationFrom().getLatitude());
+        announcementPo.getInitialLocationPo().setLongitude(announcementTo.getDestinationFrom().getLongitude());
+        announcementPo.getInitialLocationPo().setAddress(String.valueOf(addressFromJson.get("name")));
+        announcementPo.getInitialLocationPo().setLocality(String.valueOf(addressFromJson.get("locality")));
+        announcementPo.getInitialLocationPo().setCountry(String.valueOf(addressFromJson.get("country")));
+
+        announcementPo.getFinalLocationPo().setLatitude(announcementTo.getDestinationTo().getLatitude());
+        announcementPo.getFinalLocationPo().setLongitude(announcementTo.getDestinationTo().getLongitude());
+        announcementPo.getFinalLocationPo().setAddress(String.valueOf(addressToJson.get("name")));
+        announcementPo.getFinalLocationPo().setLocality(String.valueOf(addressToJson.get("locality")));
+        announcementPo.getFinalLocationPo().setCountry(String.valueOf(addressToJson.get("country")));
+
+        announcementPo.setRequireTransportWithClient(announcementTo.isRequireTransportWithClient());
+        announcementPo.setAmount(new BigDecimal(announcementTo.getAmount()));
+        Set<PackagePo> packagePos = new HashSet<>();
+        announcementService.deleteAllByAnnouncement(announcementPo);
+        announcementTo.getPackages().forEach(packageTo ->
+                packagePos.add(new PackagePo(
+                        new BigDecimal(packageTo.getPackageLength()),
+                        new BigDecimal(packageTo.getPackageWidth()),
+                        new BigDecimal(packageTo.getPackageHeight()),
+                        announcementPo
+                )));
+        announcementService.saveAllPackages(packagePos);
     }
 
-    private void saveAnnouncementWithPackages(UserPo author, AnnouncementTo announcementTo) throws InterruptedException, ParseException, IOException {
+    private void addAnnouncement(UserPo author, AnnouncementTo announcementTo) throws InterruptedException, ParseException, IOException {
         JSONObject addressFromJson = geocoderService.getAddressFromCoordinates(
                 announcementTo.getDestinationFrom().getLongitude(),
                 announcementTo.getDestinationFrom().getLatitude());
@@ -80,10 +122,13 @@ public final class AnnouncementManageController {
                 announcementTo.isRequireTransportWithClient()
 
         );
+        if (announcementTo.getId() != null) {
+            announcement.setId(announcementTo.getId());
+        }
         announcementService.save(announcement);
         Set<PackagePo> packagePos = new HashSet<>();
         announcementTo.getPackages().forEach(packageTo ->
-                packagePos.add(new AnnouncementPackagePo(
+                packagePos.add(new PackagePo(
                         new BigDecimal(packageTo.getPackageLength()),
                         new BigDecimal(packageTo.getPackageWidth()),
                         new BigDecimal(packageTo.getPackageHeight()),

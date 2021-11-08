@@ -14,7 +14,7 @@ public class FeedbackPo extends BaseEntityPo {
     @Column(nullable = false)
     private String content;
 
-    @Enumerated(EnumType.STRING)
+//    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FeedbackRate rate;
 

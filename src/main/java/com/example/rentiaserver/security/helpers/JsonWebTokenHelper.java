@@ -23,7 +23,6 @@ public final class JsonWebTokenHelper {
                 .parseClaimsJws(header.replace("Bearer ",""));
 
         String roles = claimsJws.getBody().get(ROLE_PREFIX).toString();
-        System.out.println("ID user: " + claimsJws.getBody().get(ID_PREFIX).toString());
         return new UsernamePasswordAuthenticationToken(
                 "",
                 null,

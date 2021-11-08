@@ -15,7 +15,8 @@ public class ApplicationConstants {
     }
 
     public static class Sql {
-        public static final String ORDER_BY_CREATED_AT_PREFIX = "ORDER BY CREATED_AT DESC";
+        public static final String ORDER_BY_CREATED_AT = "ORDER BY CREATED_AT DESC";
+        public static final String NOT_ARCHIVED = "IS_ARCHIVED = FALSE";
     }
 
     public static class Security {

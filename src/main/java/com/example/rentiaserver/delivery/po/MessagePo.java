@@ -2,12 +2,10 @@ package com.example.rentiaserver.delivery.po;
 
 import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.data.po.AnnouncementPo;
-import com.example.rentiaserver.data.po.MessagePackagePo;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.delivery.enums.MessageType;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "MESSAGES")
@@ -19,7 +17,7 @@ public class MessagePo extends BaseEntityPo {
     @JoinColumn(name = "ANNOUNCEMENT_ID")
     private AnnouncementPo announcementPo;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SENDER_ID")
     private UserPo senderPo;
 
@@ -30,9 +28,6 @@ public class MessagePo extends BaseEntityPo {
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "MESSAGE_TYPE")
     private MessageType messageType;
-
-    @OneToMany(mappedBy = "messagePo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<MessagePackagePo> packagePos;
 
     private boolean replied;
 
@@ -90,14 +85,6 @@ public class MessagePo extends BaseEntityPo {
 
     public void setMessageType(MessageType messageType) {
         this.messageType = messageType;
-    }
-
-    public Set<MessagePackagePo> getPackagePos() {
-        return packagePos;
-    }
-
-    public void setPackagePos(Set<MessagePackagePo> packagePos) {
-        this.packagePos = packagePos;
     }
 
     public boolean isReplied() {

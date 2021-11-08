@@ -28,13 +28,10 @@ public class AnnouncementPo extends BaseEntityPo {
     private Set<DeliveryPo> deliveryPos;
 
     @OneToMany(mappedBy = "announcementPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<AnnouncementPackagePo> packagesPos;
+    private Set<PackagePo> packagesPos;
 
     @Column(nullable = false)
     private BigDecimal amount;
-
-    @Column(nullable = false)
-    private boolean archived;
 
     @Column(nullable = false)
     private boolean requireTransportWithClient;
@@ -48,12 +45,6 @@ public class AnnouncementPo extends BaseEntityPo {
     }
 
     public AnnouncementPo() {}
-
-    @Override
-    public void init() {
-        super.init();
-        archived = false;
-    }
 
     public LocationPo getInitialLocationPo() {
         return initialLocationPo;
@@ -87,11 +78,11 @@ public class AnnouncementPo extends BaseEntityPo {
         this.deliveryPos = deliveryPos;
     }
 
-    public Set<AnnouncementPackagePo> getPackagesPos() {
+    public Set<PackagePo> getPackagesPos() {
         return packagesPos;
     }
 
-    public void setPackagesPos(Set<AnnouncementPackagePo> packagesPos) {
+    public void setPackagesPos(Set<PackagePo> packagesPos) {
         this.packagesPos = packagesPos;
     }
 
@@ -101,14 +92,6 @@ public class AnnouncementPo extends BaseEntityPo {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public boolean isArchived() {
-        return archived;
-    }
-
-    public void setArchived(boolean archived) {
-        this.archived = archived;
     }
 
     public boolean isRequireTransportWithClient() {

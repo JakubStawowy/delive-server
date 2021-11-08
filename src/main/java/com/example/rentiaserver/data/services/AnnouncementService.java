@@ -6,6 +6,7 @@ import com.example.rentiaserver.data.po.PackagePo;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -47,15 +48,21 @@ public class AnnouncementService {
         packageRepository.saveAll(packagePos);
     }
 
+    public void deleteAllByAnnouncement(AnnouncementPo announcementPo) {
+        packageRepository.deleteAllByAnnouncementPo(announcementPo);
+    }
 }
 
 @Repository
 interface AnnouncementRepository extends JpaRepository<AnnouncementPo, Long> {
-    @Query(value = "SELECT * FROM ANNOUNCEMENTS WHERE ARCHIVED = FALSE " + ApplicationConstants.Sql.ORDER_BY_CREATED_AT_PREFIX, nativeQuery = true)
+    @Query(value = "SELECT * FROM ANNOUNCEMENTS WHERE " + ApplicationConstants.Sql.NOT_ARCHIVED + " " + ApplicationConstants.Sql.ORDER_BY_CREATED_AT, nativeQuery = true)
     @NotNull
     List<AnnouncementPo> findAll();
 }
 
 @Repository
-interface PackageRepository extends CrudRepository<PackagePo, Long> {}
+interface PackageRepository extends CrudRepository<PackagePo, Long> {
+//    @Query(value = "UPDATE PACKAGES SET IS_ARCHIVED=TRUE WHERE ANNOUNCEMENT_ID=", nativeQuery = true)
+    void deleteAllByAnnouncementPo(AnnouncementPo announcementPo);
+}
 

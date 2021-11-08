@@ -19,6 +19,7 @@ import static com.example.rentiaserver.constants.ApplicationConstants.Security.R
 public class JsonWebTokenProvider implements ITokenProvider {
 
     private static final long TIMEOUT = 3600000;
+//    private static final long TIMEOUT = 60000;
 
     @Override
     public String generateUserToken(final UserPo user) {
@@ -31,7 +32,6 @@ public class JsonWebTokenProvider implements ITokenProvider {
                 .claim(ID_PREFIX, user.getId())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TIMEOUT))
-//                .setExpiration(new Date(System.currentTimeMillis()+10000))
                 .signWith(SignatureAlgorithm.HS512, signingKey)
                 .compact();
     }

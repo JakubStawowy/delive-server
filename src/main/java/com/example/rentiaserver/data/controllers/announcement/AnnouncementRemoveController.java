@@ -14,18 +14,14 @@ public final class AnnouncementRemoveController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/announcements";
     private final AnnouncementService announcementService;
-    private final IAuthorizeService authorizeService;
 
     @Autowired
-    public AnnouncementRemoveController(AnnouncementService announcementService, IAuthorizeService authorizeService) {
+    public AnnouncementRemoveController(AnnouncementService announcementService) {
         this.announcementService = announcementService;
-        this.authorizeService = authorizeService;
     }
 
     @DeleteMapping(value = EndpointConstants.REMOVE_ANNOUNCEMENT_ENDPOINT)
-    public void removeAnnouncement(@PathVariable("id") Long id, @RequestParam("userId") Long userId, @RequestParam("password") String password) {
-        if (authorizeService.authorizeUserWithIdAndPassword(userId, password)) {
-            announcementService.deleteById(id);
-        }
+    public void removeAnnouncement(@RequestParam Long announcementId) {
+        announcementService.deleteById(announcementId);
     }
 }

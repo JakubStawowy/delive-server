@@ -4,8 +4,11 @@ import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
 import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.data.po.UserPo;
+import com.example.rentiaserver.delivery.dao.MessageDao;
 import com.example.rentiaserver.delivery.enums.DeliveryState;
+import com.example.rentiaserver.delivery.enums.MessageType;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
+import com.example.rentiaserver.delivery.po.MessagePo;
 import com.example.rentiaserver.delivery.services.DeliveryService;
 import com.example.rentiaserver.finance.po.TransferPo;
 import com.example.rentiaserver.finance.po.UserWalletPo;
@@ -26,10 +29,12 @@ public class ChangeDeliveryStateController {
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/delivery";
 
     private final DeliveryService deliveryService;
+    private final MessageDao messageDao;
 
     @Autowired
-    public ChangeDeliveryStateController(DeliveryService deliveryService) {
+    public ChangeDeliveryStateController(DeliveryService deliveryService, MessageDao messageDao) {
         this.deliveryService = deliveryService;
+        this.messageDao = messageDao;
     }
 
     @PutMapping("/start")
@@ -56,18 +61,25 @@ public class ChangeDeliveryStateController {
     public void finishDelivery(@RequestParam Long deliveryId, @RequestParam double clientLatitude, @RequestParam double clientLongitude) {
 
         final double radius = 2;
+
         LocationTo clientLocation = new LocationTo(null, null, clientLatitude, clientLongitude, null, null, null);
         Optional<DeliveryPo> optionalDeliveryPo = deliveryService.findDeliveryById(deliveryId);
-        if (optionalDeliveryPo.isPresent()) {
-            DeliveryPo deliveryPo = optionalDeliveryPo.get();
-            if (deliveryService.getDistance(AnnouncementToCreatorHelper.create(deliveryPo.getAnnouncementPo()).getDestinationTo(),
-                        clientLocation) <= radius) {
-                completeTransfer(deliveryPo);
-            }
-            else {
+        optionalDeliveryPo.ifPresent(deliveryPo -> {
+
+            if (clientLatitude == 0 && clientLongitude == 0) {
                 changeDeliveryState(deliveryPo, DeliveryState.TO_ACCEPT);
             }
-        }
+            else {
+                double distance = deliveryService.getDistance(AnnouncementToCreatorHelper.create(deliveryPo.getAnnouncementPo()).getDestinationTo(),
+                        clientLocation);
+                if (distance <= radius) {
+                    completeTransfer(deliveryPo);
+                }
+                else {
+                    changeDeliveryState(deliveryPo, DeliveryState.TO_ACCEPT);
+                }
+            }
+        });
     }
 
     @PutMapping("/accept")
@@ -87,6 +99,21 @@ public class ChangeDeliveryStateController {
             announcementPo.setArchived(true);
             deliveryPo.setDeliveryState(DeliveryState.CLOSED);
             deliveryService.save(deliveryPo);
+
+            String message = "Congratulations! Delivery closed";
+            messageDao.saveAll(Arrays.asList(
+                new MessagePo(
+                    message,
+                    announcementPo,
+                    announcementPo.getAuthorPo(),
+                    deliveryPo.getUserPo(),
+                    MessageType.INFO),
+                new MessagePo(
+                    message,
+                    announcementPo,
+                    deliveryPo.getUserPo(),
+                    announcementPo.getAuthorPo(),
+                    MessageType.INFO)));
         });
     }
 

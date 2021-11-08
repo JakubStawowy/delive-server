@@ -13,6 +13,9 @@ public abstract class BaseEntityPo {
     @Column(name = "IS_EDITABLE", nullable = false)
     protected boolean isEditable;
 
+    @Column(name = "IS_ARCHIVED", nullable = false)
+    protected boolean isArchived;
+
     @Column(name = "CREATED_AT", updatable = false)
     protected Date createdAt;
 
@@ -27,6 +30,7 @@ public abstract class BaseEntityPo {
     public void init() {
         createdAt = new Date(System.currentTimeMillis());
         isEditable = true;
+        isArchived = false;
     }
 
     public void setId(Long id) {
@@ -55,5 +59,13 @@ public abstract class BaseEntityPo {
 
     public void setVersion(Long version) {
         this.version = version;
+    }
+
+    public boolean isArchived() {
+        return isArchived;
+    }
+
+    public void setArchived(boolean archived) {
+        isArchived = archived;
     }
 }

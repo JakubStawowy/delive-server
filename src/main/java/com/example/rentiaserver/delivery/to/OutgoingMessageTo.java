@@ -9,13 +9,11 @@ public class OutgoingMessageTo extends MessageTo {
 
     private final String messageType;
     private final boolean replied;
-    private final Set<PackageTo> packages;
 
-    public OutgoingMessageTo(Long id, String createdAt, Long announcementId, Long senderId, Long receiverId, String message, String messageType, boolean replied, Set<PackageTo> packages) {
+    public OutgoingMessageTo(Long id, String createdAt, Long announcementId, Long senderId, Long receiverId, String message, String messageType, boolean replied) {
         super(id, createdAt, announcementId, senderId, receiverId, message);
         this.messageType = messageType;
         this.replied = replied;
-        this.packages = packages;
     }
 
     public String getMessageType() {
@@ -26,7 +24,4 @@ public class OutgoingMessageTo extends MessageTo {
         return replied;
     }
 
-    public Set<PackageTo> getPackages() {
-        return packages;
-    }
 }
