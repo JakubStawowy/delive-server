@@ -35,7 +35,7 @@ public class UserPo extends BaseEntityPo {
     @Column(nullable = false)
     private String salt;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_WALLET_ID", referencedColumnName = "ID", nullable = false)
     private UserWalletPo userWalletPo;
 

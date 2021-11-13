@@ -37,7 +37,7 @@ public class HttpClientService {
                     .append(value)
                     .append("&"));
             return uriWithParams
-                    .substring(0, uriWithParams.length());
+                    .substring(0, uriWithParams.length()).replace(" ", "+");
         }
         else {
             return uriWithParams.toString();

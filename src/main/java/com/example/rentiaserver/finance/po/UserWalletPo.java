@@ -11,7 +11,7 @@ import java.util.Set;
 @Table(name = "USER_WALLET")
 public class UserWalletPo extends BaseEntityPo {
 
-    @OneToOne(mappedBy = "userWalletPo")
+    @OneToOne(mappedBy = "userWalletPo", fetch = FetchType.LAZY)
     private UserPo user;
 
     @Column(nullable = false)

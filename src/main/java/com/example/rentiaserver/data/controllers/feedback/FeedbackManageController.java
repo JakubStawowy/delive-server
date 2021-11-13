@@ -7,6 +7,8 @@ import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.data.services.UserService;
 import com.example.rentiaserver.data.to.FeedbackTo;
+import com.example.rentiaserver.delivery.dao.MessageDao;
+import com.example.rentiaserver.delivery.po.MessagePo;
 import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -24,10 +26,12 @@ public final class FeedbackManageController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/feedback";
     private final UserService userService;
+    private final MessageDao messageDao;
 
     @Autowired
-    public FeedbackManageController(UserService userService) {
+    public FeedbackManageController(UserService userService, MessageDao messageDao) {
         this.userService = userService;
+        this.messageDao = messageDao;
     }
 
     @PostMapping(path = EndpointConstants.ADD_FEEDBACK_ENDPOINT)
@@ -35,12 +39,19 @@ public final class FeedbackManageController {
         final Long loggedUserId = JsonWebTokenHelper.getRequesterId(request);
         Optional<UserPo> optionalAuthorPo = userService.findUserById(loggedUserId);
         Optional<UserPo> optionalUserPo = userService.findUserById(feedback.getUserId());
-        if (optionalUserPo.isPresent() && optionalAuthorPo.isPresent()) {
+        Optional<MessagePo> optionalMessagePo = messageDao.findById(feedback.getMessageId());
+
+        if (optionalUserPo.isPresent() && optionalAuthorPo.isPresent() && optionalMessagePo.isPresent()) {
+
+            MessagePo messagePo = optionalMessagePo.get();
             FeedbackPo feedbackPo = new FeedbackPo(
                     feedback.getContent(),
                     FeedbackRate.getByNumberValue(feedback.getRate()),
                     optionalAuthorPo.get(),
-                    optionalUserPo.get());
+                    optionalUserPo.get(),
+                    messagePo.getAnnouncementPo());
+            messagePo.setReplied(true);
+            messageDao.save(messagePo);
             userService.saveFeedback(feedbackPo);
         }
     }

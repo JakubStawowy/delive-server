@@ -1,6 +1,7 @@
 package com.example.rentiaserver.delivery.po;
 
 import com.example.rentiaserver.data.api.BaseEntityPo;
+import com.example.rentiaserver.data.po.FeedbackPo;
 import com.example.rentiaserver.delivery.enums.DeliveryState;
 import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.data.po.UserPo;

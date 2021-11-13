@@ -36,6 +36,9 @@ public class AnnouncementPo extends BaseEntityPo {
     @Column(nullable = false)
     private boolean requireTransportWithClient;
 
+    @OneToMany(mappedBy = "announcementPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<FeedbackPo> feedbackPos;
+
     public AnnouncementPo(LocationPo initialLocationPo, LocationPo finalLocationPo, UserPo authorPo, BigDecimal amount, boolean requireTransportWithClient) {
         this.initialLocationPo = initialLocationPo;
         this.finalLocationPo = finalLocationPo;
@@ -100,6 +103,14 @@ public class AnnouncementPo extends BaseEntityPo {
 
     public void setRequireTransportWithClient(boolean requireTransportWithClient) {
         this.requireTransportWithClient = requireTransportWithClient;
+    }
+
+    public Set<FeedbackPo> getFeedbackPos() {
+        return feedbackPos;
+    }
+
+    public void setFeedbackPos(Set<FeedbackPo> feedbackPos) {
+        this.feedbackPos = feedbackPos;
     }
 }
 

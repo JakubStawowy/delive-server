@@ -2,6 +2,7 @@ package com.example.rentiaserver.data.po;
 
 import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.data.enums.FeedbackRate;
+import com.example.rentiaserver.delivery.po.DeliveryPo;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -26,11 +27,16 @@ public class FeedbackPo extends BaseEntityPo {
     @JoinColumn(name = "USER_ID", nullable = false)
     private UserPo userPo;
 
-    public FeedbackPo(String content, FeedbackRate rate, UserPo authorPo, UserPo userPo) {
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ANNOUNCEMENT_ID", referencedColumnName = "ID", nullable = false)
+    private AnnouncementPo announcementPo;
+
+    public FeedbackPo(String content, FeedbackRate rate, UserPo authorPo, UserPo userPo, AnnouncementPo announcementPo) {
         this.content = content;
         this.rate = rate;
         this.authorPo = authorPo;
         this.userPo = userPo;
+        this.announcementPo = announcementPo;
     }
 
     public FeedbackPo() {
@@ -66,5 +72,13 @@ public class FeedbackPo extends BaseEntityPo {
 
     public void setUserPo(UserPo userPo) {
         this.userPo = userPo;
+    }
+
+    public AnnouncementPo getAnnouncementPo() {
+        return announcementPo;
+    }
+
+    public void setAnnouncementPo(AnnouncementPo announcementPo) {
+        this.announcementPo = announcementPo;
     }
 }

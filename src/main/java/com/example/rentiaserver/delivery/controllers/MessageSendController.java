@@ -3,15 +3,12 @@ package com.example.rentiaserver.delivery.controllers;
 import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.data.services.AnnouncementService;
 import com.example.rentiaserver.data.po.*;
-import com.example.rentiaserver.data.services.UserService;
-import com.example.rentiaserver.delivery.dao.DeliveryDao;
 import com.example.rentiaserver.delivery.enums.MessageType;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
 import com.example.rentiaserver.delivery.po.MessagePo;
 import com.example.rentiaserver.delivery.services.DeliveryService;
 import com.example.rentiaserver.delivery.services.MessageService;
 import com.example.rentiaserver.delivery.to.IncomingMessageTo;
-import com.example.rentiaserver.delivery.to.IncomingPackageMessageTo;
 import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -76,9 +73,11 @@ public class MessageSendController {
         if (optionalAnnouncementPo.isPresent() && optionalSenderPo.isPresent() && optionalReceiverPo.isPresent() && optionalRepliedMessage.isPresent()) {
 
             MessageType messageType;
+            String messageContent;
 
             if (incomingMessageTo.isConsent()) {
                 messageType = MessageType.CONSENT;
+                messageContent = "Your delivery request has been approved. You can now start your delivery!";
                 AnnouncementPo announcementPo = optionalAnnouncementPo.get();
                 deliveryService.save(new DeliveryPo(
                         optionalReceiverPo.get(),
@@ -87,12 +86,13 @@ public class MessageSendController {
             }
             else {
                 messageType = MessageType.DISCORD;
+                messageContent = "Your delivery request has been rejected";
             }
 
             MessagePo repliedMessage = optionalRepliedMessage.get();
             repliedMessage.setReplied(true);
             messageService.saveAllMessages(Arrays.asList(repliedMessage, new MessagePo(
-                    incomingMessageTo.getMessage(),
+                    messageContent,
                     optionalAnnouncementPo.get(),
                     optionalSenderPo.get(),
                     optionalReceiverPo.get(),

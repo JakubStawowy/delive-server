@@ -97,23 +97,42 @@ public class AnnouncementManageController {
     }
 
     private void addAnnouncement(UserPo author, AnnouncementTo announcementTo) throws InterruptedException, ParseException, IOException {
-        JSONObject addressFromJson = geocoderService.getAddressFromCoordinates(
-                announcementTo.getDestinationFrom().getLongitude(),
-                announcementTo.getDestinationFrom().getLatitude());
-        JSONObject addressToJson = geocoderService.getAddressFromCoordinates(
-                announcementTo.getDestinationTo().getLongitude(),
-                announcementTo.getDestinationTo().getLatitude());
+        JSONObject addressFromJson;
+        JSONObject addressToJson;
+        if (announcementTo.getDestinationFrom().getLongitude() == null) {
+            addressFromJson = geocoderService.getAddressFromData(
+                    announcementTo.getDestinationFrom().getAddress(),
+                    announcementTo.getDestinationFrom().getLocality(),
+                    announcementTo.getDestinationFrom().getCountry());
+        }
+        else {
+            addressFromJson = geocoderService.getAddressFromCoordinates(
+                    announcementTo.getDestinationFrom().getLongitude(),
+                    announcementTo.getDestinationFrom().getLatitude());
+        }
+        if (announcementTo.getDestinationTo().getLongitude() == null) {
+
+            addressToJson = geocoderService.getAddressFromData(
+                    announcementTo.getDestinationTo().getAddress(),
+                    announcementTo.getDestinationTo().getLocality(),
+                    announcementTo.getDestinationTo().getCountry());
+        }
+        else {
+            addressToJson = geocoderService.getAddressFromCoordinates(
+                    announcementTo.getDestinationTo().getLongitude(),
+                    announcementTo.getDestinationTo().getLatitude());
+        }
 
         AnnouncementPo announcement = new AnnouncementPo(
                 new LocationPo(
-                        announcementTo.getDestinationFrom().getLatitude(),
-                        announcementTo.getDestinationFrom().getLongitude(),
+                        Double.valueOf(String.valueOf(addressFromJson.get("latitude"))),
+                        Double.valueOf(String.valueOf(addressFromJson.get("longitude"))),
                         String.valueOf(addressFromJson.get("name")),
                         String.valueOf(addressFromJson.get("locality")),
                         String.valueOf(addressFromJson.get("country"))),
                 new LocationPo(
-                        announcementTo.getDestinationTo().getLatitude(),
-                        announcementTo.getDestinationTo().getLongitude(),
+                        Double.valueOf(String.valueOf(addressToJson.get("latitude"))),
+                        Double.valueOf(String.valueOf(addressToJson.get("longitude"))),
                         String.valueOf(addressToJson.get("name")),
                         String.valueOf(addressToJson.get("locality")),
                         String.valueOf(addressToJson.get("country"))),

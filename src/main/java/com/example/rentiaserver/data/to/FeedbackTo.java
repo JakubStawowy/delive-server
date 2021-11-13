@@ -11,6 +11,8 @@ public class FeedbackTo extends BaseEntityTo {
     private final String authorSurname;
     private final Long userId;
     private final Long authorId;
+    private Long messageId;
+
 
     public FeedbackTo(FeedbackPo feedback) {
         super(feedback.getId(), String.valueOf(feedback.getCreatedAt()));
@@ -22,7 +24,7 @@ public class FeedbackTo extends BaseEntityTo {
         userId = feedback.getUserPo().getId();
     }
 
-    public FeedbackTo(Long id, String createdAt, String content, int rate, String authorName, String authorSurname, Long authorId, Long userId) {
+    public FeedbackTo(Long id, String createdAt, String content, int rate, String authorName, String authorSurname, Long authorId, Long userId, Long messageId) {
         super(id, createdAt);
         this.content = content;
         this.rate = rate;
@@ -30,6 +32,7 @@ public class FeedbackTo extends BaseEntityTo {
         this.authorSurname = authorSurname;
         this.authorId = authorId;
         this.userId = userId;
+        this.messageId = messageId;
     }
 
     public String getContent() {
@@ -54,5 +57,13 @@ public class FeedbackTo extends BaseEntityTo {
 
     public Long getUserId() {
         return userId;
+    }
+
+    public Long getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(Long messageId) {
+        this.messageId = messageId;
     }
 }

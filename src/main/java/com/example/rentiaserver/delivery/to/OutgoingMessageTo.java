@@ -1,10 +1,5 @@
 package com.example.rentiaserver.delivery.to;
 
-import com.example.rentiaserver.data.to.PackageTo;
-
-import java.util.Date;
-import java.util.Set;
-
 public class OutgoingMessageTo extends MessageTo {
 
     private final String messageType;
