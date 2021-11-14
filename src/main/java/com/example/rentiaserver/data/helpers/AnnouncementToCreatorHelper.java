@@ -19,18 +19,14 @@ public final class AnnouncementToCreatorHelper {
                         String.valueOf(destinationFrom.getCreatedAt()),
                         destinationFrom.getLatitude(),
                         destinationFrom.getLongitude(),
-                        destinationFrom.getAddress(),
-                        destinationFrom.getLocality(),
-                        destinationFrom.getCountry()
+                        destinationFrom.getAddress()
                 ),
                 new LocationTo(
                         destinationTo.getId(),
                         String.valueOf(destinationTo.getCreatedAt()),
                         destinationTo.getLatitude(),
                         destinationTo.getLongitude(),
-                        destinationTo.getAddress(),
-                        destinationTo.getLocality(),
-                        destinationTo.getCountry()
+                        destinationTo.getAddress()
                 ),
                 announcementPo.getPackagesPos().stream().map(packagePo -> new PackageTo(
                         packagePo.getId(),

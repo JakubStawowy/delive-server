@@ -3,7 +3,7 @@ package com.example.rentiaserver.maps.controllers;
 import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
 import com.example.rentiaserver.data.po.AnnouncementPo;
-import com.example.rentiaserver.data.services.AnnouncementService;
+import com.example.rentiaserver.data.services.announcement.AnnouncementService;
 import com.example.rentiaserver.data.to.AnnouncementTo;
 import com.example.rentiaserver.maps.services.DistanceService;
 import com.example.rentiaserver.maps.to.LocationTo;
@@ -30,7 +30,7 @@ public class DistanceController {
     @GetMapping("/isInArea")
     public boolean isInArea(@RequestParam Long announcementId, @RequestParam double clientLatitude, @RequestParam double clientLongitude) {
         Optional<AnnouncementPo> optionalAnnouncementPo = announcementService.getAnnouncementById(announcementId);
-        LocationTo currentClientLocalization = new LocationTo(null, null, clientLatitude, clientLongitude, null, null, null);
+        LocationTo currentClientLocalization = new LocationTo(null, null, clientLatitude, clientLongitude, null);
         if (optionalAnnouncementPo.isPresent()) {
             AnnouncementTo announcementTo = AnnouncementToCreatorHelper.create(optionalAnnouncementPo.get());
             double RADIUS = 2;
@@ -42,7 +42,7 @@ public class DistanceController {
     @GetMapping("/get")
     public double getDistance(@RequestParam Long announcementId, @RequestParam double clientLatitude, @RequestParam double clientLongitude) {
         Optional<AnnouncementPo> optionalAnnouncementPo = announcementService.getAnnouncementById(announcementId);
-        LocationTo currentClientLocalization = new LocationTo(null, null, clientLatitude, clientLongitude, null, null, null);
+        LocationTo currentClientLocalization = new LocationTo(null, null, clientLatitude, clientLongitude, null);
         if (optionalAnnouncementPo.isPresent()) {
             AnnouncementTo announcementTo = AnnouncementToCreatorHelper.create(optionalAnnouncementPo.get());
             return distanceService.getDistance(announcementTo.getDestinationTo(), currentClientLocalization);

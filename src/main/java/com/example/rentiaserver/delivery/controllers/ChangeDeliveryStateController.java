@@ -62,7 +62,7 @@ public class ChangeDeliveryStateController {
 
         final double radius = 2;
 
-        LocationTo clientLocation = new LocationTo(null, null, clientLatitude, clientLongitude, null, null, null);
+        LocationTo clientLocation = new LocationTo(null, null, clientLatitude, clientLongitude, null);
         Optional<DeliveryPo> optionalDeliveryPo = deliveryService.findDeliveryById(deliveryId);
         optionalDeliveryPo.ifPresent(deliveryPo -> {
 

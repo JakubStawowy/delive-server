@@ -1,4 +1,4 @@
-package com.example.rentiaserver.data.services;
+package com.example.rentiaserver.data.services.user;
 
 import com.example.rentiaserver.data.po.FeedbackPo;
 import com.example.rentiaserver.data.po.UserPo;
@@ -59,16 +59,4 @@ public class UserService {
         userRepository.saveAll(userPos);
     }
 
-}
-
-@Repository
-interface UserDao extends CrudRepository<UserPo, Long> {
-    Optional<UserPo> getUserByEmail(String email);
-}
-
-@Repository
-interface FeedbackDao extends CrudRepository<FeedbackPo, Long> {
-    @Query(value = "SELECT * FROM FEEDBACK WHERE USER_ID = ?1 " + ORDER_BY_CREATED_AT
-            , nativeQuery = true)
-    List<FeedbackPo> getFeedbackPosByUserPoId(Long id);
 }

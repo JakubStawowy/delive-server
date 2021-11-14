@@ -1,7 +1,7 @@
 package com.example.rentiaserver.data.controllers.announcement;
 
-import com.example.rentiaserver.data.services.AnnouncementService;
-import com.example.rentiaserver.data.services.UserService;
+import com.example.rentiaserver.data.services.announcement.AnnouncementService;
+import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.data.to.AnnouncementTo;
 import com.example.rentiaserver.data.po.*;
 import com.example.rentiaserver.constants.EndpointConstants;
@@ -70,17 +70,15 @@ public class AnnouncementManageController {
                 announcementTo.getDestinationTo().getLongitude(),
                 announcementTo.getDestinationTo().getLatitude());
 
+        String fromAddress = addressFromJson.get("name") + ", " + addressFromJson.get("locality") + ", " + addressFromJson.get("country");
+        String toAddress = addressToJson.get("name") + ", " + addressToJson.get("locality") + ", " + addressToJson.get("country");
         announcementPo.getInitialLocationPo().setLatitude(announcementTo.getDestinationFrom().getLatitude());
         announcementPo.getInitialLocationPo().setLongitude(announcementTo.getDestinationFrom().getLongitude());
-        announcementPo.getInitialLocationPo().setAddress(String.valueOf(addressFromJson.get("name")));
-        announcementPo.getInitialLocationPo().setLocality(String.valueOf(addressFromJson.get("locality")));
-        announcementPo.getInitialLocationPo().setCountry(String.valueOf(addressFromJson.get("country")));
+        announcementPo.getInitialLocationPo().setAddress(fromAddress);
 
         announcementPo.getFinalLocationPo().setLatitude(announcementTo.getDestinationTo().getLatitude());
         announcementPo.getFinalLocationPo().setLongitude(announcementTo.getDestinationTo().getLongitude());
-        announcementPo.getFinalLocationPo().setAddress(String.valueOf(addressToJson.get("name")));
-        announcementPo.getFinalLocationPo().setLocality(String.valueOf(addressToJson.get("locality")));
-        announcementPo.getFinalLocationPo().setCountry(String.valueOf(addressToJson.get("country")));
+        announcementPo.getFinalLocationPo().setAddress(toAddress);
 
         announcementPo.setRequireTransportWithClient(announcementTo.isRequireTransportWithClient());
         announcementPo.setAmount(new BigDecimal(announcementTo.getAmount()));
@@ -100,10 +98,7 @@ public class AnnouncementManageController {
         JSONObject addressFromJson;
         JSONObject addressToJson;
         if (announcementTo.getDestinationFrom().getLongitude() == null) {
-            addressFromJson = geocoderService.getAddressFromData(
-                    announcementTo.getDestinationFrom().getAddress(),
-                    announcementTo.getDestinationFrom().getLocality(),
-                    announcementTo.getDestinationFrom().getCountry());
+            addressFromJson = geocoderService.getAddressFromData(announcementTo.getDestinationFrom().getAddress());
         }
         else {
             addressFromJson = geocoderService.getAddressFromCoordinates(
@@ -113,9 +108,7 @@ public class AnnouncementManageController {
         if (announcementTo.getDestinationTo().getLongitude() == null) {
 
             addressToJson = geocoderService.getAddressFromData(
-                    announcementTo.getDestinationTo().getAddress(),
-                    announcementTo.getDestinationTo().getLocality(),
-                    announcementTo.getDestinationTo().getCountry());
+                    announcementTo.getDestinationTo().getAddress());
         }
         else {
             addressToJson = geocoderService.getAddressFromCoordinates(
@@ -123,24 +116,20 @@ public class AnnouncementManageController {
                     announcementTo.getDestinationTo().getLatitude());
         }
 
+        String fromAddress = addressFromJson.get("name") + ", " + addressFromJson.get("locality") + ", " + addressFromJson.get("country");
+        String toAddress = addressToJson.get("name") + ", " + addressToJson.get("locality") + ", " + addressToJson.get("country");
         AnnouncementPo announcement = new AnnouncementPo(
                 new LocationPo(
                         Double.valueOf(String.valueOf(addressFromJson.get("latitude"))),
                         Double.valueOf(String.valueOf(addressFromJson.get("longitude"))),
-                        String.valueOf(addressFromJson.get("name")),
-                        String.valueOf(addressFromJson.get("locality")),
-                        String.valueOf(addressFromJson.get("country"))),
+                        fromAddress),
                 new LocationPo(
                         Double.valueOf(String.valueOf(addressToJson.get("latitude"))),
                         Double.valueOf(String.valueOf(addressToJson.get("longitude"))),
-                        String.valueOf(addressToJson.get("name")),
-                        String.valueOf(addressToJson.get("locality")),
-                        String.valueOf(addressToJson.get("country"))),
+                        toAddress),
                 author,
                 new BigDecimal(announcementTo.getAmount()),
-                announcementTo.isRequireTransportWithClient()
-
-        );
+                announcementTo.isRequireTransportWithClient());
         if (announcementTo.getId() != null) {
             announcement.setId(announcementTo.getId());
         }

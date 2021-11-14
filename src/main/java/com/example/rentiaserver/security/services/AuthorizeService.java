@@ -1,7 +1,7 @@
 package com.example.rentiaserver.security.services;
 
 import com.example.rentiaserver.data.po.UserPo;
-import com.example.rentiaserver.data.services.UserService;
+import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.security.api.IAuthorizeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;

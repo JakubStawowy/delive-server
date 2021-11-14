@@ -2,7 +2,7 @@ package com.example.rentiaserver.delivery.services;
 
 import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.data.po.UserPo;
-import com.example.rentiaserver.data.services.UserService;
+import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.delivery.dao.DeliveryDao;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
 import com.example.rentiaserver.finance.dao.TransferDao;
@@ -12,7 +12,6 @@ import com.example.rentiaserver.maps.to.LocationTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 @Service

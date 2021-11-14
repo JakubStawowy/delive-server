@@ -1,8 +1,7 @@
 package com.example.rentiaserver.data.controllers.user;
 
-import com.example.rentiaserver.data.services.UserService;
+import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.data.to.UserTo;
-import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import static com.example.rentiaserver.constants.ApplicationConstants.Security.ID_PREFIX;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController

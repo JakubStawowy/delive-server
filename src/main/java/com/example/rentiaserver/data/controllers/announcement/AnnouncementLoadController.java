@@ -1,15 +1,14 @@
 package com.example.rentiaserver.data.controllers.announcement;
 
-import com.example.rentiaserver.data.services.AnnouncementService;
-import com.example.rentiaserver.data.po.AnnouncementPo;
+import com.example.rentiaserver.data.services.announcement.AnnouncementService;
 import com.example.rentiaserver.data.to.*;
 import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
@@ -36,5 +35,12 @@ public final class AnnouncementLoadController {
     @GetMapping("/announcement")
     public AnnouncementTo getAnnouncementById(@RequestParam Long announcementId) {
         return announcementService.getAnnouncementById(announcementId).map(AnnouncementToCreatorHelper::create).orElse(null);
+    }
+
+    @GetMapping("/filtered")
+    public List<AnnouncementTo> getFilteredAnnouncements(@RequestParam String initialAddress, @RequestParam String finalAddress,
+                                                  @RequestParam String minimalSalary, @RequestParam String requireTransportWithClient) {
+        return announcementService.findAnnouncementsByAddresses(initialAddress, finalAddress, minimalSalary, requireTransportWithClient)
+                .stream().map(AnnouncementToCreatorHelper::create).collect(Collectors.toList());
     }
 }

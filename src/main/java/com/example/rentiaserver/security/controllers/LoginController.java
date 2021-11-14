@@ -3,7 +3,7 @@ package com.example.rentiaserver.security.controllers;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
-import com.example.rentiaserver.data.services.UserService;
+import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.security.api.IAuthorizeService;
 import com.example.rentiaserver.security.api.ITokenProvider;
 import com.example.rentiaserver.security.to.LoginResponseTo;

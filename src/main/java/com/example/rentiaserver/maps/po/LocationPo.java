@@ -19,24 +19,16 @@ public class LocationPo extends BaseEntityPo {
     @Nullable
     private String address;
 
-    @Nullable
-    private String locality;
-
-    @Nullable
-    private String country;
-
     @OneToOne(mappedBy = "initialLocationPo")
     private AnnouncementPo announcementFromPo;
 
     @OneToOne(mappedBy = "finalLocationPo")
     private AnnouncementPo announcementToPo;
 
-    public LocationPo(Double latitude, Double longitude, @Nullable String address, @Nullable String locality, @Nullable String country) {
+    public LocationPo(Double latitude, Double longitude, @Nullable String address) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
-        this.locality = locality;
-        this.country = country;
     }
 
     public LocationPo() {}
@@ -64,24 +56,6 @@ public class LocationPo extends BaseEntityPo {
 
     public void setAddress(@Nullable String address) {
         this.address = address;
-    }
-
-    @Nullable
-    public String getLocality() {
-        return locality;
-    }
-
-    public void setLocality(@Nullable String locality) {
-        this.locality = locality;
-    }
-
-    @Nullable
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(@Nullable String country) {
-        this.country = country;
     }
 
     public AnnouncementPo getAnnouncementFromPo() {

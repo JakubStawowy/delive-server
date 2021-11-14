@@ -5,7 +5,7 @@ import com.example.rentiaserver.data.po.FeedbackPo;
 import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.data.po.UserPo;
-import com.example.rentiaserver.data.services.UserService;
+import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.data.to.FeedbackTo;
 import com.example.rentiaserver.delivery.dao.MessageDao;
 import com.example.rentiaserver.delivery.po.MessagePo;
