@@ -10,9 +10,6 @@ public abstract class BaseEntityPo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
-    @Column(name = "IS_EDITABLE", nullable = false)
-    protected boolean isEditable;
-
     @Column(name = "IS_ARCHIVED", nullable = false)
     protected boolean isArchived;
 
@@ -29,20 +26,11 @@ public abstract class BaseEntityPo {
     @PrePersist
     public void init() {
         createdAt = new Date(System.currentTimeMillis());
-        isEditable = true;
         isArchived = false;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public boolean isEditable() {
-        return isEditable;
-    }
-
-    public void setEditable(boolean editable) {
-        isEditable = editable;
     }
 
     public Date getCreatedAt() {

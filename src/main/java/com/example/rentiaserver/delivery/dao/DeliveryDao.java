@@ -18,7 +18,7 @@ public interface DeliveryDao extends CrudRepository<DeliveryPo, Long> {
     @Query(value = "SELECT * FROM DELIVERIES WHERE USER_ID = ?1 " + ORDER_BY_CREATED_AT, nativeQuery = true)
     List<DeliveryPo> findAllByDeliverer(Long delivererId);
 
-    @Query(value = "SELECT D.ID, D.CREATED_AT, D.IS_ARCHIVED, D.FINISHED_AT, D.DELIVERY_STATE, D.ANNOUNCEMENT_ID, D.USER_ID, D.IS_EDITABLE, D.VERSION " +
+    @Query(value = "SELECT D.ID, D.CREATED_AT, D.IS_ARCHIVED, D.FINISHED_AT, D.DELIVERY_STATE, D.ANNOUNCEMENT_ID, D.USER_ID, D.VERSION " +
             "FROM DELIVERIES D JOIN ANNOUNCEMENTS A on D.ANNOUNCEMENT_ID = A.ID WHERE A.AUTHOR_ID = ?1 " + ORDER_BY_CREATED_AT, nativeQuery = true)
     List<DeliveryPo> findAllByPrincipal(Long principalId);
 

@@ -89,6 +89,7 @@ public class AnnouncementManageController {
                         new BigDecimal(packageTo.getPackageLength()),
                         new BigDecimal(packageTo.getPackageWidth()),
                         new BigDecimal(packageTo.getPackageHeight()),
+                        packageTo.getPackageWeight() != null ? new BigDecimal(packageTo.getPackageWeight()) : null,
                         announcementPo
                 )));
         announcementService.saveAllPackages(packagePos);
@@ -140,6 +141,7 @@ public class AnnouncementManageController {
                         new BigDecimal(packageTo.getPackageLength()),
                         new BigDecimal(packageTo.getPackageWidth()),
                         new BigDecimal(packageTo.getPackageHeight()),
+                        packageTo.getPackageWeight() != null ? new BigDecimal(packageTo.getPackageWeight()) : null,
                         announcement
                 )));
         announcementService.saveAllPackages(packagePos);

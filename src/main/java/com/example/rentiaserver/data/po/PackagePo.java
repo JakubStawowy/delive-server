@@ -11,24 +11,27 @@ import java.math.BigDecimal;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class PackagePo extends BaseEntityPo {
 
-    @Column(name = "PACKAGE_LENGTH", nullable = false)
+    @Column(name = "LENGTH", nullable = false)
     private BigDecimal packageLength;
 
-    @Column(name = "PACKAGE_WIDTH", nullable = false)
+    @Column(name = "WIDTH", nullable = false)
     private BigDecimal packageWidth;
 
-    @Column(name = "PACKAGE_HEIGHT", nullable = false)
+    @Column(name = "HEIGHT", nullable = false)
     private BigDecimal packageHeight;
 
+    @Column(name = "WEIGHT")
+    private BigDecimal weight;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ANNOUNCEMENT_ID", nullable = false)
     private AnnouncementPo announcementPo;
 
-    public PackagePo(BigDecimal packageLength, BigDecimal packageWidth, BigDecimal packageHeight, AnnouncementPo announcementPo) {
+    public PackagePo(BigDecimal packageLength, BigDecimal packageWidth, BigDecimal packageHeight, BigDecimal weight, AnnouncementPo announcementPo) {
         this.packageLength = packageLength;
         this.packageWidth = packageWidth;
         this.packageHeight = packageHeight;
+        this.weight = weight;
         this.announcementPo = announcementPo;
     }
 
@@ -66,4 +69,11 @@ public class PackagePo extends BaseEntityPo {
         this.announcementPo = announcementPo;
     }
 
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
+    }
 }

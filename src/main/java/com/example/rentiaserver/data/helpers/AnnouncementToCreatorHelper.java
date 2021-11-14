@@ -33,7 +33,8 @@ public final class AnnouncementToCreatorHelper {
                         String.valueOf(packagePo.getCreatedAt()),
                         String.valueOf(packagePo.getPackageLength()),
                         String.valueOf(packagePo.getPackageWidth()),
-                        String.valueOf(packagePo.getPackageHeight())
+                        String.valueOf(packagePo.getPackageHeight()),
+                        String.valueOf(packagePo.getWeight())
                 )).collect(Collectors.toSet()),
                 announcementPo.getAuthorPo().getId(),
                 announcementPo.getAmount() != null ? announcementPo.getAmount().toString() : null,

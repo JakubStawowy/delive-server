@@ -44,7 +44,7 @@ public class PositionStackReverseGeocodeService {
     public JSONObject getAddressFromData(String address) throws IOException, InterruptedException, ParseException {
         Map<String, String> params = new HashMap<>();
         params.put("access_key", API_KEY);
-        params.put("query", address);
+        params.put("query", address.replaceAll(",", " "));
         JSONArray response = converter.convertResponseToJSONArray(httpClientService.getHttpResponse(BASE_URI + "/forward", params), "data");
 
         return (JSONObject) response.get(0);
