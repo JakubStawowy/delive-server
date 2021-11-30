@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = RegisterValidationController.BASE_ENDPOINT)
 public final class RegisterValidationController {
 
-    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/validate";
+    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/validate";
     private final UserService userService;
 
     @Autowired

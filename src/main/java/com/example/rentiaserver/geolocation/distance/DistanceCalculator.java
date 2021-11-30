@@ -1,11 +1,10 @@
-package com.example.rentiaserver.maps.services;
+package com.example.rentiaserver.geolocation.distance;
 
-import com.example.rentiaserver.maps.api.IDistanceCalculator;
-import com.example.rentiaserver.maps.to.LocationTo;
+import com.example.rentiaserver.geolocation.to.LocationTo;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DistanceCalculator implements IDistanceCalculator {
+final class DistanceCalculator implements IDistanceCalculator {
 
     @Override
     public double getDistance(LocationTo initialLocation, LocationTo finalLocation) {
@@ -27,7 +26,7 @@ public class DistanceCalculator implements IDistanceCalculator {
         return earthRadius * c;
     }
 
-    private double convertToRadius(Double value) {
+    private double convertToRadius(final double value) {
         return value * Math.PI / 180;
     }
 }

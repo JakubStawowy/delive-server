@@ -12,7 +12,7 @@ import com.example.rentiaserver.delivery.po.MessagePo;
 import com.example.rentiaserver.delivery.services.DeliveryService;
 import com.example.rentiaserver.finance.po.TransferPo;
 import com.example.rentiaserver.finance.po.UserWalletPo;
-import com.example.rentiaserver.maps.to.LocationTo;
+import com.example.rentiaserver.geolocation.to.LocationTo;
 import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ import java.util.*;
 @RequestMapping(value = ChangeDeliveryStateController.BASE_ENDPOINT)
 public class ChangeDeliveryStateController {
 
-    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/delivery";
+    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/delivery";
 
     private final DeliveryService deliveryService;
     private final MessageDao messageDao;

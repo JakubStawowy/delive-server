@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping(UserLoaderController.BASE_ENDPOINT)
 public final class UserLoaderController {
 
-    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/users";
+    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/users";
     private final UserService userService;
 
     @Autowired

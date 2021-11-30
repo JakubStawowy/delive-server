@@ -6,8 +6,8 @@ import com.example.rentiaserver.data.to.AnnouncementTo;
 import com.example.rentiaserver.data.po.*;
 import com.example.rentiaserver.constants.EndpointConstants;
 import com.example.rentiaserver.constants.ApplicationConstants;
-import com.example.rentiaserver.maps.po.LocationPo;
-import com.example.rentiaserver.maps.services.PositionStackReverseGeocodeService;
+import com.example.rentiaserver.geolocation.converter.IGeocodingService;
+import com.example.rentiaserver.geolocation.po.LocationPo;
 import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -26,13 +26,13 @@ import java.util.Set;
 @RequestMapping(value = AnnouncementManageController.BASE_ENDPOINT)
 public class AnnouncementManageController {
 
-    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/announcements";
+    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/announcements";
     private final UserService userService;
     private final AnnouncementService announcementService;
-    private final PositionStackReverseGeocodeService geocoderService;
+    private final IGeocodingService geocoderService;
 
     @Autowired
-    public AnnouncementManageController(UserService userService, AnnouncementService announcementService, PositionStackReverseGeocodeService geocoderService) {
+    public AnnouncementManageController(UserService userService, AnnouncementService announcementService, IGeocodingService geocoderService) {
         this.userService = userService;
         this.announcementService = announcementService;
         this.geocoderService = geocoderService;
@@ -63,10 +63,10 @@ public class AnnouncementManageController {
     }
 
     private void editAnnouncement(AnnouncementPo announcementPo, AnnouncementTo announcementTo) throws InterruptedException, ParseException, IOException {
-        JSONObject addressFromJson = geocoderService.getAddressFromCoordinates(
+        JSONObject addressFromJson = geocoderService.getLocationDataFromCoordinates(
                 announcementTo.getDestinationFrom().getLongitude(),
                 announcementTo.getDestinationFrom().getLatitude());
-        JSONObject addressToJson = geocoderService.getAddressFromCoordinates(
+        JSONObject addressToJson = geocoderService.getLocationDataFromCoordinates(
                 announcementTo.getDestinationTo().getLongitude(),
                 announcementTo.getDestinationTo().getLatitude());
 
@@ -98,21 +98,21 @@ public class AnnouncementManageController {
     private void addAnnouncement(UserPo author, AnnouncementTo announcementTo) throws InterruptedException, ParseException, IOException {
         JSONObject addressFromJson;
         JSONObject addressToJson;
-        if (announcementTo.getDestinationFrom().getLongitude() == null) {
-            addressFromJson = geocoderService.getAddressFromData(announcementTo.getDestinationFrom().getAddress());
+        if (announcementTo.getDestinationFrom().getLongitude() == null && announcementTo.getDestinationFrom().getAddress() != null) {
+            addressFromJson = geocoderService.getLocationDataFromAddress(announcementTo.getDestinationFrom().getAddress());
         }
         else {
-            addressFromJson = geocoderService.getAddressFromCoordinates(
+            addressFromJson = geocoderService.getLocationDataFromCoordinates(
                     announcementTo.getDestinationFrom().getLongitude(),
                     announcementTo.getDestinationFrom().getLatitude());
         }
         if (announcementTo.getDestinationTo().getLongitude() == null) {
 
-            addressToJson = geocoderService.getAddressFromData(
+            addressToJson = geocoderService.getLocationDataFromAddress(
                     announcementTo.getDestinationTo().getAddress());
         }
         else {
-            addressToJson = geocoderService.getAddressFromCoordinates(
+            addressToJson = geocoderService.getLocationDataFromCoordinates(
                     announcementTo.getDestinationTo().getLongitude(),
                     announcementTo.getDestinationTo().getLatitude());
         }

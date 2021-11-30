@@ -1,6 +1,5 @@
-package com.example.rentiaserver.maps.httpclient.services;
+package com.example.rentiaserver.geolocation.http;
 
-import com.example.rentiaserver.maps.api.IHttpClientService;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -12,7 +11,7 @@ import java.time.Duration;
 import java.util.Map;
 
 @Component
-public class HttpClientService implements IHttpClientService {
+final class HttpClientService implements IHttpClientService {
 
     private static final long REQUEST_TIMEOUT = 10000;
 
@@ -32,17 +31,15 @@ public class HttpClientService implements IHttpClientService {
 
     private String buildUri(String baseUri, Map<String, String> params) {
         StringBuilder uriWithParams = new StringBuilder(baseUri);
-        if (!params.isEmpty()) {
-            uriWithParams.append("?");
-            params.forEach((key, value) -> uriWithParams.append(key)
-                    .append("=")
-                    .append(value)
-                    .append("&"));
-            return uriWithParams
-                    .substring(0, uriWithParams.length()).replace(" ", "+");
-        }
-        else {
+        if (params.isEmpty()) {
             return uriWithParams.toString();
         }
+        uriWithParams.append("?");
+        params.forEach((key, value) -> uriWithParams.append(key)
+                .append("=")
+                .append(value)
+                .append("&"));
+        return uriWithParams
+                .substring(0, uriWithParams.length()).replace(" ", "+");
     }
 }

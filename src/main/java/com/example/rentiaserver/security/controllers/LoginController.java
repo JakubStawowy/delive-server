@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(LoginController.BASE_ENDPOINT)
 public final class LoginController {
 
-    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL;
+    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX;
     private final UserService userService;
     private final ITokenProvider tokenProvider;
     private final IAuthorizeService authorizeService;

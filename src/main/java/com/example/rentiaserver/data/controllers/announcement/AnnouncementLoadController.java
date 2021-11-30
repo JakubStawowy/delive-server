@@ -1,7 +1,6 @@
 package com.example.rentiaserver.data.controllers.announcement;
 
 import com.example.rentiaserver.data.helpers.PackagesWeightCounterHelper;
-import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.data.services.announcement.AnnouncementService;
 import com.example.rentiaserver.data.to.*;
 import com.example.rentiaserver.constants.ApplicationConstants;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 @RequestMapping(value = AnnouncementLoadController.BASE_ENDPOINT)
 public final class AnnouncementLoadController {
 
-    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/announcements";
+    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/announcements";
 
     private final AnnouncementService announcementService;
 

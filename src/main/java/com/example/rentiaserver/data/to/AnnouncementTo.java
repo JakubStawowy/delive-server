@@ -1,6 +1,6 @@
 package com.example.rentiaserver.data.to;
 import com.example.rentiaserver.data.api.BaseEntityTo;
-import com.example.rentiaserver.maps.to.LocationTo;
+import com.example.rentiaserver.geolocation.to.LocationTo;
 
 import java.util.Set;
 

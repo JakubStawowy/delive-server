@@ -24,7 +24,7 @@ import java.util.Optional;
 @RequestMapping(FeedbackManageController.BASE_ENDPOINT)
 public final class FeedbackManageController {
 
-    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/feedback";
+    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/feedback";
     private final UserService userService;
     private final MessageDao messageDao;
 

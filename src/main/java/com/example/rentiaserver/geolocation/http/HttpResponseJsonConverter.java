@@ -1,6 +1,5 @@
-package com.example.rentiaserver.maps.httpclient.json;
+package com.example.rentiaserver.geolocation.http;
 
-import com.example.rentiaserver.maps.api.IResponseJsonConverter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.net.http.HttpResponse;
 
 @Component
-public class HttpResponseJsonConverter implements IResponseJsonConverter {
+final class HttpResponseJsonConverter implements IResponseJsonConverter {
 
     private final JSONParser jsonParser = new JSONParser();
 

@@ -1,4 +1,4 @@
-package com.example.rentiaserver.maps.to;
+package com.example.rentiaserver.geolocation.to;
 
 import java.io.Serializable;
 

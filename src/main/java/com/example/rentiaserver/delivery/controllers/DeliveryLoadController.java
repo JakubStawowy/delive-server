@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RequestMapping(value = DeliveryLoadController.BASE_ENDPOINT)
 public class DeliveryLoadController {
 
-    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/delivery";
+    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/delivery";
 
     private final DeliveryDao deliveryRepository;
 

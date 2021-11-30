@@ -1,7 +1,7 @@
 package com.example.rentiaserver.data.services.announcement;
 
 import com.example.rentiaserver.data.po.AnnouncementPo;
-import com.example.rentiaserver.maps.po.LocationPo;
+import com.example.rentiaserver.geolocation.po.LocationPo;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

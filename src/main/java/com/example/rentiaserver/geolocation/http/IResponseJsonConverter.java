@@ -1,4 +1,4 @@
-package com.example.rentiaserver.maps.api;
+package com.example.rentiaserver.geolocation.http;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

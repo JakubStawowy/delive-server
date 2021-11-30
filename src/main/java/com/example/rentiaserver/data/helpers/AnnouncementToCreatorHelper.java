@@ -1,9 +1,9 @@
 package com.example.rentiaserver.data.helpers;
 
 import com.example.rentiaserver.data.po.AnnouncementPo;
-import com.example.rentiaserver.maps.po.LocationPo;
+import com.example.rentiaserver.geolocation.po.LocationPo;
 import com.example.rentiaserver.data.to.*;
-import com.example.rentiaserver.maps.to.LocationTo;
+import com.example.rentiaserver.geolocation.to.LocationTo;
 
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -3,7 +3,7 @@ package com.example.rentiaserver.constants;
 public class ApplicationConstants {
 
     public static class Urls {
-        public static final String BASE_API_URL = "/api";
+        public static final String BASE_ENDPOINT_PREFIX = "/api";
         private Urls() {}
     }
 

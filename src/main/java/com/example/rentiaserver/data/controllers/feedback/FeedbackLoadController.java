@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @RequestMapping(FeedbackLoadController.BASE_ENDPOINT)
 public class FeedbackLoadController {
 
-    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/feedback";
+    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/feedback";
     private final UserService userService;
 
     @Autowired

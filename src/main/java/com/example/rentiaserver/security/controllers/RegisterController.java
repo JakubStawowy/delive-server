@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @RequestMapping(value = RegisterController.BASE_ENDPOINT)
 public final class RegisterController {
 
-    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL;
+    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX;
     private final UserService userService;
 
     @Autowired

@@ -1,4 +1,4 @@
-package com.example.rentiaserver.maps.po;
+package com.example.rentiaserver.geolocation.po;
 
 import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.data.po.AnnouncementPo;

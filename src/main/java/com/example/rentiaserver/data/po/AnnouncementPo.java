@@ -2,7 +2,7 @@ package com.example.rentiaserver.data.po;
 
 import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
-import com.example.rentiaserver.maps.po.LocationPo;
+import com.example.rentiaserver.geolocation.po.LocationPo;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
