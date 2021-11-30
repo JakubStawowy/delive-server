@@ -1,6 +1,7 @@
-package com.example.rentiaserver.httpclient.services;
+package com.example.rentiaserver.maps.httpclient.services;
 
-import org.springframework.stereotype.Service;
+import com.example.rentiaserver.maps.api.IHttpClientService;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,11 +11,12 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Map;
 
-@Service
-public class HttpClientService {
+@Component
+public class HttpClientService implements IHttpClientService {
 
     private static final long REQUEST_TIMEOUT = 10000;
 
+    @Override
     public HttpResponse<String> getHttpResponse(String baseUri, Map<String, String> params) throws IOException, InterruptedException {
 
         String finalUri = buildUri(baseUri, params);

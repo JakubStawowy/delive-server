@@ -32,8 +32,13 @@ public final class JsonWebTokenHelper {
 
     public static Long getRequesterId(HttpServletRequest request) {
         final String header = request.getHeader("Authorization");
+        return getRequesterId(header.replace("Bearer ",""));
+    }
+
+    public static Long getRequesterId(String token) {
+
         Jws<Claims> claimsJws = Jwts.parser().setSigningKey(TokenKeyConstants.KEY.getBytes(StandardCharsets.UTF_8))
-                .parseClaimsJws(header.replace("Bearer ",""));
+                .parseClaimsJws(token);
 
         return Long.valueOf(claimsJws.getBody().get("userId").toString());
     }

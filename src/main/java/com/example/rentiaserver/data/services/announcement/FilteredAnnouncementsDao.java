@@ -38,7 +38,7 @@ class FilteredAnnouncementsDao {
             predicates.add(cb.greaterThanOrEqualTo(root.get("amount"), minimalSalary));
         }
 
-        query.where(cb.and(predicates.toArray(new Predicate[0])));
+        query.where(cb.and(predicates.toArray(new Predicate[0]))).orderBy(cb.desc(root.get("createdAt")));
 
         TypedQuery<AnnouncementPo> q = entityManager.createQuery(query);
         q.setParameter(initialAddressExpression, "%" + initialAddress + "%");

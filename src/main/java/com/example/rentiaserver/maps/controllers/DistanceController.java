@@ -5,7 +5,7 @@ import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
 import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.data.services.announcement.AnnouncementService;
 import com.example.rentiaserver.data.to.AnnouncementTo;
-import com.example.rentiaserver.maps.services.DistanceService;
+import com.example.rentiaserver.maps.services.DistanceCalculator;
 import com.example.rentiaserver.maps.to.LocationTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +19,10 @@ public class DistanceController {
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_API_URL + "/distance";
 
     private final AnnouncementService announcementService;
-    private final DistanceService distanceService;
+    private final DistanceCalculator distanceService;
 
     @Autowired
-    public DistanceController(AnnouncementService announcementService, DistanceService distanceService) {
+    public DistanceController(AnnouncementService announcementService, DistanceCalculator distanceService) {
         this.announcementService = announcementService;
         this.distanceService = distanceService;
     }

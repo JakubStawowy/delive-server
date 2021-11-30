@@ -1,7 +1,7 @@
 package com.example.rentiaserver.maps.services;
 
-import com.example.rentiaserver.httpclient.json.HttpResponseJsonConverter;
-import com.example.rentiaserver.httpclient.services.HttpClientService;
+import com.example.rentiaserver.maps.httpclient.json.HttpResponseJsonConverter;
+import com.example.rentiaserver.maps.httpclient.services.HttpClientService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -15,12 +15,7 @@ import java.util.Map;
 @Service
 public class PositionStackReverseGeocodeService {
 
-//    private static final String BASE_URI = "https://us1.locationiq.com/v1/reverse.php?key=:key&lat=:lat&lon=:lon&zoom=10&format=json";
-//    private static final String BASE_URI = "https://us1.locationiq.com/v1/reverse.php";
-//    private static final String BASE_URI = "http://api.positionstack.com/v1/reverse?access_key=094f2137e9a96a52f38142d2c3729a35&query=49.872418522102805,19.664926340039447";
     private static final String BASE_URI = "http://api.positionstack.com/v1";
-
-//    private static final String API_KEY = "pk.08b24aa13f3c109e3aebf593d4dc3816";
     private static final String API_KEY = "094f2137e9a96a52f38142d2c3729a35";
 
     private final HttpClientService httpClientService;

@@ -27,9 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/test").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/validate/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/v2/*").permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/announcements/{id}/block").hasRole(UserRoles.ROLE_ADMIN.getValueWithoutPrefix())
-                .antMatchers(HttpMethod.PUT, "/api/announcements/{id}/unlock").hasRole(UserRoles.ROLE_ADMIN.getValueWithoutPrefix())
-                .antMatchers(HttpMethod.GET, "/api/announcements/blocked").hasRole(UserRoles.ROLE_ADMIN.getValueWithoutPrefix())
+                .antMatchers("/ws/**").permitAll()
                 .anyRequest()
                 .authenticated();
     }
