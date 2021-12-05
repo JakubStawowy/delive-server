@@ -4,7 +4,7 @@ import com.example.rentiaserver.geolocation.to.LocationTo;
 import org.springframework.stereotype.Component;
 
 @Component
-final class DistanceCalculator implements IDistanceCalculator {
+public final class DistanceCalculator implements IDistanceCalculator {
 
     @Override
     public double getDistance(LocationTo initialLocation, LocationTo finalLocation) {

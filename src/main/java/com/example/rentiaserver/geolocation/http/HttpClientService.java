@@ -11,7 +11,7 @@ import java.time.Duration;
 import java.util.Map;
 
 @Component
-final class HttpClientService implements IHttpClientService {
+public final class HttpClientService implements IHttpClientService {
 
     private static final long REQUEST_TIMEOUT = 10000;
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.net.http.HttpResponse;
 
 @Component
-final class HttpResponseJsonConverter implements IResponseJsonConverter {
+public final class HttpResponseJsonConverter implements IResponseJsonConverter {
 
     private final JSONParser jsonParser = new JSONParser();
 

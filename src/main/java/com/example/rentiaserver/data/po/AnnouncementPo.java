@@ -30,6 +30,9 @@ public class AnnouncementPo extends BaseEntityPo {
     @OneToMany(mappedBy = "announcementPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<PackagePo> packagesPos;
 
+    @Column(name = "WEIGHT_UNIT", nullable = false)
+    private String weightUnit;
+
     @Column(nullable = false)
     private BigDecimal amount;
 
@@ -39,12 +42,13 @@ public class AnnouncementPo extends BaseEntityPo {
     @OneToMany(mappedBy = "announcementPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<FeedbackPo> feedbackPos;
 
-    public AnnouncementPo(LocationPo initialLocationPo, LocationPo finalLocationPo, UserPo authorPo, BigDecimal amount, boolean requireTransportWithClient) {
+    public AnnouncementPo(LocationPo initialLocationPo, LocationPo finalLocationPo, UserPo authorPo, BigDecimal amount, boolean requireTransportWithClient, String weightUnit) {
         this.initialLocationPo = initialLocationPo;
         this.finalLocationPo = finalLocationPo;
         this.authorPo = authorPo;
         this.amount = amount;
         this.requireTransportWithClient = requireTransportWithClient;
+        this.weightUnit = weightUnit;
     }
 
     public AnnouncementPo() {}
@@ -111,6 +115,14 @@ public class AnnouncementPo extends BaseEntityPo {
 
     public void setFeedbackPos(Set<FeedbackPo> feedbackPos) {
         this.feedbackPos = feedbackPos;
+    }
+
+    public String getWeightUnit() {
+        return weightUnit;
+    }
+
+    public void setWeightUnit(String weightUnit) {
+        this.weightUnit = weightUnit;
     }
 }
 

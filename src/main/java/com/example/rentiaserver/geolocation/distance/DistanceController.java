@@ -20,12 +20,12 @@ public class DistanceController {
     private static final double MAX_RADIUS = 1;
 
     private final AnnouncementService announcementService;
-    private final IDistanceCalculator distanceService;
+    private final IDistanceCalculator distanceCalculator;
 
     @Autowired
-    public DistanceController(AnnouncementService announcementService, IDistanceCalculator distanceService) {
+    public DistanceController(AnnouncementService announcementService, IDistanceCalculator distanceCalculator) {
         this.announcementService = announcementService;
-        this.distanceService = distanceService;
+        this.distanceCalculator = distanceCalculator;
     }
 
     @GetMapping("/isInArea")
@@ -56,6 +56,6 @@ public class DistanceController {
 
     private double mapToDistance(AnnouncementPo announcementPo, LocationTo locationTo) {
         AnnouncementTo announcementTo = AnnouncementToCreatorHelper.create(announcementPo);
-        return distanceService.getDistance(announcementTo.getDestinationTo(), locationTo);
+        return distanceCalculator.getDistance(announcementTo.getDestinationTo(), locationTo);
     }
 }

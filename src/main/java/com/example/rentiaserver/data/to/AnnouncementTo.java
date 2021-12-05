@@ -12,10 +12,11 @@ public class AnnouncementTo extends BaseEntityTo {
     private final Long authorId;
     private final String amount;
     private final String weight;
+    private final String weightUnit;
     private final boolean requireTransportWithClient;
 
     public AnnouncementTo(Long id, String createdAt, LocationTo destinationFrom, LocationTo destinationTo, Set<PackageTo> packages,
-                          Long authorId, String amount, boolean requireTransportWithClient, String weight) {
+                          Long authorId, String amount, boolean requireTransportWithClient, String weight, String weightUnit) {
         super(id, createdAt);
         this.destinationFrom = destinationFrom;
         this.destinationTo = destinationTo;
@@ -24,6 +25,7 @@ public class AnnouncementTo extends BaseEntityTo {
         this.amount = amount;
         this.requireTransportWithClient = requireTransportWithClient;
         this.weight = weight;
+        this.weightUnit = weightUnit;
     }
 
     public LocationTo getDestinationFrom() {
@@ -52,5 +54,9 @@ public class AnnouncementTo extends BaseEntityTo {
 
     public String getWeight() {
         return weight;
+    }
+
+    public String getWeightUnit() {
+        return weightUnit;
     }
 }

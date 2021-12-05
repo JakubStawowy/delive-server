@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-final class PositionStackGeocodingService implements IGeocodingService {
+public final class PositionStackGeocodingService implements IGeocodingService {
 
     private static final String BASE_URI = "http://api.positionstack.com/v1/";
     private static final String API_KEY = "094f2137e9a96a52f38142d2c3729a35";
@@ -60,6 +60,10 @@ final class PositionStackGeocodingService implements IGeocodingService {
         paramsMap.put("query", query);
         JSONArray response = converter.convertResponseToJSONArray(httpClientService
                 .getHttpResponse(BASE_URI + geocodingType, paramsMap), "data");
+
+        if (response.isEmpty()) {
+            return null;
+        }
 
         return (JSONObject) response.get(0);
     }

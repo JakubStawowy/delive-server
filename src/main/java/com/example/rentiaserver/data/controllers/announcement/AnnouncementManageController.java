@@ -9,16 +9,20 @@ import com.example.rentiaserver.constants.ApplicationConstants;
 import com.example.rentiaserver.geolocation.converter.IGeocodingService;
 import com.example.rentiaserver.geolocation.po.LocationPo;
 import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
+import com.example.rentiaserver.security.to.ResponseTo;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
@@ -40,9 +44,10 @@ public class AnnouncementManageController {
 
     @PostMapping(value = EndpointConstants.ADD_NORMAL_ANNOUNCEMENTS_ENDPOINT)
     @Transactional
-    public void saveAnnouncement(@RequestBody AnnouncementTo announcementTo, HttpServletRequest request) {
-
-        userService.findUserById(JsonWebTokenHelper.getRequesterId(request)).ifPresent(author -> {
+    public ResponseTo saveAnnouncement(@RequestBody AnnouncementTo announcementTo, HttpServletRequest request) {
+        Optional<UserPo> optionalUserPo = userService.findUserById(JsonWebTokenHelper.getRequesterId(request));
+        if (optionalUserPo.isPresent()) {
+            UserPo author = optionalUserPo.get();
             try {
                 if (announcementTo.getId() != null) {
                     announcementService.getAnnouncementById(announcementTo.getId()).ifPresent(announcementPo -> {
@@ -56,10 +61,15 @@ public class AnnouncementManageController {
                 else {
                     addAnnouncement(author, announcementTo);
                 }
+                return new ResponseTo(true, null, HttpStatus.OK);
             } catch (InterruptedException | ParseException | IOException e) {
                 throw new RuntimeException(e);
+            } catch (LocationNotFoundException e) {
+                return new ResponseTo(false, e.getMessage(), HttpStatus.NOT_FOUND);
             }
-        });
+        }
+
+        return new ResponseTo(false, "User not found", HttpStatus.NOT_FOUND);
     }
 
     private void editAnnouncement(AnnouncementPo announcementPo, AnnouncementTo announcementTo) throws InterruptedException, ParseException, IOException {
@@ -87,19 +97,26 @@ public class AnnouncementManageController {
         announcementTo.getPackages().forEach(packageTo ->
                 packagePos.add(new PackagePo(
                         new BigDecimal(packageTo.getPackageLength()),
+                        packageTo.getLengthUnit(),
                         new BigDecimal(packageTo.getPackageWidth()),
+                        packageTo.getWidthUnit(),
                         new BigDecimal(packageTo.getPackageHeight()),
+                        packageTo.getHeightUnit(),
                         packageTo.getPackageWeight() != null ? new BigDecimal(packageTo.getPackageWeight()) : null,
                         announcementPo
                 )));
         announcementService.saveAllPackages(packagePos);
     }
 
-    private void addAnnouncement(UserPo author, AnnouncementTo announcementTo) throws InterruptedException, ParseException, IOException {
+    private void addAnnouncement(UserPo author, AnnouncementTo announcementTo) throws InterruptedException, ParseException, IOException, LocationNotFoundException {
         JSONObject addressFromJson;
         JSONObject addressToJson;
         if (announcementTo.getDestinationFrom().getLongitude() == null && announcementTo.getDestinationFrom().getAddress() != null) {
-            addressFromJson = geocoderService.getLocationDataFromAddress(announcementTo.getDestinationFrom().getAddress());
+            String fromAddress = announcementTo.getDestinationFrom().getAddress();
+            addressFromJson = geocoderService.getLocationDataFromAddress(fromAddress);
+            if (addressFromJson == null) {
+                throw new LocationNotFoundException("Address not found: " + fromAddress);
+            }
         }
         else {
             addressFromJson = geocoderService.getLocationDataFromCoordinates(
@@ -108,8 +125,11 @@ public class AnnouncementManageController {
         }
         if (announcementTo.getDestinationTo().getLongitude() == null) {
 
-            addressToJson = geocoderService.getLocationDataFromAddress(
-                    announcementTo.getDestinationTo().getAddress());
+            String toAddress = announcementTo.getDestinationTo().getAddress();
+            addressToJson = geocoderService.getLocationDataFromAddress(toAddress);
+            if (addressToJson == null) {
+                throw new LocationNotFoundException("Address not found: " + toAddress);
+            }
         }
         else {
             addressToJson = geocoderService.getLocationDataFromCoordinates(
@@ -130,7 +150,8 @@ public class AnnouncementManageController {
                         toAddress),
                 author,
                 new BigDecimal(announcementTo.getAmount()),
-                announcementTo.isRequireTransportWithClient());
+                announcementTo.isRequireTransportWithClient(),
+                announcementTo.getWeightUnit());
         if (announcementTo.getId() != null) {
             announcement.setId(announcementTo.getId());
         }
@@ -139,11 +160,20 @@ public class AnnouncementManageController {
         announcementTo.getPackages().forEach(packageTo ->
                 packagePos.add(new PackagePo(
                         new BigDecimal(packageTo.getPackageLength()),
+                        packageTo.getLengthUnit(),
                         new BigDecimal(packageTo.getPackageWidth()),
+                        packageTo.getWidthUnit(),
                         new BigDecimal(packageTo.getPackageHeight()),
+                        packageTo.getHeightUnit(),
                         packageTo.getPackageWeight() != null ? new BigDecimal(packageTo.getPackageWeight()) : null,
                         announcement
                 )));
         announcementService.saveAllPackages(packagePos);
+    }
+
+    private static class LocationNotFoundException extends Exception {
+        public LocationNotFoundException(String message) {
+            super(message);
+        }
     }
 }

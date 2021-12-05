@@ -15,9 +15,11 @@ import com.example.rentiaserver.finance.po.UserWalletPo;
 import com.example.rentiaserver.geolocation.to.LocationTo;
 import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -35,6 +37,11 @@ public class ChangeDeliveryStateController {
     public ChangeDeliveryStateController(DeliveryService deliveryService, MessageDao messageDao) {
         this.deliveryService = deliveryService;
         this.messageDao = messageDao;
+    }
+
+    @PutMapping("/pick")
+    public void pickPackage(@RequestParam Long deliveryId) {
+        deliveryService.findDeliveryById(deliveryId).ifPresent(deliveryPo -> changeDeliveryState(deliveryPo, DeliveryState.TO_START));
     }
 
     @PutMapping("/start")
@@ -118,27 +125,31 @@ public class ChangeDeliveryStateController {
     }
 
     @GetMapping("/actionName")
-    public Set<String> getNextActionNames(@RequestParam DeliveryState deliveryState, @RequestParam Long announcementAuthorId,
-                                    @RequestParam Long delivererId, HttpServletRequest request) {
+    public Set<ActionPair> getNextActionNames(@RequestParam DeliveryState deliveryState, @RequestParam Long announcementAuthorId,
+                                        @RequestParam Long delivererId, HttpServletRequest request) {
         final Long loggedUserId = JsonWebTokenHelper.getRequesterId(request);
         final boolean isUserPrincipal = announcementAuthorId.compareTo(loggedUserId) == 0;
         final boolean isUserDeliverer = delivererId.compareTo(loggedUserId) == 0;
         if (DeliveryState.REGISTERED.equals(deliveryState) && isUserDeliverer) {
-            return Collections.singleton("start");
+            return Collections.singleton(new ActionPair("pick", "pick up the load"));
+        }
+        if (DeliveryState.TO_START.equals(deliveryState) && isUserPrincipal) {
+            return Collections.singleton(new ActionPair("start", "hand over package to deliverer"));
         }
         if (DeliveryState.STARTED.equals(deliveryState) && isUserDeliverer) {
-            return Collections.singleton("finish");
+            return Collections.singleton(new ActionPair("finish", "package delivered"));
         }
         if (DeliveryState.FINISHED.equals(deliveryState) && isUserPrincipal) {
-            return Collections.singleton("close");
+            return Collections.singleton(new ActionPair("close", "close delivery"));
         }
         if (DeliveryState.TO_ACCEPT.equals(deliveryState) && isUserPrincipal) {
-            return new HashSet<>(Arrays.asList("accept", "discard"));
+            return new HashSet<>(Arrays.asList(new ActionPair("accept", "package delivered"),
+                    new ActionPair("discard", "package not delivered")));
         }
         if (DeliveryState.CLOSED.equals(deliveryState)) {
-            return Collections.singleton("-");
+            return Collections.singleton(new ActionPair("-", "-"));
         }
-        return Collections.singleton("waiting");
+        return Collections.singleton(new ActionPair("waiting", "waiting"));
     }
 
     private void completeTransfer(DeliveryPo deliveryPo) {
@@ -156,5 +167,32 @@ public class ChangeDeliveryStateController {
     private void changeDeliveryState(DeliveryPo deliveryPo, DeliveryState deliveryState) {
         deliveryPo.setDeliveryState(deliveryState);
         deliveryService.save(deliveryPo);
+    }
+
+    private static class ActionPair implements Serializable {
+
+        private String value;
+        private String label;
+
+        public ActionPair(String value, String label) {
+            this.value = value;
+            this.label = label;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
 @RequestMapping(value = MapController.BASE_ENDPOINT)
-public class MapController {
+public final class MapController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/maps";
 
