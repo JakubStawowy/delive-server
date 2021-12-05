@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+//@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+@CrossOrigin
 @RestController
 @RequestMapping(value = DistanceController.BASE_ENDPOINT)
 public class DistanceController {

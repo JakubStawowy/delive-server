@@ -25,7 +25,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+//@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+@CrossOrigin
 @RestController
 @RequestMapping(value = AnnouncementManageController.BASE_ENDPOINT)
 public class AnnouncementManageController {

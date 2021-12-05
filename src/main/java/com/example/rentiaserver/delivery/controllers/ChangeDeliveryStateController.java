@@ -23,7 +23,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.*;
 
-@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+//@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+@CrossOrigin
 @RestController
 @RequestMapping(value = ChangeDeliveryStateController.BASE_ENDPOINT)
 public class ChangeDeliveryStateController {

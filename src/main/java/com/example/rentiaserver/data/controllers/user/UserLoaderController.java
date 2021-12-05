@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+//@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+@CrossOrigin
 @RestController
 @RequestMapping(UserLoaderController.BASE_ENDPOINT)
 public final class UserLoaderController {

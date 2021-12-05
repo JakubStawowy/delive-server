@@ -17,7 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Optional;
 
-@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+//@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+@CrossOrigin
 @RestController
 @RequestMapping(value = MessageSendController.BASE_ENDPOINT)
 public class MessageSendController {

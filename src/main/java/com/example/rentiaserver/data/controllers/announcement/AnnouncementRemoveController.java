@@ -6,7 +6,8 @@ import com.example.rentiaserver.data.services.announcement.AnnouncementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+//@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+@CrossOrigin
 @RestController
 @RequestMapping(value = AnnouncementRemoveController.BASE_ENDPOINT)
 public final class AnnouncementRemoveController {
