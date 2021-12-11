@@ -1,6 +1,6 @@
 package com.example.rentiaserver.delivery.controllers;
 
-import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.delivery.dao.MessageDao;
 import com.example.rentiaserver.delivery.helpers.MessageToCreateHelper;
 import com.example.rentiaserver.delivery.to.MessageTo;
@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+//@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+@CrossOrigin
 @RestController
 @RequestMapping(value = MessageLoadController.BASE_ENDPOINT)
 public class MessageLoadController {

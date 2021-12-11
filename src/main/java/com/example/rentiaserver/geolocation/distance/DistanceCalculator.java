@@ -21,9 +21,7 @@ public final class DistanceCalculator implements IDistanceCalculator {
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
                 Math.cos(convertToRadius(lat1)) * Math.cos(convertToRadius(lat2)) *
                         Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-        return earthRadius * c;
+        return earthRadius * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     }
 
     private double convertToRadius(final double value) {

@@ -3,7 +3,7 @@ package com.example.rentiaserver.data.controllers.announcement;
 import com.example.rentiaserver.data.helpers.PackagesWeightCounterHelper;
 import com.example.rentiaserver.data.services.announcement.AnnouncementService;
 import com.example.rentiaserver.data.to.*;
-import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +12,8 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+//@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+@CrossOrigin
 @RestController
 @RequestMapping(value = AnnouncementLoadController.BASE_ENDPOINT)
 public final class AnnouncementLoadController {

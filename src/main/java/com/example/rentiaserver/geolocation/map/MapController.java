@@ -1,11 +1,12 @@
 package com.example.rentiaserver.geolocation.map;
 
-import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.geolocation.to.GeolocationTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+//@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+@CrossOrigin
 @RestController
 @RequestMapping(value = MapController.BASE_ENDPOINT)
 public final class MapController {
@@ -30,6 +31,6 @@ public final class MapController {
                 geolocationService.getHalfwayPoint(fromLongitude, toLongitude),
                 geolocationService.getZoomLevel(
                         fromLongitude, fromLatitude,
-                        toLongitude, toLatitude, mapWidth));
+                        toLongitude, toLatitude));
     }
 }

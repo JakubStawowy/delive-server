@@ -2,7 +2,7 @@ package com.example.rentiaserver.data.controllers.user;
 
 import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.data.to.UserTo;
-import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+//@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+@CrossOrigin
 @RestController
 @RequestMapping(UserLoaderController.BASE_ENDPOINT)
 public final class UserLoaderController {
@@ -37,10 +38,5 @@ public final class UserLoaderController {
                 .map(user -> new ResponseEntity<>(UserTo.createLoggedUserTo(user), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
-    }
-
-    @GetMapping("/details/loggedUser/id")
-    public Long getLoggedUserId(HttpServletRequest request) {
-        return JsonWebTokenHelper.getRequesterId(request);
     }
 }

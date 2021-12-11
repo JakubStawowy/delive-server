@@ -5,8 +5,6 @@ import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.delivery.dao.DeliveryDao;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
-import com.example.rentiaserver.finance.dao.TransferDao;
-import com.example.rentiaserver.finance.po.TransferPo;
 import com.example.rentiaserver.geolocation.distance.IDistanceCalculator;
 import com.example.rentiaserver.geolocation.to.LocationTo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +18,12 @@ public class DeliveryService {
     private final DeliveryDao deliveryDao;
     private final UserService userService;
     private final IDistanceCalculator distanceService;
-    private final TransferDao transferDao;
 
     @Autowired
-    public DeliveryService(DeliveryDao deliveryDao, UserService userService, IDistanceCalculator distanceService, TransferDao transferDao) {
+    public DeliveryService(DeliveryDao deliveryDao, UserService userService, IDistanceCalculator distanceService) {
         this.deliveryDao = deliveryDao;
         this.userService = userService;
         this.distanceService = distanceService;
-        this.transferDao = transferDao;
     }
 
     public Optional<UserPo> findUserById(Long id) {
@@ -48,10 +44,6 @@ public class DeliveryService {
 
     public void save(DeliveryPo deliveryPo) {
         deliveryDao.save(deliveryPo);
-    }
-
-    public void save(TransferPo transferPo) {
-        transferDao.save(transferPo);
     }
 
     public double getDistance(LocationTo initialLocation, LocationTo finalLocation) {

@@ -1,12 +1,12 @@
 package com.example.rentiaserver.data.controllers.announcement;
 
-import com.example.rentiaserver.constants.EndpointConstants;
-import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.data.services.announcement.AnnouncementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+//@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
+@CrossOrigin
 @RestController
 @RequestMapping(value = AnnouncementRemoveController.BASE_ENDPOINT)
 public final class AnnouncementRemoveController {
@@ -19,7 +19,7 @@ public final class AnnouncementRemoveController {
         this.announcementService = announcementService;
     }
 
-    @DeleteMapping(value = EndpointConstants.REMOVE_ANNOUNCEMENT_ENDPOINT)
+    @DeleteMapping(value = "/delete")
     public void removeAnnouncement(@RequestParam Long announcementId) {
         announcementService.deleteById(announcementId);
     }

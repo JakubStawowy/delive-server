@@ -3,9 +3,9 @@ package com.example.rentiaserver.geolocation.map;
 import com.example.rentiaserver.geolocation.distance.IDistanceCalculator;
 import com.example.rentiaserver.geolocation.to.LocationTo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 final class GeolocationService implements IGeolocationService {
 
     private final IDistanceCalculator distanceCalculator;
@@ -21,14 +21,8 @@ final class GeolocationService implements IGeolocationService {
     }
 
     @Override
-    public long getZoomLevel(final double fromLongitude, final double toLongitude, final double mapWidth) {
-        double angle = toLongitude - fromLongitude < 0 ? toLongitude - fromLongitude + 360 : toLongitude - fromLongitude;
-        return Math.round(Math.log(mapWidth * 360 / angle / 256 / Math.log(2)));
-    }
-
-    @Override
     public long getZoomLevel(final double fromLongitude, final double fromLatitude,
-                             final double toLongitude, final double toLatitude, final double mapWidth) {
+                             final double toLongitude, final double toLatitude) {
         LocationTo initialLocation = LocationTo.Builder.getBuilder()
                 .setLatitude(fromLatitude)
                 .setLongitude(fromLongitude)
@@ -43,3 +37,7 @@ final class GeolocationService implements IGeolocationService {
         return Math.round(Math.log(x));
     }
 }
+
+
+
+

@@ -6,8 +6,9 @@ public class ChatMessage {
     private String token;
     private String user;
 
-    public ChatMessage(String value) {
+    public ChatMessage(String value, String token) {
         this.value = value;
+        this.token = token;
     }
 
     public ChatMessage() {

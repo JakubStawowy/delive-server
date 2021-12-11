@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@Deprecated
 public final class PositionStackGeocodingService implements IGeocodingService {
 
     private static final String BASE_URI = "http://api.positionstack.com/v1/";
