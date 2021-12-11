@@ -1,6 +1,6 @@
 package com.example.rentiaserver.delivery.controllers;
 
-import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.delivery.dao.DeliveryDao;
 import com.example.rentiaserver.delivery.helpers.DeliveryToCreateHelper;
 import com.example.rentiaserver.delivery.to.DeliveryTo;

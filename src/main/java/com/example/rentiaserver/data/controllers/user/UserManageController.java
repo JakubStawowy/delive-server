@@ -1,8 +1,7 @@
 package com.example.rentiaserver.data.controllers.user;
 
 import com.example.rentiaserver.data.po.UserPo;
-import com.example.rentiaserver.constants.EndpointConstants;
-import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.data.to.UserTo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public final class UserManageController {
         this.userService = userService;
     }
 
-    @PutMapping(path = EndpointConstants.EDIT_USER_ENDPOINT)
+    @PutMapping(value = "/edit")
     public ResponseEntity<?> editUser(@RequestBody UserTo userTo) {
         return userService.findUserById(userTo.getId())
                 .map(userPo -> editUser(userPo, userTo))

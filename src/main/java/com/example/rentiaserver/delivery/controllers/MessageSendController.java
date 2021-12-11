@@ -1,6 +1,6 @@
 package com.example.rentiaserver.delivery.controllers;
 
-import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.data.services.announcement.AnnouncementService;
 import com.example.rentiaserver.data.po.*;
 import com.example.rentiaserver.delivery.enums.MessageType;

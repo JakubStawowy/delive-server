@@ -1,6 +1,6 @@
 package com.example.rentiaserver.security.controllers;
 
-import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.data.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

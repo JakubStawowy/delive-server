@@ -1,6 +1,6 @@
 package com.example.rentiaserver.geolocation.map;
 
-import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.geolocation.to.GeolocationTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +31,6 @@ public final class MapController {
                 geolocationService.getHalfwayPoint(fromLongitude, toLongitude),
                 geolocationService.getZoomLevel(
                         fromLongitude, fromLatitude,
-                        toLongitude, toLatitude, mapWidth));
+                        toLongitude, toLatitude));
     }
 }

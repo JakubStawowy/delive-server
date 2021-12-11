@@ -1,16 +1,18 @@
 package com.example.rentiaserver.security.controllers;
 
 import com.example.rentiaserver.data.po.UserPo;
-import com.example.rentiaserver.constants.EndpointConstants;
-import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.security.api.IAuthorizeService;
 import com.example.rentiaserver.security.api.ITokenProvider;
+import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import com.example.rentiaserver.security.to.LoginResponseTo;
 import com.example.rentiaserver.security.to.ResponseTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 //@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @CrossOrigin
@@ -30,8 +32,8 @@ public final class LoginController {
         this.authorizeService = authorizeService;
     }
 
-    @PostMapping(value = EndpointConstants.LOGIN_ENDPOINT)
-    public ResponseTo loginUser(@RequestParam("email") String email, @RequestParam("password") String password) {
+    @PostMapping(value = "/login")
+    public ResponseTo loginUser(@RequestParam String email, @RequestParam String password) {
         UserPo user;
         if ((user = authorizeService.authorizeUserWithEmailAndPassword(email, password)) != null) {
             user.setLogged(true);
@@ -41,5 +43,10 @@ public final class LoginController {
             );
         }
         return new ResponseTo(false, "Wrong email or password", HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping(value = "/userId")
+    public Long getLoggedUserId(HttpServletRequest request) {
+        return JsonWebTokenHelper.getRequesterId(request);
     }
 }

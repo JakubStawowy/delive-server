@@ -1,7 +1,7 @@
 package com.example.rentiaserver.security.providers;
 
 import com.example.rentiaserver.data.po.UserPo;
-import com.example.rentiaserver.constants.TokenKeyConstants;
+import com.example.rentiaserver.security.api.TokenKeyConstants;
 import com.example.rentiaserver.security.api.ITokenProvider;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -12,8 +12,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
-import static com.example.rentiaserver.constants.ApplicationConstants.Security.ID_PREFIX;
-import static com.example.rentiaserver.constants.ApplicationConstants.Security.ROLE_PREFIX;
+import static com.example.rentiaserver.ApplicationConstants.Security.ID_PREFIX;
+import static com.example.rentiaserver.ApplicationConstants.Security.ROLE_PREFIX;
 
 @Service
 public class JsonWebTokenProvider implements ITokenProvider {

@@ -3,7 +3,7 @@ package com.example.rentiaserver.data.controllers.announcement;
 import com.example.rentiaserver.data.helpers.PackagesWeightCounterHelper;
 import com.example.rentiaserver.data.services.announcement.AnnouncementService;
 import com.example.rentiaserver.data.to.*;
-import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -2,8 +2,7 @@ package com.example.rentiaserver.data.controllers.feedback;
 
 import com.example.rentiaserver.data.enums.FeedbackRate;
 import com.example.rentiaserver.data.po.FeedbackPo;
-import com.example.rentiaserver.constants.EndpointConstants;
-import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.data.to.FeedbackTo;
@@ -35,7 +34,7 @@ public final class FeedbackManageController {
         this.messageDao = messageDao;
     }
 
-    @PostMapping(path = EndpointConstants.ADD_FEEDBACK_ENDPOINT)
+    @PostMapping(path = "/add")
     public void addFeedback(@RequestBody FeedbackTo feedback, HttpServletRequest request) {
         final Long loggedUserId = JsonWebTokenHelper.getRequesterId(request);
         Optional<UserPo> optionalAuthorPo = userService.findUserById(loggedUserId);
@@ -57,7 +56,7 @@ public final class FeedbackManageController {
         }
     }
 
-    @DeleteMapping(EndpointConstants.DELETE_FEEDBACK_ENDPOINT)
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<?> deleteFeedback(@PathVariable("id") Long id) {
         try{
             userService.deleteFeedbackById(id);
@@ -67,7 +66,7 @@ public final class FeedbackManageController {
         }
     }
 
-    @PutMapping(value = EndpointConstants.EDIT_FEEDBACK_ENDPOINT, consumes = "application/json")
+    @PutMapping(value = "/{id}/edit")
     public ResponseEntity<?> editFeedback(@PathVariable("id") Long id, @RequestBody FeedbackPo feedback) {
         Optional<FeedbackPo> optionalFeedback = userService.findFeedbackById(id);
         if(optionalFeedback.isPresent()) {

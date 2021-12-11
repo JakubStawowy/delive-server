@@ -1,6 +1,6 @@
 package com.example.rentiaserver.delivery.dao;
 
-import static com.example.rentiaserver.constants.ApplicationConstants.Sql.ORDER_BY_CREATED_AT;
+import static com.example.rentiaserver.ApplicationConstants.Sql.ORDER_BY_CREATED_AT;
 
 import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.data.po.UserPo;

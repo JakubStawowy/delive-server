@@ -1,6 +1,6 @@
 package com.example.rentiaserver.geolocation.distance;
 
-import com.example.rentiaserver.constants.ApplicationConstants;
+import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
 import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.data.services.announcement.AnnouncementService;

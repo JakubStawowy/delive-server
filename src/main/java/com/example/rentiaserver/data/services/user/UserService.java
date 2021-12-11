@@ -2,15 +2,10 @@ package com.example.rentiaserver.data.services.user;
 
 import com.example.rentiaserver.data.po.FeedbackPo;
 import com.example.rentiaserver.data.po.UserPo;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
-import static com.example.rentiaserver.constants.ApplicationConstants.Sql.ORDER_BY_CREATED_AT;
 
 @Service
 public class UserService {

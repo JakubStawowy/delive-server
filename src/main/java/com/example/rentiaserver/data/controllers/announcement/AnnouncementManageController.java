@@ -4,10 +4,11 @@ import com.example.rentiaserver.data.services.announcement.AnnouncementService;
 import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.data.to.AnnouncementTo;
 import com.example.rentiaserver.data.po.*;
-import com.example.rentiaserver.constants.EndpointConstants;
-import com.example.rentiaserver.constants.ApplicationConstants;
-import com.example.rentiaserver.geolocation.converter.IGeocodingService;
+import com.example.rentiaserver.ApplicationConstants;
+import com.example.rentiaserver.geolocation.converter.ForwardGeocodingService;
+import com.example.rentiaserver.geolocation.converter.ReverseGeocodingService;
 import com.example.rentiaserver.geolocation.po.LocationPo;
+import com.example.rentiaserver.geolocation.to.LocationTo;
 import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import com.example.rentiaserver.security.to.ResponseTo;
 import org.json.simple.JSONObject;
@@ -17,8 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.Option;
+import javax.servlet.http.HttpServletRequest;;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -34,16 +34,18 @@ public class AnnouncementManageController {
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/announcements";
     private final UserService userService;
     private final AnnouncementService announcementService;
-    private final IGeocodingService geocoderService;
+    private final ForwardGeocodingService forwardGeocodingService;
+    private final ReverseGeocodingService reverseGeocodingService;
 
     @Autowired
-    public AnnouncementManageController(UserService userService, AnnouncementService announcementService, IGeocodingService geocoderService) {
+    public AnnouncementManageController(UserService userService, AnnouncementService announcementService, ForwardGeocodingService forwardGeocodingService, ReverseGeocodingService reverseGeocodingService) {
         this.userService = userService;
         this.announcementService = announcementService;
-        this.geocoderService = geocoderService;
+        this.forwardGeocodingService = forwardGeocodingService;
+        this.reverseGeocodingService = reverseGeocodingService;
     }
 
-    @PostMapping(value = EndpointConstants.ADD_NORMAL_ANNOUNCEMENTS_ENDPOINT)
+    @PostMapping(value = "/normal/add")
     @Transactional
     public ResponseTo saveAnnouncement(@RequestBody AnnouncementTo announcementTo, HttpServletRequest request) {
         Optional<UserPo> optionalUserPo = userService.findUserById(JsonWebTokenHelper.getRequesterId(request));
@@ -73,13 +75,16 @@ public class AnnouncementManageController {
         return new ResponseTo(false, "User not found", HttpStatus.NOT_FOUND);
     }
 
-    private void editAnnouncement(AnnouncementPo announcementPo, AnnouncementTo announcementTo) throws InterruptedException, ParseException, IOException {
-        JSONObject addressFromJson = geocoderService.getLocationDataFromCoordinates(
-                announcementTo.getDestinationFrom().getLongitude(),
-                announcementTo.getDestinationFrom().getLatitude());
-        JSONObject addressToJson = geocoderService.getLocationDataFromCoordinates(
-                announcementTo.getDestinationTo().getLongitude(),
-                announcementTo.getDestinationTo().getLatitude());
+    private void editAnnouncement(AnnouncementPo announcementPo, AnnouncementTo announcementTo) throws
+            InterruptedException, ParseException, IOException {
+//        JSONObject addressFromJson = reverseGeocodingService.getLocationData(
+//                String.valueOf(announcementTo.getDestinationFrom().getLongitude()),
+//                String.valueOf(announcementTo.getDestinationFrom().getLatitude()));
+//        JSONObject addressToJson = reverseGeocodingService.getLocationData(
+//                String.valueOf(announcementTo.getDestinationTo().getLongitude()),
+//                String.valueOf(announcementTo.getDestinationTo().getLatitude()));
+        JSONObject addressFromJson = reverseGeocodingService.getFullLocationData(announcementTo.getDestinationFrom());
+        JSONObject addressToJson = reverseGeocodingService.getFullLocationData(announcementTo.getDestinationTo());
 
         String fromAddress = addressFromJson.get("name") + ", " + addressFromJson.get("locality") + ", " + addressFromJson.get("country");
         String toAddress = addressToJson.get("name") + ", " + addressToJson.get("locality") + ", " + addressToJson.get("country");
@@ -113,29 +118,32 @@ public class AnnouncementManageController {
         JSONObject addressFromJson;
         JSONObject addressToJson;
         if (announcementTo.getDestinationFrom().getLongitude() == null && announcementTo.getDestinationFrom().getAddress() != null) {
-            String fromAddress = announcementTo.getDestinationFrom().getAddress();
-            addressFromJson = geocoderService.getLocationDataFromAddress(fromAddress);
+//            String fromAddress = announcementTo.getDestinationFrom().getAddress();
+            LocationTo locationTo = announcementTo.getDestinationFrom();
+            addressFromJson = forwardGeocodingService.getFullLocationData(locationTo);
             if (addressFromJson == null) {
-                throw new LocationNotFoundException("Address not found: " + fromAddress);
+                throw new LocationNotFoundException("Address not found: " + locationTo.getAddress());
             }
         }
         else {
-            addressFromJson = geocoderService.getLocationDataFromCoordinates(
-                    announcementTo.getDestinationFrom().getLongitude(),
-                    announcementTo.getDestinationFrom().getLatitude());
+//            addressFromJson = reverseGeocodingService.getLocationData(
+//                    String.valueOf(announcementTo.getDestinationFrom().getLatitude()),
+//                    String.valueOf(announcementTo.getDestinationFrom().getLongitude())
+//            );
+            addressFromJson = reverseGeocodingService.getFullLocationData(announcementTo.getDestinationFrom());
         }
         if (announcementTo.getDestinationTo().getLongitude() == null) {
 
-            String toAddress = announcementTo.getDestinationTo().getAddress();
-            addressToJson = geocoderService.getLocationDataFromAddress(toAddress);
+//            String toAddress = announcementTo.getDestinationTo().getAddress();
+            LocationTo locationTo = announcementTo.getDestinationTo();
+//            addressToJson = forwardGeocodingService.getLocationData(toAddress);
+            addressToJson = forwardGeocodingService.getFullLocationData(locationTo);
             if (addressToJson == null) {
-                throw new LocationNotFoundException("Address not found: " + toAddress);
+                throw new LocationNotFoundException("Address not found: " + locationTo.getAddress());
             }
         }
         else {
-            addressToJson = geocoderService.getLocationDataFromCoordinates(
-                    announcementTo.getDestinationTo().getLongitude(),
-                    announcementTo.getDestinationTo().getLatitude());
+            addressToJson = reverseGeocodingService.getFullLocationData(announcementTo.getDestinationTo());
         }
 
         String fromAddress = addressFromJson.get("name") + ", " + addressFromJson.get("locality") + ", " + addressFromJson.get("country");

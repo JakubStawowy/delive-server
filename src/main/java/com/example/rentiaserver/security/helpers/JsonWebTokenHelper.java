@@ -1,6 +1,6 @@
 package com.example.rentiaserver.security.helpers;
 
-import com.example.rentiaserver.constants.TokenKeyConstants;
+import com.example.rentiaserver.security.api.TokenKeyConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -12,8 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
-import static com.example.rentiaserver.constants.ApplicationConstants.Security.ID_PREFIX;
-import static com.example.rentiaserver.constants.ApplicationConstants.Security.ROLE_PREFIX;
+import static com.example.rentiaserver.ApplicationConstants.Security.ROLE_PREFIX;
 
 public final class JsonWebTokenHelper {
 

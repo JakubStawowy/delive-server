@@ -2,11 +2,11 @@ package com.example.rentiaserver.data.po;
 
 import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
-import com.example.rentiaserver.finance.po.UserWalletPo;
 import com.example.rentiaserver.security.enums.UserRoles;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
@@ -20,11 +20,18 @@ public class UserPo extends BaseEntityPo {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String name;
-    private String surname;
-    private String phone;
-    private String image;
 
+    @Column(nullable = false)
+    private String surname;
+
+    @Column(unique = true)
+    private String phone;
+
+    @Column(nullable = false)
+    private BigDecimal balance;
+    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRoles role;
@@ -34,10 +41,6 @@ public class UserPo extends BaseEntityPo {
 
     @Column(nullable = false)
     private String salt;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_WALLET_ID", referencedColumnName = "ID", nullable = false)
-    private UserWalletPo userWalletPo;
 
     @OneToMany(mappedBy = "authorPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<FeedbackPo> feedbackSent;
@@ -51,14 +54,12 @@ public class UserPo extends BaseEntityPo {
     @OneToMany(mappedBy = "userPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<DeliveryPo> deliveryPos;
 
-    public UserPo(String email,
-                  String password,
-                  UserRoles role,
-                  UserWalletPo userWalletPo) {
+    public UserPo(String email, String password, String name, String surname, UserRoles role) {
         this.email = email;
         this.password = password;
+        this.name = name;
+        this.surname = surname;
         this.role = role;
-        this.userWalletPo = userWalletPo;
     }
 
     public UserPo() {
@@ -69,6 +70,7 @@ public class UserPo extends BaseEntityPo {
         super.init();
         logged = false;
         role = UserRoles.ROLE_USER;
+        balance = new BigDecimal("0.0");
     }
 
     public String getEmail() {
@@ -111,14 +113,6 @@ public class UserPo extends BaseEntityPo {
         this.phone = phone;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public UserRoles getRole() {
         return role;
     }
@@ -141,14 +135,6 @@ public class UserPo extends BaseEntityPo {
 
     public void setSalt(String salt) {
         this.salt = salt;
-    }
-
-    public UserWalletPo getUserWalletPo() {
-        return userWalletPo;
-    }
-
-    public void setUserWalletPo(UserWalletPo userWalletPo) {
-        this.userWalletPo = userWalletPo;
     }
 
     public Set<FeedbackPo> getFeedbackSent() {
@@ -183,4 +169,11 @@ public class UserPo extends BaseEntityPo {
         this.deliveryPos = deliveryPos;
     }
 
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
 }

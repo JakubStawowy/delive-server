@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.example.rentiaserver.constants.ApplicationConstants.Sql.ORDER_BY_CREATED_AT;
+import static com.example.rentiaserver.ApplicationConstants.Sql.ORDER_BY_CREATED_AT;
 
 @Repository
 interface FeedbackDao extends CrudRepository<FeedbackPo, Long> {
