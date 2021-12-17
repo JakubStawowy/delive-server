@@ -1,6 +1,8 @@
 package com.example.rentiaserver.delivery.to;
 
-public class ChatMessage {
+import java.io.Serializable;
+
+public class ChatMessage implements Serializable {
 
     private String value;
     private String token;

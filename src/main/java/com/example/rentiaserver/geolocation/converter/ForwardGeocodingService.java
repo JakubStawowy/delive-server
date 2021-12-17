@@ -22,8 +22,8 @@ public final class ForwardGeocodingService extends GeocodingService {
     @Override
     protected String prepareQuery(LocationTo locationTo) {
         String address = locationTo.getAddress();
-        if (address == null || address.isEmpty()) {
-            throw new IllegalArgumentException("Forward geocoding requires not empty address param.");
+        if (address == null || address.length() < 3) {
+            throw new IllegalArgumentException("Forward geocoding requires not empty address param with at least 3 characters.");
         }
         return address.replaceAll(",", " ");
     }

@@ -7,6 +7,9 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
 
 import java.net.http.HttpResponse;
+import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Component
 public final class HttpResponseJsonConverter implements IResponseJsonConverter {
@@ -20,7 +23,13 @@ public final class HttpResponseJsonConverter implements IResponseJsonConverter {
 
     @Override
     public JSONArray convertResponseToJSONArray(HttpResponse<String> response, String rootElement) throws ParseException {
-        JSONObject rootObject = convertResponseToJSONObject(response);
-        return (JSONArray) jsonParser.parse(String.valueOf(rootObject.get(rootElement)));
+
+        try {
+            JSONObject rootObject = convertResponseToJSONObject(response);
+            return (JSONArray) jsonParser.parse(String.valueOf(rootObject.get(rootElement)));
+        } catch (Exception ex) {
+            Logger.getGlobal().log(Level.WARNING, "ParseException occurred. Returning empty JSONArray.");
+            return new JSONArray();
+        }
     }
 }

@@ -6,33 +6,33 @@ import com.example.rentiaserver.geolocation.to.LocationTo;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class GeocodingService {
+@Service
+public class NewForwardGeocodingService {
 
-    private static final String BASE_URI = "http://api.positionstack.com/v1/";
-    private static final String API_KEY = "674d875372303ee0f00d7cf5e87946c1";
+    private static final String BASE_URI = "http://open.mapquestapi.com/geocoding/v1/address";
+    private static final String API_KEY = "aFNv2te6iS61qABztEDdKAcQjMbv25dO";
 
     private final IHttpClientService httpClientService;
     private final IResponseJsonConverter converter;
 
-    public GeocodingService(IHttpClientService httpClientService, IResponseJsonConverter converter) {
+    public NewForwardGeocodingService(IHttpClientService httpClientService, IResponseJsonConverter converter) {
         this.httpClientService = httpClientService;
         this.converter = converter;
     }
 
-    protected abstract GeocodingType getGeocodingType();
-    protected abstract String prepareQuery(LocationTo locationTo);
 
     public JSONArray getLocationsData(LocationTo locationTo) throws IOException, InterruptedException, ParseException {
         Map<String, String> paramsMap = new HashMap<>();
-        paramsMap.put("access_key", API_KEY);
-        paramsMap.put("query", prepareQuery(locationTo));
+        paramsMap.put("key", API_KEY);
+        paramsMap.put("location", locationTo.getAddress().replaceAll(",", " "));
         return converter.convertResponseToJSONArray(httpClientService
-                .getHttpResponse(BASE_URI + getGeocodingType(), paramsMap), "data");
+                .getHttpResponse(BASE_URI, paramsMap), "results");
     }
 
     public JSONObject getFullLocationData(LocationTo locationTo)
@@ -41,21 +41,7 @@ public abstract class GeocodingService {
         if (response.isEmpty()) {
             return null;
         }
-        return (JSONObject) response.get(0);
+        return (JSONObject) ((JSONArray)((JSONObject) response.get(0)).get("locations")).get(0);
     }
 
-    protected enum GeocodingType {
-        FORWARD("forward"),
-        REVERSE("reverse");
-        private final String value;
-
-        GeocodingType(String value) {
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return value;
-        }
-    }
 }

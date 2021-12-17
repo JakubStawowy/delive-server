@@ -47,7 +47,8 @@ public final class AnnouncementService {
         packageDao.deleteAllByAnnouncementPo(announcementPo);
     }
 
-    public List<AnnouncementPo> findAnnouncementsByAddresses(String initialAddress, String finalAddress, String minimalSalary, String requireTransportWithClient) {
-        return filteredAnnouncementsDao.findAnnouncementsByAddresses(initialAddress, finalAddress, minimalSalary, requireTransportWithClient);
+    public List<AnnouncementPo> findAnnouncementsByAddresses(String initialAddress, String finalAddress, String minimalSalary,
+                                                             String requireTransportWithClient, boolean sortBySalary) {
+        return filteredAnnouncementsDao.findAnnouncementsByAddresses(initialAddress, finalAddress, minimalSalary, requireTransportWithClient, sortBySalary);
     }
 }

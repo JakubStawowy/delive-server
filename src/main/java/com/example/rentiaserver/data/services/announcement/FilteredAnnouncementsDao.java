@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -17,7 +18,8 @@ class FilteredAnnouncementsDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<AnnouncementPo> findAnnouncementsByAddresses(String initialAddress, String finalAddress, String minimalSalary, String requireTransportWithClient) {
+    public List<AnnouncementPo> findAnnouncementsByAddresses(String initialAddress, String finalAddress, String minimalSalary,
+                                                             String requireTransportWithClient, boolean sortBySalary) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<AnnouncementPo> query = cb.createQuery(AnnouncementPo.class);
         Root<AnnouncementPo> root = query.from(AnnouncementPo.class);
@@ -38,7 +40,15 @@ class FilteredAnnouncementsDao {
             predicates.add(cb.greaterThanOrEqualTo(root.get("amount"), minimalSalary));
         }
 
-        query.where(cb.and(predicates.toArray(new Predicate[0]))).orderBy(cb.desc(root.get("createdAt")));
+        Order order;
+        if (sortBySalary) {
+            order = cb.desc(root.get("amount"));
+        }
+        else {
+            order = cb.desc(root.get("createdAt"));
+        }
+
+        query.where(cb.and(predicates.toArray(new Predicate[0]))).orderBy(order);
 
         TypedQuery<AnnouncementPo> q = entityManager.createQuery(query);
         q.setParameter(initialAddressExpression, "%" + initialAddress + "%");

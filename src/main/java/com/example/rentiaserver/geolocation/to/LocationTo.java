@@ -27,7 +27,16 @@ public class LocationTo extends BaseEntityTo {
         return address;
     }
 
-    public static class Builder {
+    public interface InitialBuilder {
+        Builder setAddress(String address);
+        LongitudeBuilder setLatitude(Double latitude);
+    }
+
+    public interface LongitudeBuilder {
+        Builder setLongitude(Double longitude);
+    }
+
+    public static class Builder implements InitialBuilder, LongitudeBuilder {
 
         private Long id;
         private String createdAt;
@@ -37,7 +46,7 @@ public class LocationTo extends BaseEntityTo {
 
         private Builder() {};
 
-        public static Builder getBuilder() {
+        public static InitialBuilder getBuilder() {
             return new Builder();
         }
 
@@ -56,12 +65,12 @@ public class LocationTo extends BaseEntityTo {
             return this;
         }
 
-        public Builder setLatitude(double latitude) {
+        public LongitudeBuilder setLatitude(Double latitude) {
             this.latitude = latitude;
             return this;
         }
 
-        public Builder setLongitude(double longitude) {
+        public Builder setLongitude(Double longitude) {
             this.longitude = longitude;
             return this;
         }

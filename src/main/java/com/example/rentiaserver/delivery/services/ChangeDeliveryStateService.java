@@ -20,6 +20,7 @@ import java.util.Arrays;
 public final class ChangeDeliveryStateService extends BaseChangeDeliveryStateService {
 
     private final MessageDao messageDao;
+    private static final double RADIUS = 0.5;
 
     @Autowired
     public ChangeDeliveryStateService(DeliveryService deliveryService, MessageDao messageDao) {

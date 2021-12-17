@@ -12,6 +12,8 @@ public class MessageToCreateHelper {
                 messagePo.getSenderPo() != null ? messagePo.getSenderPo().getId() : null,
                 messagePo.getReceiverPo().getId(),
                 messagePo.getMessage(),
+                messagePo.getVehicleRegistrationNumber(),
+                messagePo.getPhoneNumber(),
                 messagePo.getMessageType().name(),
                 messagePo.isReplied()
         );

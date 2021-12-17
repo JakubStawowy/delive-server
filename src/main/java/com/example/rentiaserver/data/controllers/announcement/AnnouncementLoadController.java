@@ -43,16 +43,30 @@ public final class AnnouncementLoadController {
     @GetMapping("/filtered")
     public List<AnnouncementTo> getFilteredAnnouncements(@RequestParam String initialAddress, @RequestParam String finalAddress,
                                                   @RequestParam String minimalSalary, @RequestParam String maxWeight,
-                                                         @RequestParam String requireTransportWithClient) {
+                                                         @RequestParam String requireTransportWithClient, @RequestParam boolean sortBySalary,
+                                                         @RequestParam boolean sortByWeight) {
         List<AnnouncementTo> announcementTos = announcementService
-                .findAnnouncementsByAddresses(initialAddress, finalAddress, minimalSalary, requireTransportWithClient)
+                .findAnnouncementsByAddresses(initialAddress, finalAddress, minimalSalary, requireTransportWithClient, sortBySalary)
                 .stream().map(AnnouncementToCreatorHelper::create).collect(Collectors.toList());
+        List<AnnouncementTo> result;
+
         if (maxWeight != null && !maxWeight.isEmpty()) {
-            return announcementTos.stream().filter(announcementTo ->
-                    PackagesWeightCounterHelper.sumPackagesWeights(announcementTo.getPackages()).compareTo(new BigDecimal(maxWeight)) < 0)
-                    .collect(Collectors.toList());
+            result = new ArrayList<>();
+            for (AnnouncementTo announcementTo: announcementTos) {
+                BigDecimal weight = PackagesWeightCounterHelper.sumPackagesWeights(announcementTo.getPackages());
+                if (weight.compareTo(new BigDecimal(maxWeight)) < 0) {
+                    result.add(announcementTo);
+                }
+            }
+        } else {
+            result = new ArrayList<>(announcementTos);
         }
-        return announcementTos;
+
+        if (sortByWeight) {
+            result.sort(Comparator.comparing(announcementTo -> new BigDecimal(announcementTo.getWeight())));
+        }
+
+        return result;
     }
 
 }

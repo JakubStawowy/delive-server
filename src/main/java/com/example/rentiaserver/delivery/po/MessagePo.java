@@ -13,6 +13,12 @@ public class MessagePo extends BaseEntityPo {
 
     private String message;
 
+    @Column(name = "VEHICLE_REGISTRATION_NUMBER")
+    private String vehicleRegistrationNumber;
+
+    @Column(name = "PHONE_NUMBER")
+    private String phoneNumber;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ANNOUNCEMENT_ID")
     private AnnouncementPo announcementPo;
@@ -93,5 +99,21 @@ public class MessagePo extends BaseEntityPo {
 
     public void setReplied(boolean replied) {
         this.replied = replied;
+    }
+
+    public String getVehicleRegistrationNumber() {
+        return vehicleRegistrationNumber;
+    }
+
+    public void setVehicleRegistrationNumber(String vehicleRegistrationNumber) {
+        this.vehicleRegistrationNumber = vehicleRegistrationNumber;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

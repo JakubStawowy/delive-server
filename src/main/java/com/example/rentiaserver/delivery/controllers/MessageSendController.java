@@ -53,13 +53,15 @@ public class MessageSendController {
                 return false;
             }
 
-            messageService.saveMessage(
-                    new MessagePo(
-                            incomingMessageTo.getMessage(),
-                            optionalAnnouncementPo.get(),
-                            optionalSenderPo.get(),
-                            optionalReceiverPo.get(),
-                            MessageType.REQUEST));
+            MessagePo messagePo = new MessagePo(
+                    incomingMessageTo.getMessage(),
+                    optionalAnnouncementPo.get(),
+                    optionalSenderPo.get(),
+                    optionalReceiverPo.get(),
+                    MessageType.REQUEST);
+            messagePo.setVehicleRegistrationNumber(incomingMessageTo.getVehicleRegistrationNumber());
+            messagePo.setPhoneNumber(incomingMessageTo.getPhoneNumber());
+            messageService.saveMessage(messagePo);
             return true;
         }
         throw new IllegalArgumentException("Data not found");

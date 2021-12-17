@@ -6,6 +6,7 @@ import com.example.rentiaserver.data.to.AnnouncementTo;
 import com.example.rentiaserver.data.po.*;
 import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.geolocation.converter.ForwardGeocodingService;
+import com.example.rentiaserver.geolocation.converter.NewForwardGeocodingService;
 import com.example.rentiaserver.geolocation.converter.ReverseGeocodingService;
 import com.example.rentiaserver.geolocation.po.LocationPo;
 import com.example.rentiaserver.geolocation.to.LocationTo;
@@ -35,6 +36,8 @@ public class AnnouncementManageController {
     private final UserService userService;
     private final AnnouncementService announcementService;
     private final ForwardGeocodingService forwardGeocodingService;
+    // Na wypadek awarii positionstack
+//    private final NewForwardGeocodingService forwardGeocodingService;
     private final ReverseGeocodingService reverseGeocodingService;
 
     @Autowired
@@ -77,12 +80,6 @@ public class AnnouncementManageController {
 
     private void editAnnouncement(AnnouncementPo announcementPo, AnnouncementTo announcementTo) throws
             InterruptedException, ParseException, IOException {
-//        JSONObject addressFromJson = reverseGeocodingService.getLocationData(
-//                String.valueOf(announcementTo.getDestinationFrom().getLongitude()),
-//                String.valueOf(announcementTo.getDestinationFrom().getLatitude()));
-//        JSONObject addressToJson = reverseGeocodingService.getLocationData(
-//                String.valueOf(announcementTo.getDestinationTo().getLongitude()),
-//                String.valueOf(announcementTo.getDestinationTo().getLatitude()));
         JSONObject addressFromJson = reverseGeocodingService.getFullLocationData(announcementTo.getDestinationFrom());
         JSONObject addressToJson = reverseGeocodingService.getFullLocationData(announcementTo.getDestinationTo());
 
@@ -118,7 +115,6 @@ public class AnnouncementManageController {
         JSONObject addressFromJson;
         JSONObject addressToJson;
         if (announcementTo.getDestinationFrom().getLongitude() == null && announcementTo.getDestinationFrom().getAddress() != null) {
-//            String fromAddress = announcementTo.getDestinationFrom().getAddress();
             LocationTo locationTo = announcementTo.getDestinationFrom();
             addressFromJson = forwardGeocodingService.getFullLocationData(locationTo);
             if (addressFromJson == null) {
@@ -126,17 +122,11 @@ public class AnnouncementManageController {
             }
         }
         else {
-//            addressFromJson = reverseGeocodingService.getLocationData(
-//                    String.valueOf(announcementTo.getDestinationFrom().getLatitude()),
-//                    String.valueOf(announcementTo.getDestinationFrom().getLongitude())
-//            );
             addressFromJson = reverseGeocodingService.getFullLocationData(announcementTo.getDestinationFrom());
         }
         if (announcementTo.getDestinationTo().getLongitude() == null) {
 
-//            String toAddress = announcementTo.getDestinationTo().getAddress();
             LocationTo locationTo = announcementTo.getDestinationTo();
-//            addressToJson = forwardGeocodingService.getLocationData(toAddress);
             addressToJson = forwardGeocodingService.getFullLocationData(locationTo);
             if (addressToJson == null) {
                 throw new LocationNotFoundException("Address not found: " + locationTo.getAddress());
@@ -148,6 +138,11 @@ public class AnnouncementManageController {
 
         String fromAddress = addressFromJson.get("name") + ", " + addressFromJson.get("locality") + ", " + addressFromJson.get("country");
         String toAddress = addressToJson.get("name") + ", " + addressToJson.get("locality") + ", " + addressToJson.get("country");
+
+        // Na wypadek awarii positionstack
+//        String fromAddress = addressFromJson.get("street") + ", " + addressFromJson.get("adminArea5") + ", " + addressFromJson.get("adminArea1");
+//        String toAddress = addressToJson.get("street") + ", " + addressToJson.get("adminArea5") + ", " + addressToJson.get("adminArea1");
+
         AnnouncementPo announcement = new AnnouncementPo(
                 new LocationPo(
                         Double.valueOf(String.valueOf(addressFromJson.get("latitude"))),
@@ -157,6 +152,15 @@ public class AnnouncementManageController {
                         Double.valueOf(String.valueOf(addressToJson.get("latitude"))),
                         Double.valueOf(String.valueOf(addressToJson.get("longitude"))),
                         toAddress),
+                // Na wypadek awarii positionstack
+//                new LocationPo(
+//                        Double.valueOf(String.valueOf(((JSONObject)addressFromJson.get("latLng")).get("lat"))),
+//                        Double.valueOf(String.valueOf(((JSONObject)addressFromJson.get("latLng")).get("lng"))),
+//                        fromAddress),
+//                new LocationPo(
+//                        Double.valueOf(String.valueOf(((JSONObject)addressToJson.get("latLng")).get("lat"))),
+//                        Double.valueOf(String.valueOf(((JSONObject)addressToJson.get("latLng")).get("lng"))),
+//                        toAddress),
                 author,
                 new BigDecimal(announcementTo.getAmount()),
                 announcementTo.isRequireTransportWithClient(),
