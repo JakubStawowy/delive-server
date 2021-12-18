@@ -1,11 +1,13 @@
-package com.example.rentiaserver.data.controllers.announcement;
+package com.example.rentiaserver.data.controllers.order;
 
 import com.example.rentiaserver.data.helpers.PackagesWeightCounterHelper;
-import com.example.rentiaserver.data.services.announcement.AnnouncementService;
+import com.example.rentiaserver.data.services.order.OrderService;
 import com.example.rentiaserver.data.to.*;
 import com.example.rentiaserver.ApplicationConstants;
-import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
+import com.example.rentiaserver.data.helpers.OrderToCreatorHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -15,15 +17,16 @@ import java.util.stream.Collectors;
 //@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @CrossOrigin
 @RestController
-@RequestMapping(value = AnnouncementLoadController.BASE_ENDPOINT)
-public final class AnnouncementLoadController {
+@RequestMapping(value = OrderLoadController.BASE_ENDPOINT)
+public final class OrderLoadController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/announcements";
 
-    private final AnnouncementService announcementService;
+
+    private final OrderService announcementService;
 
     @Autowired
-    public AnnouncementLoadController(AnnouncementService announcementService) {
+    public OrderLoadController(OrderService announcementService) {
         this.announcementService = announcementService;
     }
 
@@ -31,13 +34,13 @@ public final class AnnouncementLoadController {
     public List<AnnouncementTo> getAllAnnouncements() {
         List<AnnouncementTo> announcementTransferObjects = new LinkedList<>();
         announcementService.getAllAnnouncements()
-                .forEach(announcement -> announcementTransferObjects.add(AnnouncementToCreatorHelper.create(announcement)));
+                .forEach(announcement -> announcementTransferObjects.add(OrderToCreatorHelper.create(announcement)));
         return announcementTransferObjects;
     }
 
     @GetMapping("/announcement")
     public AnnouncementTo getAnnouncementById(@RequestParam Long announcementId) {
-        return announcementService.getAnnouncementById(announcementId).map(AnnouncementToCreatorHelper::create).orElse(null);
+        return announcementService.getAnnouncementById(announcementId).map(OrderToCreatorHelper::create).orElse(null);
     }
 
     @GetMapping("/filtered")
@@ -47,7 +50,7 @@ public final class AnnouncementLoadController {
                                                          @RequestParam boolean sortByWeight) {
         List<AnnouncementTo> announcementTos = announcementService
                 .findAnnouncementsByAddresses(initialAddress, finalAddress, minimalSalary, requireTransportWithClient, sortBySalary)
-                .stream().map(AnnouncementToCreatorHelper::create).collect(Collectors.toList());
+                .stream().map(OrderToCreatorHelper::create).collect(Collectors.toList());
         List<AnnouncementTo> result;
 
         if (maxWeight != null && !maxWeight.isEmpty()) {

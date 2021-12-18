@@ -1,4 +1,4 @@
-package com.example.rentiaserver.data.services.announcement;
+package com.example.rentiaserver.data.services.order;
 
 import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.geolocation.po.LocationPo;
@@ -9,11 +9,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Repository
-class FilteredAnnouncementsDao {
+class FilteredOrderService {
 
     @PersistenceContext
     private EntityManager entityManager;

@@ -1,13 +1,12 @@
-package com.example.rentiaserver.data.controllers.announcement;
+package com.example.rentiaserver.data.controllers.order;
 
-import com.example.rentiaserver.data.services.announcement.AnnouncementService;
+import com.example.rentiaserver.data.services.order.OrderService;
 import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.data.to.AnnouncementTo;
 import com.example.rentiaserver.data.po.*;
 import com.example.rentiaserver.ApplicationConstants;
-import com.example.rentiaserver.geolocation.converter.ForwardGeocodingService;
-import com.example.rentiaserver.geolocation.converter.NewForwardGeocodingService;
-import com.example.rentiaserver.geolocation.converter.ReverseGeocodingService;
+import com.example.rentiaserver.geolocation.converter.*;
+import com.example.rentiaserver.geolocation.helpers.UnwrapResponseHelper;
 import com.example.rentiaserver.geolocation.po.LocationPo;
 import com.example.rentiaserver.geolocation.to.LocationTo;
 import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
@@ -15,6 +14,8 @@ import com.example.rentiaserver.security.to.ResponseTo;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -29,23 +30,35 @@ import java.util.Set;
 //@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @CrossOrigin
 @RestController
-@RequestMapping(value = AnnouncementManageController.BASE_ENDPOINT)
-public class AnnouncementManageController {
+@RequestMapping(value = OrderSaveController.BASE_ENDPOINT)
+@PropertySource("classpath:application.properties")
+public class OrderSaveController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/announcements";
+
     private final UserService userService;
-    private final AnnouncementService announcementService;
-    private final ForwardGeocodingService forwardGeocodingService;
-    // Na wypadek awarii positionstack
-//    private final NewForwardGeocodingService forwardGeocodingService;
-    private final ReverseGeocodingService reverseGeocodingService;
+    private final OrderService announcementService;
+    private final IGeocodingService forwardGeocodingService;
+    private final IGeocodingService reverseGeocodingService;
+    private final String emergencyGeocodingMode;
 
     @Autowired
-    public AnnouncementManageController(UserService userService, AnnouncementService announcementService, ForwardGeocodingService forwardGeocodingService, ReverseGeocodingService reverseGeocodingService) {
+    public OrderSaveController(UserService userService, OrderService announcementService,
+                               ForwardGeocodingService forwardGeocodingService,
+                               ReverseGeocodingService reverseGeocodingService,
+                               ForwardEmergencyGeocodingService forwardEmergencyGeocodingService,
+                               ReverseEmergencyGeocodingService reverseEmergencyGeocodingService,
+                               @Value("${geocoding.mode.emergency}") String emergencyGeocodingMode) {
         this.userService = userService;
         this.announcementService = announcementService;
-        this.forwardGeocodingService = forwardGeocodingService;
-        this.reverseGeocodingService = reverseGeocodingService;
+        this.emergencyGeocodingMode = emergencyGeocodingMode;
+        if (Boolean.TRUE.equals(Boolean.valueOf(emergencyGeocodingMode))) {
+            this.forwardGeocodingService = forwardEmergencyGeocodingService;
+            this.reverseGeocodingService = reverseEmergencyGeocodingService;
+        } else {
+            this.forwardGeocodingService = forwardGeocodingService;
+            this.reverseGeocodingService = reverseGeocodingService;
+        }
     }
 
     @PostMapping(value = "/normal/add")
@@ -83,8 +96,10 @@ public class AnnouncementManageController {
         JSONObject addressFromJson = reverseGeocodingService.getFullLocationData(announcementTo.getDestinationFrom());
         JSONObject addressToJson = reverseGeocodingService.getFullLocationData(announcementTo.getDestinationTo());
 
-        String fromAddress = addressFromJson.get("name") + ", " + addressFromJson.get("locality") + ", " + addressFromJson.get("country");
-        String toAddress = addressToJson.get("name") + ", " + addressToJson.get("locality") + ", " + addressToJson.get("country");
+//        String fromAddress = addressFromJson.get("name") + ", " + addressFromJson.get("locality") + ", " + addressFromJson.get("country");
+        String fromAddress = UnwrapResponseHelper.unwrapPositionStackSingleResponse(addressFromJson);
+//        String toAddress = addressToJson.get("name") + ", " + addressToJson.get("locality") + ", " + addressToJson.get("country");
+        String toAddress = UnwrapResponseHelper.unwrapPositionStackSingleResponse(addressToJson);
         announcementPo.getInitialLocationPo().setLatitude(announcementTo.getDestinationFrom().getLatitude());
         announcementPo.getInitialLocationPo().setLongitude(announcementTo.getDestinationFrom().getLongitude());
         announcementPo.getInitialLocationPo().setAddress(fromAddress);
@@ -95,6 +110,7 @@ public class AnnouncementManageController {
 
         announcementPo.setRequireTransportWithClient(announcementTo.isRequireTransportWithClient());
         announcementPo.setAmount(new BigDecimal(announcementTo.getAmount()));
+        announcementPo.setWeightUnit(announcementTo.getWeightUnit());
         Set<PackagePo> packagePos = new HashSet<>();
         announcementService.deleteAllByAnnouncement(announcementPo);
         announcementTo.getPackages().forEach(packageTo ->
@@ -136,38 +152,28 @@ public class AnnouncementManageController {
             addressToJson = reverseGeocodingService.getFullLocationData(announcementTo.getDestinationTo());
         }
 
-        String fromAddress = addressFromJson.get("name") + ", " + addressFromJson.get("locality") + ", " + addressFromJson.get("country");
-        String toAddress = addressToJson.get("name") + ", " + addressToJson.get("locality") + ", " + addressToJson.get("country");
-
-        // Na wypadek awarii positionstack
-//        String fromAddress = addressFromJson.get("street") + ", " + addressFromJson.get("adminArea5") + ", " + addressFromJson.get("adminArea1");
-//        String toAddress = addressToJson.get("street") + ", " + addressToJson.get("adminArea5") + ", " + addressToJson.get("adminArea1");
+        LocationTo initialLocationTo;
+        LocationTo finalLocationTo;
+        if (Boolean.TRUE.equals(Boolean.valueOf(emergencyGeocodingMode))) {
+            initialLocationTo = UnwrapResponseHelper.convertMapquestSingleResponse(addressFromJson);
+            finalLocationTo = UnwrapResponseHelper.convertMapquestSingleResponse(addressToJson);
+        } else {
+            initialLocationTo = UnwrapResponseHelper.convertPositionStackSingleResponse(addressFromJson);
+            finalLocationTo = UnwrapResponseHelper.convertPositionStackSingleResponse(addressToJson);
+        }
 
         AnnouncementPo announcement = new AnnouncementPo(
-                new LocationPo(
-                        Double.valueOf(String.valueOf(addressFromJson.get("latitude"))),
-                        Double.valueOf(String.valueOf(addressFromJson.get("longitude"))),
-                        fromAddress),
-                new LocationPo(
-                        Double.valueOf(String.valueOf(addressToJson.get("latitude"))),
-                        Double.valueOf(String.valueOf(addressToJson.get("longitude"))),
-                        toAddress),
-                // Na wypadek awarii positionstack
-//                new LocationPo(
-//                        Double.valueOf(String.valueOf(((JSONObject)addressFromJson.get("latLng")).get("lat"))),
-//                        Double.valueOf(String.valueOf(((JSONObject)addressFromJson.get("latLng")).get("lng"))),
-//                        fromAddress),
-//                new LocationPo(
-//                        Double.valueOf(String.valueOf(((JSONObject)addressToJson.get("latLng")).get("lat"))),
-//                        Double.valueOf(String.valueOf(((JSONObject)addressToJson.get("latLng")).get("lng"))),
-//                        toAddress),
+                new LocationPo(initialLocationTo.getLatitude(), initialLocationTo.getLongitude(), initialLocationTo.getAddress()),
+                new LocationPo(finalLocationTo.getLatitude(), finalLocationTo.getLongitude(), finalLocationTo.getAddress()),
                 author,
                 new BigDecimal(announcementTo.getAmount()),
                 announcementTo.isRequireTransportWithClient(),
                 announcementTo.getWeightUnit());
+
         if (announcementTo.getId() != null) {
             announcement.setId(announcementTo.getId());
         }
+
         announcementService.save(announcement);
         Set<PackagePo> packagePos = new HashSet<>();
         announcementTo.getPackages().forEach(packageTo ->

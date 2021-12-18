@@ -1,4 +1,4 @@
-package com.example.rentiaserver.data.services.announcement;
+package com.example.rentiaserver.data.services.order;
 
 
 import com.example.rentiaserver.data.po.AnnouncementPo;

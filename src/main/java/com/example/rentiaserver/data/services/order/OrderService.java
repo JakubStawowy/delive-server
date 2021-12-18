@@ -1,4 +1,4 @@
-package com.example.rentiaserver.data.services.announcement;
+package com.example.rentiaserver.data.services.order;
 
 import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.data.po.PackagePo;
@@ -10,33 +10,33 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public final class AnnouncementService {
+public final class OrderService {
 
-    private final AnnouncementDao announcementDao;
-    private final FilteredAnnouncementsDao filteredAnnouncementsDao;
+    private final OrderDao orderDao;
+    private final FilteredOrderService filteredAnnouncementsDao;
     private final PackageDao packageDao;
 
     @Autowired
-    public AnnouncementService(AnnouncementDao announcementRepository, FilteredAnnouncementsDao filteredAnnouncementsDao, PackageDao packageRepository) {
-        this.announcementDao = announcementRepository;
+    public OrderService(OrderDao announcementRepository, FilteredOrderService filteredAnnouncementsDao, PackageDao packageRepository) {
+        this.orderDao = announcementRepository;
         this.filteredAnnouncementsDao = filteredAnnouncementsDao;
         this.packageDao = packageRepository;
     }
 
     public void save(AnnouncementPo announcementPo) {
-        announcementDao.save(announcementPo);
+        orderDao.save(announcementPo);
     }
 
     public void deleteById(Long id) {
-        announcementDao.deleteById(id);
+        orderDao.deleteById(id);
     }
 
     public Optional<AnnouncementPo> getAnnouncementById(Long id) {
-        return announcementDao.findById(id);
+        return orderDao.findById(id);
     }
 
     public List<AnnouncementPo> getAllAnnouncements() {
-        return announcementDao.findAll();
+        return orderDao.findAll();
     }
 
     public void saveAllPackages(Set<PackagePo> packagePos) {

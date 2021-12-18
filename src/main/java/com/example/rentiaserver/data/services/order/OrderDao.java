@@ -1,4 +1,4 @@
-package com.example.rentiaserver.data.services.announcement;
+package com.example.rentiaserver.data.services.order;
 
 import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.data.po.AnnouncementPo;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-interface AnnouncementDao extends JpaRepository<AnnouncementPo, Long> {
+interface OrderDao extends JpaRepository<AnnouncementPo, Long> {
     @Query(value = "SELECT * FROM ANNOUNCEMENTS WHERE " + ApplicationConstants.Sql.NOT_ARCHIVED + " " + ApplicationConstants.Sql.ORDER_BY_CREATED_AT, nativeQuery = true)
     @NotNull
     List<AnnouncementPo> findAll();

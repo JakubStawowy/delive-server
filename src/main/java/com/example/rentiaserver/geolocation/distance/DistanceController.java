@@ -1,9 +1,9 @@
 package com.example.rentiaserver.geolocation.distance;
 
 import com.example.rentiaserver.ApplicationConstants;
-import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
+import com.example.rentiaserver.data.helpers.OrderToCreatorHelper;
 import com.example.rentiaserver.data.po.AnnouncementPo;
-import com.example.rentiaserver.data.services.announcement.AnnouncementService;
+import com.example.rentiaserver.data.services.order.OrderService;
 import com.example.rentiaserver.data.to.AnnouncementTo;
 import com.example.rentiaserver.geolocation.to.LocationTo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +20,11 @@ public class DistanceController {
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/distance";
     private static final double MAX_RADIUS = 1;
 
-    private final AnnouncementService announcementService;
+    private final OrderService announcementService;
     private final IDistanceCalculator distanceCalculator;
 
     @Autowired
-    public DistanceController(AnnouncementService announcementService, IDistanceCalculator distanceCalculator) {
+    public DistanceController(OrderService announcementService, IDistanceCalculator distanceCalculator) {
         this.announcementService = announcementService;
         this.distanceCalculator = distanceCalculator;
     }
@@ -56,7 +56,7 @@ public class DistanceController {
     }
 
     private double mapToDistance(AnnouncementPo announcementPo, LocationTo locationTo) {
-        AnnouncementTo announcementTo = AnnouncementToCreatorHelper.create(announcementPo);
+        AnnouncementTo announcementTo = OrderToCreatorHelper.create(announcementPo);
         return distanceCalculator.getDistance(announcementTo.getDestinationTo(), locationTo);
     }
 }

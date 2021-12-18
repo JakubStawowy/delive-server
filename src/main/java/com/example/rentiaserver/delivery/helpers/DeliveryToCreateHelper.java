@@ -1,6 +1,6 @@
 package com.example.rentiaserver.delivery.helpers;
 
-import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
+import com.example.rentiaserver.data.helpers.OrderToCreatorHelper;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
 import com.example.rentiaserver.delivery.to.DeliveryTo;
 
@@ -10,7 +10,7 @@ public class DeliveryToCreateHelper {
                 deliveryPo.getId(),
                 String.valueOf(deliveryPo.getCreatedAt()),
                 deliveryPo.getUserPo().getId(),
-                AnnouncementToCreatorHelper.create(deliveryPo.getAnnouncementPo()),
+                OrderToCreatorHelper.create(deliveryPo.getAnnouncementPo()),
                 deliveryPo.getDeliveryState().name()
         );
     }

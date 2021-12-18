@@ -8,7 +8,7 @@ import com.example.rentiaserver.geolocation.to.LocationTo;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public final class AnnouncementToCreatorHelper {
+public final class OrderToCreatorHelper {
     public static AnnouncementTo create(AnnouncementPo announcementPo) {
         LocationPo destinationFrom = announcementPo.getInitialLocationPo();
         LocationPo destinationTo = announcementPo.getFinalLocationPo();

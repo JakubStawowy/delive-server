@@ -1,7 +1,7 @@
 package com.example.rentiaserver.delivery.controllers;
 
 import com.example.rentiaserver.ApplicationConstants;
-import com.example.rentiaserver.data.services.announcement.AnnouncementService;
+import com.example.rentiaserver.data.services.order.OrderService;
 import com.example.rentiaserver.data.po.*;
 import com.example.rentiaserver.delivery.enums.MessageType;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
@@ -25,13 +25,13 @@ public class MessageSendController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/messages";
 
-    private final AnnouncementService announcementService;
+    private final OrderService announcementService;
     private final MessageService messageService;
     private final DeliveryService deliveryService;
 
     @Autowired
     public MessageSendController(
-            AnnouncementService announcementService,
+            OrderService announcementService,
             MessageService messageService,
             DeliveryService deliveryService
     ) {

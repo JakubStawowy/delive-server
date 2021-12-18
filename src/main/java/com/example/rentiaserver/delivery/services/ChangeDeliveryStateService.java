@@ -1,6 +1,6 @@
 package com.example.rentiaserver.delivery.services;
 
-import com.example.rentiaserver.data.helpers.AnnouncementToCreatorHelper;
+import com.example.rentiaserver.data.helpers.OrderToCreatorHelper;
 import com.example.rentiaserver.data.po.AnnouncementPo;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.delivery.api.BaseChangeDeliveryStateService;
@@ -35,7 +35,7 @@ public final class ChangeDeliveryStateService extends BaseChangeDeliveryStateSer
             changeDeliveryState(deliveryPo, DeliveryState.TO_ACCEPT);
         }
         else {
-            double distance = deliveryService.getDistance(AnnouncementToCreatorHelper.create(deliveryPo.getAnnouncementPo()).getDestinationTo(),
+            double distance = deliveryService.getDistance(OrderToCreatorHelper.create(deliveryPo.getAnnouncementPo()).getDestinationTo(),
                     clientLocation);
             if (distance <= RADIUS) {
                 completeTransfer(deliveryPo);
