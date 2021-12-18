@@ -1,6 +1,6 @@
 package com.example.rentiaserver.data.services.order;
 
-import com.example.rentiaserver.data.po.AnnouncementPo;
+import com.example.rentiaserver.data.po.OrderPo;
 import com.example.rentiaserver.data.po.PackagePo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,29 +13,29 @@ import java.util.Set;
 public final class OrderService {
 
     private final OrderDao orderDao;
-    private final FilteredOrderService filteredAnnouncementsDao;
+    private final FilteredOrderService filteredOrdersDao;
     private final PackageDao packageDao;
 
     @Autowired
-    public OrderService(OrderDao announcementRepository, FilteredOrderService filteredAnnouncementsDao, PackageDao packageRepository) {
-        this.orderDao = announcementRepository;
-        this.filteredAnnouncementsDao = filteredAnnouncementsDao;
+    public OrderService(OrderDao orderDao, FilteredOrderService filteredOrdersDao, PackageDao packageRepository) {
+        this.orderDao = orderDao;
+        this.filteredOrdersDao = filteredOrdersDao;
         this.packageDao = packageRepository;
     }
 
-    public void save(AnnouncementPo announcementPo) {
-        orderDao.save(announcementPo);
+    public void save(OrderPo orderPo) {
+        orderDao.save(orderPo);
     }
 
     public void deleteById(Long id) {
         orderDao.deleteById(id);
     }
 
-    public Optional<AnnouncementPo> getAnnouncementById(Long id) {
+    public Optional<OrderPo> getOrderById(Long id) {
         return orderDao.findById(id);
     }
 
-    public List<AnnouncementPo> getAllAnnouncements() {
+    public List<OrderPo> getAllOrders() {
         return orderDao.findAll();
     }
 
@@ -43,12 +43,12 @@ public final class OrderService {
         packageDao.saveAll(packagePos);
     }
 
-    public void deleteAllByAnnouncement(AnnouncementPo announcementPo) {
-        packageDao.deleteAllByAnnouncementPo(announcementPo);
+    public void deleteAllByOrder(OrderPo orderPo) {
+        packageDao.deleteAllByOrderPo(orderPo);
     }
 
-    public List<AnnouncementPo> findAnnouncementsByAddresses(String initialAddress, String finalAddress, String minimalSalary,
-                                                             String requireTransportWithClient, boolean sortBySalary) {
-        return filteredAnnouncementsDao.findAnnouncementsByAddresses(initialAddress, finalAddress, minimalSalary, requireTransportWithClient, sortBySalary);
+    public List<OrderPo> findOrdersByAddresses(String initialAddress, String finalAddress, String minimalSalary,
+                                               String requireTransportWithClient, boolean sortBySalary) {
+        return filteredOrdersDao.findOrdersByAddresses(initialAddress, finalAddress, minimalSalary, requireTransportWithClient, sortBySalary);
     }
 }

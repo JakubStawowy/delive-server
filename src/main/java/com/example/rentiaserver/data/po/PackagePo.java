@@ -3,11 +3,10 @@ package com.example.rentiaserver.data.po;
 import com.example.rentiaserver.data.api.BaseEntityPo;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "PACKAGES")
+@Table(name = "TB_PACKAGE")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class PackagePo extends BaseEntityPo {
 
@@ -33,12 +32,12 @@ public class PackagePo extends BaseEntityPo {
     private BigDecimal weight;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ANNOUNCEMENT_ID", nullable = false)
-    private AnnouncementPo announcementPo;
+    @JoinColumn(name = "ORDER_ID", nullable = false)
+    private OrderPo orderPo;
 
     public PackagePo(BigDecimal packageLength, String lengthUnit, BigDecimal packageWidth, String widthUnit,
                      BigDecimal packageHeight, String heightUnit, BigDecimal weight,
-                     AnnouncementPo announcementPo) {
+                     OrderPo orderPo) {
         this.packageLength = packageLength;
         this.lengthUnit = lengthUnit;
         this.packageWidth = packageWidth;
@@ -46,7 +45,7 @@ public class PackagePo extends BaseEntityPo {
         this.packageHeight = packageHeight;
         this.heightUnit = heightUnit;
         this.weight = weight;
-        this.announcementPo = announcementPo;
+        this.orderPo = orderPo;
     }
 
     public PackagePo() {}
@@ -75,12 +74,12 @@ public class PackagePo extends BaseEntityPo {
         this.packageHeight = packageHeight;
     }
 
-    public AnnouncementPo getAnnouncementPo() {
-        return announcementPo;
+    public OrderPo getOrderPo() {
+        return orderPo;
     }
 
-    public void setAnnouncementPo(AnnouncementPo announcementPo) {
-        this.announcementPo = announcementPo;
+    public void setOrderPo(OrderPo orderPo) {
+        this.orderPo = orderPo;
     }
 
     public BigDecimal getWeight() {

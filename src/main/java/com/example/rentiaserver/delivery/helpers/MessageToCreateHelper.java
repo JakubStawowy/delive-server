@@ -8,7 +8,7 @@ public class MessageToCreateHelper {
         return new OutgoingMessageTo(
                 messagePo.getId(),
                 String.valueOf(messagePo.getCreatedAt()),
-                messagePo.getAnnouncementPo().getId(),
+                messagePo.getOrderPo().getId(),
                 messagePo.getSenderPo() != null ? messagePo.getSenderPo().getId() : null,
                 messagePo.getReceiverPo().getId(),
                 messagePo.getMessage(),

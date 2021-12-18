@@ -12,10 +12,10 @@ import java.util.List;
 @Repository
 public interface MessageDao extends CrudRepository<MessagePo, Long> {
 
-    @Query(value = "SELECT * FROM MESSAGES WHERE SENDER_ID = ?1 AND MESSAGE_TYPE != 'INFO'" + ORDER_BY_CREATED_AT, nativeQuery = true)
+    @Query(value = "SELECT * FROM TB_MESSAGE WHERE SENDER_ID = ?1 AND MESSAGE_TYPE != 'INFO'" + ORDER_BY_CREATED_AT, nativeQuery = true)
     List<MessagePo> findAllBySender(Long senderId);
 
-    @Query(value = "SELECT * FROM MESSAGES WHERE RECEIVER_ID = ?1 " + ORDER_BY_CREATED_AT, nativeQuery = true)
+    @Query(value = "SELECT * FROM TB_MESSAGE WHERE RECEIVER_ID = ?1 " + ORDER_BY_CREATED_AT, nativeQuery = true)
     List<MessagePo> findAllByReceiver(Long receiverId);
 
 }

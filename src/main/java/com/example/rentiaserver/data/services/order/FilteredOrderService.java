@@ -1,6 +1,6 @@
 package com.example.rentiaserver.data.services.order;
 
-import com.example.rentiaserver.data.po.AnnouncementPo;
+import com.example.rentiaserver.data.po.OrderPo;
 import com.example.rentiaserver.geolocation.po.LocationPo;
 import org.springframework.stereotype.Repository;
 
@@ -17,13 +17,13 @@ class FilteredOrderService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<AnnouncementPo> findAnnouncementsByAddresses(String initialAddress, String finalAddress, String minimalSalary,
-                                                             String requireTransportWithClient, boolean sortBySalary) {
+    public List<OrderPo> findOrdersByAddresses(String initialAddress, String finalAddress, String minimalSalary,
+                                               String requireTransportWithClient, boolean sortBySalary) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<AnnouncementPo> query = cb.createQuery(AnnouncementPo.class);
-        Root<AnnouncementPo> root = query.from(AnnouncementPo.class);
-        Join<AnnouncementPo, LocationPo> initialLocationJoin = root.join("initialLocationPo");
-        Join<AnnouncementPo, LocationPo> finalLocationJoin = root.join("finalLocationPo");
+        CriteriaQuery<OrderPo> query = cb.createQuery(OrderPo.class);
+        Root<OrderPo> root = query.from(OrderPo.class);
+        Join<OrderPo, LocationPo> initialLocationJoin = root.join("initialLocationPo");
+        Join<OrderPo, LocationPo> finalLocationJoin = root.join("finalLocationPo");
 
         ParameterExpression<String> initialAddressExpression = cb.parameter(String.class);
         ParameterExpression<String> finalAddressExpression = cb.parameter(String.class);
@@ -36,12 +36,12 @@ class FilteredOrderService {
         }
 
         if (minimalSalary != null && !minimalSalary.isEmpty()) {
-            predicates.add(cb.greaterThanOrEqualTo(root.get("amount"), minimalSalary));
+            predicates.add(cb.greaterThanOrEqualTo(root.get("salary"), minimalSalary));
         }
 
         Order order;
         if (sortBySalary) {
-            order = cb.desc(root.get("amount"));
+            order = cb.desc(root.get("salary"));
         }
         else {
             order = cb.desc(root.get("createdAt"));
@@ -49,7 +49,7 @@ class FilteredOrderService {
 
         query.where(cb.and(predicates.toArray(new Predicate[0]))).orderBy(order);
 
-        TypedQuery<AnnouncementPo> q = entityManager.createQuery(query);
+        TypedQuery<OrderPo> q = entityManager.createQuery(query);
         q.setParameter(initialAddressExpression, "%" + initialAddress + "%");
         q.setParameter(finalAddressExpression, "%" + finalAddress + "%");
         return q.getResultList();

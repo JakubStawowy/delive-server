@@ -2,7 +2,7 @@ package com.example.rentiaserver.data.controllers.order;
 
 import com.example.rentiaserver.data.services.order.OrderService;
 import com.example.rentiaserver.data.services.user.UserService;
-import com.example.rentiaserver.data.to.AnnouncementTo;
+import com.example.rentiaserver.data.to.OrderTo;
 import com.example.rentiaserver.data.po.*;
 import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.geolocation.converter.*;
@@ -34,23 +34,23 @@ import java.util.Set;
 @PropertySource("classpath:application.properties")
 public class OrderSaveController {
 
-    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/announcements";
+    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/orders";
 
     private final UserService userService;
-    private final OrderService announcementService;
+    private final OrderService orderService;
     private final IGeocodingService forwardGeocodingService;
     private final IGeocodingService reverseGeocodingService;
     private final String emergencyGeocodingMode;
 
     @Autowired
-    public OrderSaveController(UserService userService, OrderService announcementService,
+    public OrderSaveController(UserService userService, OrderService orderService,
                                ForwardGeocodingService forwardGeocodingService,
                                ReverseGeocodingService reverseGeocodingService,
                                ForwardEmergencyGeocodingService forwardEmergencyGeocodingService,
                                ReverseEmergencyGeocodingService reverseEmergencyGeocodingService,
                                @Value("${geocoding.mode.emergency}") String emergencyGeocodingMode) {
         this.userService = userService;
-        this.announcementService = announcementService;
+        this.orderService = orderService;
         this.emergencyGeocodingMode = emergencyGeocodingMode;
         if (Boolean.TRUE.equals(Boolean.valueOf(emergencyGeocodingMode))) {
             this.forwardGeocodingService = forwardEmergencyGeocodingService;
@@ -63,22 +63,22 @@ public class OrderSaveController {
 
     @PostMapping(value = "/normal/add")
     @Transactional
-    public ResponseTo saveAnnouncement(@RequestBody AnnouncementTo announcementTo, HttpServletRequest request) {
+    public ResponseTo saveOrder(@RequestBody OrderTo orderTo, HttpServletRequest request) {
         Optional<UserPo> optionalUserPo = userService.findUserById(JsonWebTokenHelper.getRequesterId(request));
         if (optionalUserPo.isPresent()) {
             UserPo author = optionalUserPo.get();
             try {
-                if (announcementTo.getId() != null) {
-                    announcementService.getAnnouncementById(announcementTo.getId()).ifPresent(announcementPo -> {
+                if (orderTo.getId() != null) {
+                    orderService.getOrderById(orderTo.getId()).ifPresent(orderPo -> {
                         try {
-                            editAnnouncement(announcementPo, announcementTo);
+                            editOrder(orderPo, orderTo);
                         } catch (InterruptedException | ParseException | IOException e) {
                             throw new RuntimeException(e);
                         }
                     });
                 }
                 else {
-                    addAnnouncement(author, announcementTo);
+                    addOrder(author, orderTo);
                 }
                 return new ResponseTo(true, null, HttpStatus.OK);
             } catch (InterruptedException | ParseException | IOException e) {
@@ -91,29 +91,29 @@ public class OrderSaveController {
         return new ResponseTo(false, "User not found", HttpStatus.NOT_FOUND);
     }
 
-    private void editAnnouncement(AnnouncementPo announcementPo, AnnouncementTo announcementTo) throws
+    private void editOrder(OrderPo orderPo, OrderTo orderTo) throws
             InterruptedException, ParseException, IOException {
-        JSONObject addressFromJson = reverseGeocodingService.getFullLocationData(announcementTo.getDestinationFrom());
-        JSONObject addressToJson = reverseGeocodingService.getFullLocationData(announcementTo.getDestinationTo());
+        JSONObject addressFromJson = reverseGeocodingService.getFullLocationData(orderTo.getDestinationFrom());
+        JSONObject addressToJson = reverseGeocodingService.getFullLocationData(orderTo.getDestinationTo());
 
 //        String fromAddress = addressFromJson.get("name") + ", " + addressFromJson.get("locality") + ", " + addressFromJson.get("country");
         String fromAddress = UnwrapResponseHelper.unwrapPositionStackSingleResponse(addressFromJson);
 //        String toAddress = addressToJson.get("name") + ", " + addressToJson.get("locality") + ", " + addressToJson.get("country");
         String toAddress = UnwrapResponseHelper.unwrapPositionStackSingleResponse(addressToJson);
-        announcementPo.getInitialLocationPo().setLatitude(announcementTo.getDestinationFrom().getLatitude());
-        announcementPo.getInitialLocationPo().setLongitude(announcementTo.getDestinationFrom().getLongitude());
-        announcementPo.getInitialLocationPo().setAddress(fromAddress);
+        orderPo.getInitialLocationPo().setLatitude(orderTo.getDestinationFrom().getLatitude());
+        orderPo.getInitialLocationPo().setLongitude(orderTo.getDestinationFrom().getLongitude());
+        orderPo.getInitialLocationPo().setAddress(fromAddress);
 
-        announcementPo.getFinalLocationPo().setLatitude(announcementTo.getDestinationTo().getLatitude());
-        announcementPo.getFinalLocationPo().setLongitude(announcementTo.getDestinationTo().getLongitude());
-        announcementPo.getFinalLocationPo().setAddress(toAddress);
+        orderPo.getFinalLocationPo().setLatitude(orderTo.getDestinationTo().getLatitude());
+        orderPo.getFinalLocationPo().setLongitude(orderTo.getDestinationTo().getLongitude());
+        orderPo.getFinalLocationPo().setAddress(toAddress);
 
-        announcementPo.setRequireTransportWithClient(announcementTo.isRequireTransportWithClient());
-        announcementPo.setAmount(new BigDecimal(announcementTo.getAmount()));
-        announcementPo.setWeightUnit(announcementTo.getWeightUnit());
+        orderPo.setRequireTransportWithClient(orderTo.isRequireTransportWithClient());
+        orderPo.setSalary(new BigDecimal(orderTo.getSalary()));
+        orderPo.setWeightUnit(orderTo.getWeightUnit());
         Set<PackagePo> packagePos = new HashSet<>();
-        announcementService.deleteAllByAnnouncement(announcementPo);
-        announcementTo.getPackages().forEach(packageTo ->
+        orderService.deleteAllByOrder(orderPo);
+        orderTo.getPackages().forEach(packageTo ->
                 packagePos.add(new PackagePo(
                         new BigDecimal(packageTo.getPackageLength()),
                         packageTo.getLengthUnit(),
@@ -122,34 +122,34 @@ public class OrderSaveController {
                         new BigDecimal(packageTo.getPackageHeight()),
                         packageTo.getHeightUnit(),
                         packageTo.getPackageWeight() != null ? new BigDecimal(packageTo.getPackageWeight()) : null,
-                        announcementPo
+                        orderPo
                 )));
-        announcementService.saveAllPackages(packagePos);
+        orderService.saveAllPackages(packagePos);
     }
 
-    private void addAnnouncement(UserPo author, AnnouncementTo announcementTo) throws InterruptedException, ParseException, IOException, LocationNotFoundException {
+    private void addOrder(UserPo author, OrderTo orderTo) throws InterruptedException, ParseException, IOException, LocationNotFoundException {
         JSONObject addressFromJson;
         JSONObject addressToJson;
-        if (announcementTo.getDestinationFrom().getLongitude() == null && announcementTo.getDestinationFrom().getAddress() != null) {
-            LocationTo locationTo = announcementTo.getDestinationFrom();
+        if (orderTo.getDestinationFrom().getLongitude() == null && orderTo.getDestinationFrom().getAddress() != null) {
+            LocationTo locationTo = orderTo.getDestinationFrom();
             addressFromJson = forwardGeocodingService.getFullLocationData(locationTo);
             if (addressFromJson == null) {
                 throw new LocationNotFoundException("Address not found: " + locationTo.getAddress());
             }
         }
         else {
-            addressFromJson = reverseGeocodingService.getFullLocationData(announcementTo.getDestinationFrom());
+            addressFromJson = reverseGeocodingService.getFullLocationData(orderTo.getDestinationFrom());
         }
-        if (announcementTo.getDestinationTo().getLongitude() == null) {
+        if (orderTo.getDestinationTo().getLongitude() == null) {
 
-            LocationTo locationTo = announcementTo.getDestinationTo();
+            LocationTo locationTo = orderTo.getDestinationTo();
             addressToJson = forwardGeocodingService.getFullLocationData(locationTo);
             if (addressToJson == null) {
                 throw new LocationNotFoundException("Address not found: " + locationTo.getAddress());
             }
         }
         else {
-            addressToJson = reverseGeocodingService.getFullLocationData(announcementTo.getDestinationTo());
+            addressToJson = reverseGeocodingService.getFullLocationData(orderTo.getDestinationTo());
         }
 
         LocationTo initialLocationTo;
@@ -162,21 +162,21 @@ public class OrderSaveController {
             finalLocationTo = UnwrapResponseHelper.convertPositionStackSingleResponse(addressToJson);
         }
 
-        AnnouncementPo announcement = new AnnouncementPo(
+        OrderPo orderPo = new OrderPo(
                 new LocationPo(initialLocationTo.getLatitude(), initialLocationTo.getLongitude(), initialLocationTo.getAddress()),
                 new LocationPo(finalLocationTo.getLatitude(), finalLocationTo.getLongitude(), finalLocationTo.getAddress()),
                 author,
-                new BigDecimal(announcementTo.getAmount()),
-                announcementTo.isRequireTransportWithClient(),
-                announcementTo.getWeightUnit());
+                new BigDecimal(orderTo.getSalary()),
+                orderTo.isRequireTransportWithClient(),
+                orderTo.getWeightUnit());
 
-        if (announcementTo.getId() != null) {
-            announcement.setId(announcementTo.getId());
+        if (orderTo.getId() != null) {
+            orderPo.setId(orderTo.getId());
         }
 
-        announcementService.save(announcement);
+        orderService.save(orderPo);
         Set<PackagePo> packagePos = new HashSet<>();
-        announcementTo.getPackages().forEach(packageTo ->
+        orderTo.getPackages().forEach(packageTo ->
                 packagePos.add(new PackagePo(
                         new BigDecimal(packageTo.getPackageLength()),
                         packageTo.getLengthUnit(),
@@ -185,9 +185,9 @@ public class OrderSaveController {
                         new BigDecimal(packageTo.getPackageHeight()),
                         packageTo.getHeightUnit(),
                         packageTo.getPackageWeight() != null ? new BigDecimal(packageTo.getPackageWeight()) : null,
-                        announcement
+                        orderPo
                 )));
-        announcementService.saveAllPackages(packagePos);
+        orderService.saveAllPackages(packagePos);
     }
 
     private static class LocationNotFoundException extends Exception {

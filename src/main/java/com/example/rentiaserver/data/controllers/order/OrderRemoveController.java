@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = OrderRemoveController.BASE_ENDPOINT)
 public final class OrderRemoveController {
 
-    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/announcements";
-    private final OrderService announcementService;
+    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/orders";
+    private final OrderService orderService;
 
     @Autowired
-    public OrderRemoveController(OrderService announcementService) {
-        this.announcementService = announcementService;
+    public OrderRemoveController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @DeleteMapping(value = "/delete")
-    public void removeAnnouncement(@RequestParam Long announcementId) {
-        announcementService.deleteById(announcementId);
+    public void removeOrder(@RequestParam Long orderId) {
+        orderService.deleteById(orderId);
     }
 }

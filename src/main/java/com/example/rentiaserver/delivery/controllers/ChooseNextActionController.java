@@ -25,10 +25,10 @@ public class ChooseNextActionController {
     }
 
     @GetMapping("/actionName")
-    public Set<IChooseNextActionService.ActionPack> getNextActionNames(@RequestParam DeliveryState deliveryState, @RequestParam Long announcementAuthorId,
+    public Set<IChooseNextActionService.ActionPack> getNextActionNames(@RequestParam DeliveryState deliveryState, @RequestParam Long orderAuthorId,
                                                                        @RequestParam Long delivererId, HttpServletRequest request) {
         final Long loggedUserId = JsonWebTokenHelper.getRequesterId(request);
-        final boolean isUserPrincipal = announcementAuthorId.compareTo(loggedUserId) == 0;
+        final boolean isUserPrincipal = orderAuthorId.compareTo(loggedUserId) == 0;
         final boolean isUserDeliverer = delivererId.compareTo(loggedUserId) == 0;
         return nextActionService.getNextActionNames(deliveryState, isUserPrincipal, isUserDeliverer);
     }

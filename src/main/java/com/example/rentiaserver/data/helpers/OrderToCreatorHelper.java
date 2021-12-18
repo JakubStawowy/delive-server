@@ -1,6 +1,6 @@
 package com.example.rentiaserver.data.helpers;
 
-import com.example.rentiaserver.data.po.AnnouncementPo;
+import com.example.rentiaserver.data.po.OrderPo;
 import com.example.rentiaserver.geolocation.po.LocationPo;
 import com.example.rentiaserver.data.to.*;
 import com.example.rentiaserver.geolocation.to.LocationTo;
@@ -9,11 +9,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class OrderToCreatorHelper {
-    public static AnnouncementTo create(AnnouncementPo announcementPo) {
-        LocationPo destinationFrom = announcementPo.getInitialLocationPo();
-        LocationPo destinationTo = announcementPo.getFinalLocationPo();
+    public static OrderTo create(OrderPo orderPo) {
+        LocationPo destinationFrom = orderPo.getInitialLocationPo();
+        LocationPo destinationTo = orderPo.getFinalLocationPo();
         Set<PackageTo> packageTos =
-                announcementPo.getPackagesPos().stream().map(packagePo -> new PackageTo(
+                orderPo.getPackagesPos().stream().map(packagePo -> new PackageTo(
                         packagePo.getId(),
                         String.valueOf(packagePo.getCreatedAt()),
                         String.valueOf(packagePo.getPackageLength()),
@@ -24,9 +24,9 @@ public final class OrderToCreatorHelper {
                         packagePo.getHeightUnit(),
                         String.valueOf(packagePo.getWeight())
                 )).collect(Collectors.toSet());
-        return new AnnouncementTo(
-                announcementPo.getId(),
-                String.valueOf(announcementPo.getCreatedAt()),
+        return new OrderTo(
+                orderPo.getId(),
+                String.valueOf(orderPo.getCreatedAt()),
                 new LocationTo(
                         destinationFrom.getId(),
                         String.valueOf(destinationFrom.getCreatedAt()),
@@ -42,11 +42,11 @@ public final class OrderToCreatorHelper {
                         destinationTo.getAddress()
                 ),
                 packageTos,
-                announcementPo.getAuthorPo().getId(),
-                announcementPo.getAmount() != null ? announcementPo.getAmount().toString() : null,
-                announcementPo.isRequireTransportWithClient(),
+                orderPo.getAuthorPo().getId(),
+                orderPo.getSalary() != null ? orderPo.getSalary().toString() : null,
+                orderPo.isRequireTransportWithClient(),
                 String.valueOf(PackagesWeightCounterHelper.sumPackagesWeights(packageTos)),
-                announcementPo.getWeightUnit()
+                orderPo.getWeightUnit()
         );
     }
 }

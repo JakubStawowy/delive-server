@@ -10,7 +10,7 @@ public class DeliveryToCreateHelper {
                 deliveryPo.getId(),
                 String.valueOf(deliveryPo.getCreatedAt()),
                 deliveryPo.getUserPo().getId(),
-                OrderToCreatorHelper.create(deliveryPo.getAnnouncementPo()),
+                OrderToCreatorHelper.create(deliveryPo.getOrderPo()),
                 deliveryPo.getDeliveryState().name()
         );
     }

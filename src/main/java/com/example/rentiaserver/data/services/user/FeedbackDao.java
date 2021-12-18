@@ -11,7 +11,7 @@ import static com.example.rentiaserver.ApplicationConstants.Sql.ORDER_BY_CREATED
 
 @Repository
 interface FeedbackDao extends CrudRepository<FeedbackPo, Long> {
-    @Query(value = "SELECT * FROM FEEDBACK WHERE USER_ID = ?1 " + ORDER_BY_CREATED_AT
+    @Query(value = "SELECT * FROM TB_FEEDBACK WHERE USER_ID = ?1 " + ORDER_BY_CREATED_AT
             , nativeQuery = true)
     List<FeedbackPo> getFeedbackPosByUserPoId(Long id);
 }

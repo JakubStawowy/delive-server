@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "TB_USER")
 public class UserPo extends BaseEntityPo {
 
     @NotEmpty
@@ -49,7 +49,7 @@ public class UserPo extends BaseEntityPo {
     private Set<FeedbackPo> feedbackReceived;
 
     @OneToMany(mappedBy = "authorPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<AnnouncementPo> announcementPos;
+    private Set<OrderPo> orderPos;
 
     @OneToMany(mappedBy = "userPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<DeliveryPo> deliveryPos;
@@ -153,12 +153,12 @@ public class UserPo extends BaseEntityPo {
         this.feedbackReceived = feedbackReceived;
     }
 
-    public Set<AnnouncementPo> getAnnouncementPos() {
-        return announcementPos;
+    public Set<OrderPo> getOrderPos() {
+        return orderPos;
     }
 
-    public void setAnnouncementPos(Set<AnnouncementPo> announcementPos) {
-        this.announcementPos = announcementPos;
+    public void setOrderPos(Set<OrderPo> orderPos) {
+        this.orderPos = orderPos;
     }
 
     public Set<DeliveryPo> getDeliveryPos() {

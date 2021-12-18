@@ -2,14 +2,11 @@ package com.example.rentiaserver.data.po;
 
 import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.data.enums.FeedbackRate;
-import com.example.rentiaserver.delivery.po.DeliveryPo;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "FEEDBACK")
+@Table(name = "TB_FEEDBACK")
 public class FeedbackPo extends BaseEntityPo {
 
     @Column(nullable = false)
@@ -28,15 +25,15 @@ public class FeedbackPo extends BaseEntityPo {
     private UserPo userPo;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ANNOUNCEMENT_ID", referencedColumnName = "ID", nullable = false)
-    private AnnouncementPo announcementPo;
+    @JoinColumn(name = "ORDER_ID", referencedColumnName = "ID", nullable = false)
+    private OrderPo orderPo;
 
-    public FeedbackPo(String content, FeedbackRate rate, UserPo authorPo, UserPo userPo, AnnouncementPo announcementPo) {
+    public FeedbackPo(String content, FeedbackRate rate, UserPo authorPo, UserPo userPo, OrderPo orderPo) {
         this.content = content;
         this.rate = rate;
         this.authorPo = authorPo;
         this.userPo = userPo;
-        this.announcementPo = announcementPo;
+        this.orderPo = orderPo;
     }
 
     public FeedbackPo() {
@@ -74,11 +71,11 @@ public class FeedbackPo extends BaseEntityPo {
         this.userPo = userPo;
     }
 
-    public AnnouncementPo getAnnouncementPo() {
-        return announcementPo;
+    public OrderPo getOrderPo() {
+        return orderPo;
     }
 
-    public void setAnnouncementPo(AnnouncementPo announcementPo) {
-        this.announcementPo = announcementPo;
+    public void setOrderPo(OrderPo orderPo) {
+        this.orderPo = orderPo;
     }
 }

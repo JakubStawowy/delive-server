@@ -1,6 +1,6 @@
 package com.example.rentiaserver.delivery.api;
 
-import com.example.rentiaserver.data.po.AnnouncementPo;
+import com.example.rentiaserver.data.po.OrderPo;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.delivery.enums.DeliveryState;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
@@ -24,11 +24,11 @@ public abstract class BaseChangeDeliveryStateService implements IChangeDeliveryS
 
     @Override
     public void completeTransfer(DeliveryPo deliveryPo) {
-        AnnouncementPo announcementPo = deliveryPo.getAnnouncementPo();
-        BigDecimal amount = announcementPo.getAmount();
+        OrderPo orderPo = deliveryPo.getOrderPo();
+        BigDecimal salary = orderPo.getSalary();
         UserPo deliverer = deliveryPo.getUserPo();
         BigDecimal delivererWalletBalance = deliverer.getBalance();
-        deliverer.setBalance(delivererWalletBalance.add(amount));
+        deliverer.setBalance(delivererWalletBalance.add(salary));
         deliveryService.save(deliverer);
         changeDeliveryState(deliveryPo, DeliveryState.FINISHED);
     }

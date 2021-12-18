@@ -25,37 +25,37 @@ public class MessageSendController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/messages";
 
-    private final OrderService announcementService;
+    private final OrderService orderService;
     private final MessageService messageService;
     private final DeliveryService deliveryService;
 
     @Autowired
     public MessageSendController(
-            OrderService announcementService,
+            OrderService orderService,
             MessageService messageService,
             DeliveryService deliveryService
     ) {
-        this.announcementService = announcementService;
+        this.orderService = orderService;
         this.messageService = messageService;
         this.deliveryService = deliveryService;
     }
 
     @PostMapping("/register/normal")
     public boolean registerMessageNormal(@RequestBody IncomingMessageTo incomingMessageTo, HttpServletRequest request) {
-        Optional<AnnouncementPo> optionalAnnouncementPo = announcementService.getAnnouncementById(incomingMessageTo.getAnnouncementId());
+        Optional<OrderPo> optionalOrderPo = orderService.getOrderById(incomingMessageTo.getOrderId());
         Optional<UserPo> optionalSenderPo = deliveryService.findUserById(JsonWebTokenHelper.getRequesterId(request));
         Optional<UserPo> optionalReceiverPo = deliveryService.findUserById(incomingMessageTo.getReceiverId());
-        if (optionalAnnouncementPo.isPresent() && optionalSenderPo.isPresent() && optionalReceiverPo.isPresent()) {
-            AnnouncementPo announcementPo = optionalAnnouncementPo.get();
+        if (optionalOrderPo.isPresent() && optionalSenderPo.isPresent() && optionalReceiverPo.isPresent()) {
+            OrderPo orderPo = optionalOrderPo.get();
             UserPo senderPo = optionalSenderPo.get();
-            Optional<DeliveryPo> optionalDeliveryPo = deliveryService.findDeliveryByAnnouncementPoAndUserPo(announcementPo, senderPo);
+            Optional<DeliveryPo> optionalDeliveryPo = deliveryService.findDeliveryByOrderPoAndUserPo(orderPo, senderPo);
             if (optionalDeliveryPo.isPresent()) {
                 return false;
             }
 
             MessagePo messagePo = new MessagePo(
                     incomingMessageTo.getMessage(),
-                    optionalAnnouncementPo.get(),
+                    optionalOrderPo.get(),
                     optionalSenderPo.get(),
                     optionalReceiverPo.get(),
                     MessageType.REQUEST);
@@ -69,11 +69,11 @@ public class MessageSendController {
 
     @PostMapping("/reply")
     public void replyOnMessage(@RequestBody IncomingMessageTo incomingMessageTo, HttpServletRequest request) {
-        Optional<AnnouncementPo> optionalAnnouncementPo = announcementService.getAnnouncementById(incomingMessageTo.getAnnouncementId());
+        Optional<OrderPo> optionalOrderPo = orderService.getOrderById(incomingMessageTo.getOrderId());
         Optional<UserPo> optionalSenderPo = deliveryService.findUserById(JsonWebTokenHelper.getRequesterId(request));
         Optional<UserPo> optionalReceiverPo = deliveryService.findUserById(incomingMessageTo.getReceiverId());
         Optional<MessagePo> optionalRepliedMessage = messageService.findById(incomingMessageTo.getReplyMessageId());
-        if (optionalAnnouncementPo.isPresent() && optionalSenderPo.isPresent() && optionalReceiverPo.isPresent() && optionalRepliedMessage.isPresent()) {
+        if (optionalOrderPo.isPresent() && optionalSenderPo.isPresent() && optionalReceiverPo.isPresent() && optionalRepliedMessage.isPresent()) {
 
             MessageType messageType;
             String messageContent;
@@ -81,10 +81,10 @@ public class MessageSendController {
             if (incomingMessageTo.isConsent()) {
                 messageType = MessageType.CONSENT;
                 messageContent = "Your delivery request has been approved. You can now start your delivery!";
-                AnnouncementPo announcementPo = optionalAnnouncementPo.get();
+                OrderPo orderPo = optionalOrderPo.get();
                 deliveryService.save(new DeliveryPo(
                         optionalReceiverPo.get(),
-                        announcementPo
+                        orderPo
                 ));
             }
             else {
@@ -96,7 +96,7 @@ public class MessageSendController {
             repliedMessage.setReplied(true);
             messageService.saveAllMessages(Arrays.asList(repliedMessage, new MessagePo(
                     messageContent,
-                    optionalAnnouncementPo.get(),
+                    optionalOrderPo.get(),
                     optionalSenderPo.get(),
                     optionalReceiverPo.get(),
                     messageType

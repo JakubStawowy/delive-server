@@ -1,7 +1,7 @@
 package com.example.rentiaserver.delivery.services;
 
 import com.example.rentiaserver.data.helpers.OrderToCreatorHelper;
-import com.example.rentiaserver.data.po.AnnouncementPo;
+import com.example.rentiaserver.data.po.OrderPo;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.delivery.api.BaseChangeDeliveryStateService;
 import com.example.rentiaserver.delivery.dao.MessageDao;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Date;
 
 @Service
 public final class ChangeDeliveryStateService extends BaseChangeDeliveryStateService {
@@ -35,12 +36,13 @@ public final class ChangeDeliveryStateService extends BaseChangeDeliveryStateSer
             changeDeliveryState(deliveryPo, DeliveryState.TO_ACCEPT);
         }
         else {
-            double distance = deliveryService.getDistance(OrderToCreatorHelper.create(deliveryPo.getAnnouncementPo()).getDestinationTo(),
+            double distance = deliveryService.getDistance(OrderToCreatorHelper.create(deliveryPo.getOrderPo()).getDestinationTo(),
                     clientLocation);
             if (distance <= RADIUS) {
                 completeTransfer(deliveryPo);
             }
             else {
+                deliveryPo.setFinishedAt(new Date(System.currentTimeMillis()));
                 changeDeliveryState(deliveryPo, DeliveryState.TO_ACCEPT);
             }
         }
@@ -48,8 +50,8 @@ public final class ChangeDeliveryStateService extends BaseChangeDeliveryStateSer
 
     @Override
     public void closeDelivery(DeliveryPo deliveryPo) {
-        AnnouncementPo announcementPo = deliveryPo.getAnnouncementPo();
-        announcementPo.setArchived(true);
+        OrderPo orderPo = deliveryPo.getOrderPo();
+        orderPo.setArchived(true);
         deliveryPo.setDeliveryState(DeliveryState.CLOSED);
         deliveryService.save(deliveryPo);
 
@@ -57,25 +59,26 @@ public final class ChangeDeliveryStateService extends BaseChangeDeliveryStateSer
         messageDao.saveAll(Arrays.asList(
                 new MessagePo(
                         message,
-                        announcementPo,
-                        announcementPo.getAuthorPo(),
+                        orderPo,
+                        orderPo.getAuthorPo(),
                         deliveryPo.getUserPo(),
                         MessageType.INFO),
                 new MessagePo(
                         message,
-                        announcementPo,
+                        orderPo,
                         deliveryPo.getUserPo(),
-                        announcementPo.getAuthorPo(),
+                        orderPo.getAuthorPo(),
                         MessageType.INFO)));
     }
 
     @Override
     public void startDelivery(DeliveryPo deliveryPo) {
-        AnnouncementPo announcementPo = deliveryPo.getAnnouncementPo();
-        BigDecimal amount = announcementPo.getAmount();
-        UserPo principal = announcementPo.getAuthorPo();
+        OrderPo orderPo = deliveryPo.getOrderPo();
+        BigDecimal salary = orderPo.getSalary();
+        UserPo principal = orderPo.getAuthorPo();
         BigDecimal principalBalance = principal.getBalance();
-        principal.setBalance(principalBalance.subtract(amount));
+        principal.setBalance(principalBalance.subtract(salary));
+        deliveryPo.setStartedAt(new Date(System.currentTimeMillis()));
         changeDeliveryState(deliveryPo, DeliveryState.STARTED);
     }
 }

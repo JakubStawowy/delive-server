@@ -49,7 +49,7 @@ public final class FeedbackManageController {
                     FeedbackRate.getByNumberValue(feedback.getRate()),
                     optionalAuthorPo.get(),
                     optionalUserPo.get(),
-                    messagePo.getAnnouncementPo());
+                    messagePo.getOrderPo());
             messagePo.setReplied(true);
             messageDao.save(messagePo);
             userService.saveFeedback(feedbackPo);
