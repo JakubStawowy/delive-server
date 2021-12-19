@@ -10,7 +10,9 @@ import com.example.rentiaserver.delivery.enums.MessageType;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
 import com.example.rentiaserver.delivery.po.MessagePo;
 import com.example.rentiaserver.geolocation.to.LocationTo;
+import com.example.rentiaserver.security.to.ResponseTo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,20 +32,23 @@ public final class ChangeDeliveryStateService extends BaseChangeDeliveryStateSer
     }
 
     @Override
-    public void finishDelivery(DeliveryPo deliveryPo, LocationTo clientLocation) {
+    public ResponseTo finishDelivery(DeliveryPo deliveryPo, LocationTo clientLocation) {
 
+        String message = "Deliverer has reached the destination but system cannot verify this." +
+                " You can accept it or discard from the delivery panel.";
+        changeDeliveryState(deliveryPo, DeliveryState.TO_ACCEPT);
         if (clientLocation.getLatitude() == 0 && clientLocation.getLongitude() == 0) {
-            changeDeliveryState(deliveryPo, DeliveryState.TO_ACCEPT);
+            return new ResponseTo(true, message, HttpStatus.OK);
         }
         else {
             double distance = deliveryService.getDistance(OrderToCreatorHelper.create(deliveryPo.getOrderPo()).getDestinationTo(),
                     clientLocation);
             if (distance <= RADIUS) {
-                completeTransfer(deliveryPo);
+                return new ResponseTo(true, "Deliverer has reached the destination safely! " +
+                        "You must accept the delivery from the delivery panel", HttpStatus.OK);
             }
             else {
-                deliveryPo.setFinishedAt(new Date(System.currentTimeMillis()));
-                changeDeliveryState(deliveryPo, DeliveryState.TO_ACCEPT);
+                return new ResponseTo(true, message, HttpStatus.OK);
             }
         }
     }
@@ -80,5 +85,11 @@ public final class ChangeDeliveryStateService extends BaseChangeDeliveryStateSer
         principal.setBalance(principalBalance.subtract(salary));
         deliveryPo.setStartedAt(new Date(System.currentTimeMillis()));
         changeDeliveryState(deliveryPo, DeliveryState.STARTED);
+    }
+
+    @Override
+    public void acceptDeliveryFinishRequest(DeliveryPo deliveryPo) {
+        deliveryPo.setFinishedAt(new Date(System.currentTimeMillis()));
+        completeTransfer(deliveryPo);
     }
 }

@@ -5,12 +5,16 @@ import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.data.to.UserTo;
 import com.example.rentiaserver.security.api.IAuthorizeService;
+import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import com.example.rentiaserver.security.to.ResponseTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 //@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @CrossOrigin
@@ -30,11 +34,12 @@ public final class UserEditController {
     }
 
     @PutMapping(value = "/edit")
-    public ResponseTo editUser(@RequestBody UserTo userTo) {
-        if (userTo.getOldPassword() != null && !authorizeService.authorizeUserWithIdAndPassword(userTo.getId(), userTo.getOldPassword())) {
+    public ResponseTo editUser(@RequestBody UserTo userTo, HttpServletRequest request) {
+        Long userId = JsonWebTokenHelper.getRequesterId(request);
+        if (userTo.getOldPassword() != null && !authorizeService.authorizeUserWithIdAndPassword(userId, userTo.getOldPassword())) {
             return new ResponseTo(false, "Wrong old password value", HttpStatus.BAD_REQUEST);
         }
-        return userService.findUserById(userTo.getId())
+        return userService.findUserById(userId)
                 .map(userPo -> editUser(userPo, userTo))
                 .orElse(new ResponseTo(false, "User not found", HttpStatus.NOT_FOUND));
     }

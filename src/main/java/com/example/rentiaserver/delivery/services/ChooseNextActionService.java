@@ -19,7 +19,7 @@ public class ChooseNextActionService implements IChooseNextActionService {
             return Collections.singleton(new ActionPack("start", "hand over package to deliverer", "Your delivery has started"));
         }
         if (DeliveryState.STARTED.equals(deliveryState) && isUserDeliverer) {
-            return Collections.singleton(new ActionPack("finish", "package delivered", "Deliverer has reached the destination"));
+            return Collections.singleton(new ActionPack("finish", "package delivered"));
         }
         if (DeliveryState.FINISHED.equals(deliveryState) && isUserPrincipal) {
             return Collections.singleton(new ActionPack("close", "close delivery", "Your delivery has been closed"));

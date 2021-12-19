@@ -5,7 +5,9 @@ import com.example.rentiaserver.delivery.api.IChangeDeliveryStateService;
 import com.example.rentiaserver.delivery.enums.DeliveryState;
 import com.example.rentiaserver.delivery.services.DeliveryService;
 import com.example.rentiaserver.geolocation.to.LocationTo;
+import com.example.rentiaserver.security.to.ResponseTo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 //@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
@@ -36,18 +38,20 @@ public class ChangeDeliveryStateController {
     }
 
     @PutMapping("/finish")
-    public void finishDelivery(@RequestParam Long deliveryId, @RequestParam double clientLatitude, @RequestParam double clientLongitude) {
+    public ResponseTo finishDelivery(@RequestParam Long deliveryId, @RequestParam double clientLatitude, @RequestParam double clientLongitude) {
 
         LocationTo clientLocation = LocationTo.Builder.getBuilder()
                 .setLatitude(clientLatitude)
                 .setLongitude(clientLongitude)
                 .build();
-        deliveryService.findDeliveryById(deliveryId).ifPresent(deliveryPo -> changeDeliveryStateService.finishDelivery(deliveryPo, clientLocation));
+        return deliveryService.findDeliveryById(deliveryId)
+                .map(deliveryPo -> changeDeliveryStateService.finishDelivery(deliveryPo, clientLocation))
+                .orElse(new ResponseTo(false, "Delivery not found", HttpStatus.NOT_FOUND));
     }
 
     @PutMapping("/accept")
     public void acceptDelivery(@RequestParam Long deliveryId) {
-        deliveryService.findDeliveryById(deliveryId).ifPresent(changeDeliveryStateService::completeTransfer);
+        deliveryService.findDeliveryById(deliveryId).ifPresent(changeDeliveryStateService::acceptDeliveryFinishRequest);
     }
 
     @PutMapping("/discard")

@@ -21,6 +21,6 @@ public final class OrderRemoveController {
 
     @DeleteMapping(value = "/delete")
     public void removeOrder(@RequestParam Long orderId) {
-        orderService.deleteById(orderId);
+        orderService.archiveOrderById(orderId);
     }
 }
