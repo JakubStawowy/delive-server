@@ -10,7 +10,8 @@ public class ApplicationConstants {
     }
 
     public static class Origins {
-        public static final String LOCALHOST_ORIGIN = "http://localhost:3000";
+//        public static final String LOCALHOST_ORIGIN = "http://localhost:3000";
+        public static final String LOCALHOST_ORIGIN = "https://delive-server-1.herokuapp.com";
 //        public static final String LOCALHOST_ORIGIN = "http://192.168.0.115:3000";
 //        public static final String LOCALHOST_ORIGIN = "http://192.168.2.109:3000";
 
