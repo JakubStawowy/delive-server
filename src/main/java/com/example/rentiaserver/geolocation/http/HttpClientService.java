@@ -16,30 +16,32 @@ public final class HttpClientService implements IHttpClientService {
     private static final long REQUEST_TIMEOUT = 10000;
 
     @Override
-    public HttpResponse<String> getHttpResponse(String baseUri, Map<String, String> params) throws IOException, InterruptedException {
+    public HttpResponse<String> getHttpResponse(String baseUri, Map<String, String> params)
+            throws IOException, InterruptedException {
 
         String finalUri = buildUri(baseUri, params);
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create(finalUri))
-                .timeout(Duration.ofMillis(REQUEST_TIMEOUT)).build();
+                .timeout(Duration.ofMillis(REQUEST_TIMEOUT))
+                .build();
 
-        return httpClient.send(httpRequest,
-                HttpResponse.BodyHandlers.ofString());
+        return httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
     }
 
     private String buildUri(String baseUri, Map<String, String> params) {
+
         StringBuilder uriWithParams = new StringBuilder(baseUri);
-        if (params.isEmpty()) {
-            return uriWithParams.toString();
+        if (!params.isEmpty()) {
+            uriWithParams.append("?");
+            params.forEach((key, value) -> uriWithParams.append(key)
+                    .append("=")
+                    .append(value)
+                    .append("&"));
         }
-        uriWithParams.append("?");
-        params.forEach((key, value) -> uriWithParams.append(key)
-                .append("=")
-                .append(value)
-                .append("&"));
-        return uriWithParams
-                .substring(0, uriWithParams.length()).replace(" ", "+");
+
+        return uriWithParams.toString()
+                .replace(" ", "+");
     }
 }

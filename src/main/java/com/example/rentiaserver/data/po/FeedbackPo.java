@@ -3,7 +3,12 @@ package com.example.rentiaserver.data.po;
 import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.data.enums.FeedbackRate;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.FetchType;
 
 @Entity
 @Table(name = "TB_FEEDBACK")

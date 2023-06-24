@@ -1,15 +1,17 @@
 package com.example.rentiaserver.data.helpers;
 
 import com.example.rentiaserver.data.po.OrderPo;
+import com.example.rentiaserver.data.to.OrderTo;
+import com.example.rentiaserver.data.to.PackageTo;
 import com.example.rentiaserver.geolocation.po.LocationPo;
-import com.example.rentiaserver.data.to.*;
 import com.example.rentiaserver.geolocation.to.LocationTo;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public final class OrderToCreatorHelper {
-    public static OrderTo create(OrderPo orderPo) {
+public final class OrderMapper {
+
+    public static OrderTo mapPersistentObjectToTransfer(OrderPo orderPo) {
         LocationPo destinationFrom = orderPo.getInitialLocationPo();
         LocationPo destinationTo = orderPo.getFinalLocationPo();
         Set<PackageTo> packageTos =
@@ -24,23 +26,24 @@ public final class OrderToCreatorHelper {
                         packagePo.getHeightUnit(),
                         String.valueOf(packagePo.getWeight())
                 )).collect(Collectors.toSet());
+
         return new OrderTo(
                 orderPo.getId(),
                 String.valueOf(orderPo.getCreatedAt()),
-                new LocationTo(
-                        destinationFrom.getId(),
-                        String.valueOf(destinationFrom.getCreatedAt()),
-                        destinationFrom.getLatitude(),
-                        destinationFrom.getLongitude(),
-                        destinationFrom.getAddress()
-                ),
-                new LocationTo(
-                        destinationTo.getId(),
-                        String.valueOf(destinationTo.getCreatedAt()),
-                        destinationTo.getLatitude(),
-                        destinationTo.getLongitude(),
-                        destinationTo.getAddress()
-                ),
+                LocationTo.getBuilder()
+                        .setAddress(destinationFrom.getAddress())
+                        .setLatitude(destinationFrom.getLatitude())
+                        .setLongitude(destinationFrom.getLongitude())
+                        .setId(destinationFrom.getId())
+                        .setCreatedAt(String.valueOf(destinationFrom.getCreatedAt()))
+                        .build(),
+                LocationTo.getBuilder()
+                        .setAddress(destinationTo.getAddress())
+                        .setLatitude(destinationTo.getLatitude())
+                        .setLongitude(destinationTo.getLongitude())
+                        .setId(destinationTo.getId())
+                        .setCreatedAt(String.valueOf(destinationTo.getCreatedAt()))
+                        .build(),
                 packageTos,
                 orderPo.getAuthorPo().getId(),
                 orderPo.getSalary() != null ? orderPo.getSalary().toString() : null,

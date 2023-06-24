@@ -1,8 +1,9 @@
 package com.example.rentiaserver.delivery.controllers;
 
 import com.example.rentiaserver.ApplicationConstants;
+import com.example.rentiaserver.data.po.OrderPo;
+import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.data.services.order.OrderService;
-import com.example.rentiaserver.data.po.*;
 import com.example.rentiaserver.delivery.enums.MessageType;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
 import com.example.rentiaserver.delivery.po.MessagePo;
@@ -11,7 +12,12 @@ import com.example.rentiaserver.delivery.services.MessageService;
 import com.example.rentiaserver.delivery.to.IncomingMessageTo;
 import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -26,8 +32,11 @@ public class MessageSendController {
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/messages";
 
     private final OrderService orderService;
+
     private final MessageService messageService;
+
     private final DeliveryService deliveryService;
+
 
     @Autowired
     public MessageSendController(

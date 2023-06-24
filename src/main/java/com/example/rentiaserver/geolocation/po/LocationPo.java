@@ -4,7 +4,10 @@ import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.data.po.OrderPo;
 import org.springframework.lang.Nullable;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.OneToOne;
+import javax.persistence.Column;
 
 @Entity
 @Table(name = "TB_LOCATION")

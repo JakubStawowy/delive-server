@@ -1,26 +1,31 @@
 package com.example.rentiaserver.delivery.enums;
 
+import java.util.Arrays;
+
 public enum DeliveryState {
 
-    REGISTERED,
-    TO_START,
-    STARTED,
-    FINISHED,
-    CLOSED,
-    TO_ACCEPT;
+    REGISTERED("registered"),
+
+    TO_START("toStart"),
+
+    STARTED("started"),
+
+    FINISHED("finished"),
+
+    CLOSED("closed"),
+
+    TO_ACCEPT("toAccept");
+
+    private final String code;
+
+    DeliveryState(String code) {
+        this.code = code;
+    }
 
     public static DeliveryState getNextStateAfterAction(String action) {
-        if ("toStart".equals(action)) {
-            return TO_START;
-        }
-        if ("start".equals(action))
-            return STARTED;
-        if ("finish".equals(action))
-            return FINISHED;
-        if ("close".equals(action))
-            return CLOSED;
-        if ("toAccept".equals(action))
-            return TO_ACCEPT;
-        throw new IllegalArgumentException("Wrong action name");
+        return Arrays.stream(values())
+                .filter(value -> action.equals(value.code))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Wrong action name"));
     }
 }

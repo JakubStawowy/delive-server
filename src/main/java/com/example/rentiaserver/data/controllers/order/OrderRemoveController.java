@@ -2,11 +2,15 @@ package com.example.rentiaserver.data.controllers.order;
 
 import com.example.rentiaserver.ApplicationConstants;
 import com.example.rentiaserver.data.services.order.OrderService;
+import com.example.rentiaserver.data.util.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-//@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
-@CrossOrigin
+@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
 @RequestMapping(value = OrderRemoveController.BASE_ENDPOINT)
 public final class OrderRemoveController {
@@ -20,7 +24,7 @@ public final class OrderRemoveController {
     }
 
     @DeleteMapping(value = "/delete")
-    public void removeOrder(@RequestParam Long orderId) {
+    public void removeOrder(@RequestParam Long orderId) throws EntityNotFoundException {
         orderService.archiveOrderById(orderId);
     }
 }

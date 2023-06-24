@@ -1,8 +1,9 @@
 package com.example.rentiaserver.delivery.services;
 
-import com.example.rentiaserver.data.helpers.OrderToCreatorHelper;
+import com.example.rentiaserver.data.helpers.OrderMapper;
 import com.example.rentiaserver.data.po.OrderPo;
 import com.example.rentiaserver.data.po.UserPo;
+import com.example.rentiaserver.data.to.OrderTo;
 import com.example.rentiaserver.delivery.api.BaseChangeDeliveryStateService;
 import com.example.rentiaserver.delivery.dao.MessageDao;
 import com.example.rentiaserver.delivery.enums.DeliveryState;
@@ -23,7 +24,7 @@ import java.util.Date;
 public final class ChangeDeliveryStateService extends BaseChangeDeliveryStateService {
 
     private final MessageDao messageDao;
-    private static final double RADIUS = 0.5;
+    private static final double ACCEPTED_RADIUS = 0.5;
 
     @Autowired
     public ChangeDeliveryStateService(DeliveryService deliveryService, MessageDao messageDao) {
@@ -38,16 +39,14 @@ public final class ChangeDeliveryStateService extends BaseChangeDeliveryStateSer
                 " You can accept it or discard from the delivery panel.";
         changeDeliveryState(deliveryPo, DeliveryState.TO_ACCEPT);
         if (clientLocation.getLatitude() == 0 && clientLocation.getLongitude() == 0) {
-            return new ResponseTo(true, message, HttpStatus.OK);
-        }
-        else {
-            double distance = deliveryService.getDistance(OrderToCreatorHelper.create(deliveryPo.getOrderPo()).getDestinationTo(),
-                    clientLocation);
-            if (distance <= RADIUS) {
+            return new ResponseTo(true, HttpStatus.OK);
+        } else {
+            OrderTo order = OrderMapper.mapPersistentObjectToTransfer(deliveryPo.getOrderPo());
+            double distance = deliveryService.getDistance(order.getDestinationTo(), clientLocation);
+            if (distance <= ACCEPTED_RADIUS) {
                 return new ResponseTo(true, "Deliverer has reached the destination safely! " +
                         "You must accept the delivery from the delivery panel", HttpStatus.OK);
-            }
-            else {
+            } else {
                 return new ResponseTo(true, message, HttpStatus.OK);
             }
         }
@@ -84,6 +83,7 @@ public final class ChangeDeliveryStateService extends BaseChangeDeliveryStateSer
         BigDecimal principalBalance = principal.getBalance();
         principal.setBalance(principalBalance.subtract(salary));
         deliveryPo.setStartedAt(new Date(System.currentTimeMillis()));
+
         changeDeliveryState(deliveryPo, DeliveryState.STARTED);
     }
 

@@ -4,7 +4,15 @@ import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
 import com.example.rentiaserver.geolocation.po.LocationPo;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.CascadeType;
+import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -37,12 +45,12 @@ public class OrderPo extends BaseEntityPo {
     private BigDecimal salary;
 
     @Column(nullable = false)
-    private boolean requireTransportWithClient;
+    private Boolean requireTransportWithClient;
 
     @OneToMany(mappedBy = "orderPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<FeedbackPo> feedbackPos;
 
-    public OrderPo(LocationPo initialLocationPo, LocationPo finalLocationPo, UserPo authorPo, BigDecimal salary, boolean requireTransportWithClient, String weightUnit) {
+    public OrderPo(LocationPo initialLocationPo, LocationPo finalLocationPo, UserPo authorPo, BigDecimal salary, Boolean requireTransportWithClient, String weightUnit) {
         this.initialLocationPo = initialLocationPo;
         this.finalLocationPo = finalLocationPo;
         this.authorPo = authorPo;
@@ -51,7 +59,9 @@ public class OrderPo extends BaseEntityPo {
         this.weightUnit = weightUnit;
     }
 
-    public OrderPo() {}
+    public OrderPo() {
+        //
+    }
 
     public LocationPo getInitialLocationPo() {
         return initialLocationPo;
@@ -101,7 +111,7 @@ public class OrderPo extends BaseEntityPo {
         this.salary = salary;
     }
 
-    public boolean isRequireTransportWithClient() {
+    public Boolean isRequireTransportWithClient() {
         return requireTransportWithClient;
     }
 
