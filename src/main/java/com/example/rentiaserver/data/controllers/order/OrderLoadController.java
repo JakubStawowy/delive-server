@@ -1,75 +1,98 @@
 package com.example.rentiaserver.data.controllers.order;
 
 import com.example.rentiaserver.data.helpers.PackagesWeightCounterHelper;
+import com.example.rentiaserver.data.po.OrderPo;
 import com.example.rentiaserver.data.services.order.OrderService;
-import com.example.rentiaserver.data.to.*;
 import com.example.rentiaserver.ApplicationConstants;
-import com.example.rentiaserver.data.helpers.OrderToCreatorHelper;
+import com.example.rentiaserver.data.helpers.OrderMapper;
+import com.example.rentiaserver.data.to.OrderTo;
+import com.example.rentiaserver.data.util.EntityNotFoundException;
+import com.example.rentiaserver.data.util.EntityNotFoundExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
-//@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
-@CrossOrigin
+@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
 @RequestMapping(value = OrderLoadController.BASE_ENDPOINT)
 public final class OrderLoadController {
 
-    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/announcements";
+    public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/orders";
 
-
-    private final OrderService announcementService;
+    private final OrderService orderService;
 
     @Autowired
-    public OrderLoadController(OrderService announcementService) {
-        this.announcementService = announcementService;
+    public OrderLoadController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @GetMapping("/all")
-    public List<AnnouncementTo> getAllAnnouncements() {
-        List<AnnouncementTo> announcementTransferObjects = new LinkedList<>();
-        announcementService.getAllAnnouncements()
-                .forEach(announcement -> announcementTransferObjects.add(OrderToCreatorHelper.create(announcement)));
-        return announcementTransferObjects;
+    public List<OrderTo> getAllOrders() {
+        return orderService.getAllOrders()
+                .stream()
+                .map(OrderMapper::mapPersistentObjectToTransfer)
+                .collect(Collectors.toList());
     }
 
-    @GetMapping("/announcement")
-    public AnnouncementTo getAnnouncementById(@RequestParam Long announcementId) {
-        return announcementService.getAnnouncementById(announcementId).map(OrderToCreatorHelper::create).orElse(null);
+    @GetMapping("/order")
+    public ResponseEntity<OrderTo> getOrderById(@RequestParam Long orderId) {
+        try {
+            OrderTo order = orderService.getOrderById(orderId)
+                    .map(OrderMapper::mapPersistentObjectToTransfer)
+                    .orElseThrow(() -> createOrderNotFound(orderId));
+
+            return new ResponseEntity<>(order, HttpStatus.OK);
+
+        } catch (EntityNotFoundException ex) {
+            return EntityNotFoundExceptionHandler.handle(ex);
+        }
     }
 
     @GetMapping("/filtered")
-    public List<AnnouncementTo> getFilteredAnnouncements(@RequestParam String initialAddress, @RequestParam String finalAddress,
-                                                  @RequestParam String minimalSalary, @RequestParam String maxWeight,
-                                                         @RequestParam String requireTransportWithClient, @RequestParam boolean sortBySalary,
-                                                         @RequestParam boolean sortByWeight) {
-        List<AnnouncementTo> announcementTos = announcementService
-                .findAnnouncementsByAddresses(initialAddress, finalAddress, minimalSalary, requireTransportWithClient, sortBySalary)
-                .stream().map(OrderToCreatorHelper::create).collect(Collectors.toList());
-        List<AnnouncementTo> result;
+    public List<OrderTo> getFilteredOrders(@RequestParam String initialAddress,
+                                           @RequestParam String finalAddress,
+                                           @RequestParam String minimalSalary,
+                                           @RequestParam String maxWeight,
+                                           @RequestParam Boolean requireTransportWithClient,
+                                           @RequestParam Boolean sortBySalary,
+                                           @RequestParam Boolean sortByWeight) {
 
-        if (maxWeight != null && !maxWeight.isEmpty()) {
-            result = new ArrayList<>();
-            for (AnnouncementTo announcementTo: announcementTos) {
-                BigDecimal weight = PackagesWeightCounterHelper.sumPackagesWeights(announcementTo.getPackages());
-                if (weight.compareTo(new BigDecimal(maxWeight)) < 0) {
-                    result.add(announcementTo);
-                }
-            }
-        } else {
-            result = new ArrayList<>(announcementTos);
+        List<OrderPo> orders = orderService.findOrdersByAddresses(initialAddress,
+                finalAddress,
+                minimalSalary,
+                requireTransportWithClient,
+                sortBySalary);
+
+        List<OrderTo> orderTos = orders.stream()
+                .map(OrderMapper::mapPersistentObjectToTransfer)
+                .filter(order -> isBelowMaxWeight(order, maxWeight))
+                .collect(Collectors.toList());
+
+        // TODO put this in Criteria query
+        if (Boolean.TRUE.equals(sortByWeight)) {
+            orderTos.sort(Comparator.comparing(orderTo -> new BigDecimal(orderTo.getWeight())));
         }
 
-        if (sortByWeight) {
-            result.sort(Comparator.comparing(announcementTo -> new BigDecimal(announcementTo.getWeight())));
-        }
-
-        return result;
+        return orderTos;
     }
 
+    private boolean isBelowMaxWeight(OrderTo order, String maxWeight) {
+        return !(maxWeight != null && !maxWeight.isEmpty())
+                || PackagesWeightCounterHelper.sumPackagesWeights(order.getPackages())
+                .compareTo(new BigDecimal(maxWeight)) < 0;
+    }
+
+    private EntityNotFoundException createOrderNotFound(long orderId) {
+        return new EntityNotFoundException(OrderPo.class, orderId);
+    }
 }

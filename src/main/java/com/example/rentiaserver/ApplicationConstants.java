@@ -12,7 +12,7 @@ public class ApplicationConstants {
     public static class Origins {
         public static final String LOCALHOST_ORIGIN = "http://localhost:3000";
 //        public static final String LOCALHOST_ORIGIN = "http://192.168.0.115:3000";
-//        public static final String LOCALHOST_ORIGIN = "http://192.168.2.109:3000";
+//        public static final String LOCALHOST_ORIGIN = "http://192.168.2.105:3000";
 
         private Origins() {
             throw new IllegalStateException();
@@ -31,6 +31,16 @@ public class ApplicationConstants {
         public static final String ROLE_PREFIX = "role";
         public static final String ID_PREFIX = "userId";
         private Security() {
+            throw new IllegalStateException();
+        }
+    }
+
+    public static class Paths {
+        public static final String APPLICATION_PROPERTIES = "classpath:application.properties";
+        public static final String PROPERTY_POSITION_STACK_API_KEY = "${positionStack.api.key}";
+
+        public static final String PROPERTY_MAPQUEST_API_KEY = "${positionStack.api.key}";
+        private Paths() {
             throw new IllegalStateException();
         }
     }

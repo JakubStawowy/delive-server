@@ -1,12 +1,12 @@
 package com.example.rentiaserver.delivery.services;
 
-import com.example.rentiaserver.data.po.AnnouncementPo;
+import com.example.rentiaserver.data.po.OrderPo;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.data.services.user.UserService;
 import com.example.rentiaserver.delivery.dao.DeliveryDao;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
-import com.example.rentiaserver.geolocation.distance.IDistanceCalculator;
 import com.example.rentiaserver.geolocation.to.LocationTo;
+import com.example.rentiaserver.geolocation.tool.HaversineDistanceCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +16,14 @@ import java.util.Optional;
 public class DeliveryService {
 
     private final DeliveryDao deliveryDao;
+
     private final UserService userService;
-    private final IDistanceCalculator distanceService;
+
 
     @Autowired
-    public DeliveryService(DeliveryDao deliveryDao, UserService userService, IDistanceCalculator distanceService) {
+    public DeliveryService(DeliveryDao deliveryDao, UserService userService) {
         this.deliveryDao = deliveryDao;
         this.userService = userService;
-        this.distanceService = distanceService;
     }
 
     public Optional<UserPo> findUserById(Long id) {
@@ -34,8 +34,8 @@ public class DeliveryService {
         return deliveryDao.findById(id);
     }
 
-    public Optional<DeliveryPo> findDeliveryByAnnouncementPoAndUserPo(AnnouncementPo announcementPo, UserPo userPo) {
-        return deliveryDao.findByAnnouncementPoAndUserPo(announcementPo, userPo);
+    public Optional<DeliveryPo> findDeliveryByOrderPoAndUserPo(OrderPo orderPo, UserPo userPo) {
+        return deliveryDao.findByOrderPoAndUserPo(orderPo, userPo);
     }
 
     public void save(UserPo userPo) {
@@ -47,6 +47,6 @@ public class DeliveryService {
     }
 
     public double getDistance(LocationTo initialLocation, LocationTo finalLocation) {
-        return distanceService.getDistance(initialLocation, finalLocation);
+        return HaversineDistanceCalculator.getDistance(initialLocation, finalLocation);
     }
 }

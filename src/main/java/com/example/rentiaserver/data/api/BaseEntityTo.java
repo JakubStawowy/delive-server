@@ -5,6 +5,7 @@ import java.io.Serializable;
 public abstract class BaseEntityTo implements Serializable {
 
     private final Long id;
+
     private final String createdAt;
 
     public BaseEntityTo(Long id, String createdAt) {

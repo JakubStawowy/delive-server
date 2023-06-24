@@ -1,20 +1,18 @@
 package com.example.rentiaserver.delivery.to;
 
 import com.example.rentiaserver.data.api.BaseEntityTo;
-import com.example.rentiaserver.data.to.AnnouncementTo;
-
-import java.io.Serializable;
+import com.example.rentiaserver.data.to.OrderTo;
 
 public class DeliveryTo extends BaseEntityTo {
 
     private final Long delivererId;
-    private final AnnouncementTo announcement;
+    private final OrderTo order;
     private final String deliveryState;
 
-    public DeliveryTo(Long id, String createdAt, Long delivererId, AnnouncementTo announcement, String deliveryState) {
+    public DeliveryTo(Long id, String createdAt, Long delivererId, OrderTo order, String deliveryState) {
         super(id, createdAt);
         this.delivererId = delivererId;
-        this.announcement = announcement;
+        this.order = order;
         this.deliveryState = deliveryState;
     }
 
@@ -22,8 +20,8 @@ public class DeliveryTo extends BaseEntityTo {
         return delivererId;
     }
 
-    public AnnouncementTo getAnnouncement() {
-        return announcement;
+    public OrderTo getOrder() {
+        return order;
     }
 
     public String getDeliveryState() {

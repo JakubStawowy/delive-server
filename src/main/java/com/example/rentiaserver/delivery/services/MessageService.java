@@ -1,9 +1,6 @@
 package com.example.rentiaserver.delivery.services;
 
-import com.example.rentiaserver.data.po.AnnouncementPo;
-import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.delivery.dao.MessageDao;
-import com.example.rentiaserver.delivery.enums.MessageType;
 import com.example.rentiaserver.delivery.po.MessagePo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

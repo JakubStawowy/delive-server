@@ -1,13 +1,16 @@
 package com.example.rentiaserver.geolocation.po;
 
 import com.example.rentiaserver.data.api.BaseEntityPo;
-import com.example.rentiaserver.data.po.AnnouncementPo;
+import com.example.rentiaserver.data.po.OrderPo;
 import org.springframework.lang.Nullable;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.OneToOne;
+import javax.persistence.Column;
 
 @Entity
-@Table(name = "LOCATIONS")
+@Table(name = "TB_LOCATION")
 public class LocationPo extends BaseEntityPo {
 
     @Column(nullable = false)
@@ -20,10 +23,10 @@ public class LocationPo extends BaseEntityPo {
     private String address;
 
     @OneToOne(mappedBy = "initialLocationPo")
-    private AnnouncementPo announcementFromPo;
+    private OrderPo orderFromPo;
 
     @OneToOne(mappedBy = "finalLocationPo")
-    private AnnouncementPo announcementToPo;
+    private OrderPo orderToPo;
 
     public LocationPo(Double latitude, Double longitude, @Nullable String address) {
         this.latitude = latitude;
@@ -58,19 +61,19 @@ public class LocationPo extends BaseEntityPo {
         this.address = address;
     }
 
-    public AnnouncementPo getAnnouncementFromPo() {
-        return announcementFromPo;
+    public OrderPo getOrderFromPo() {
+        return orderFromPo;
     }
 
-    public void setAnnouncementFromPo(AnnouncementPo announcementFromPo) {
-        this.announcementFromPo = announcementFromPo;
+    public void setOrderFromPo(OrderPo orderFromPo) {
+        this.orderFromPo = orderFromPo;
     }
 
-    public AnnouncementPo getAnnouncementToPo() {
-        return announcementToPo;
+    public OrderPo getOrderToPo() {
+        return orderToPo;
     }
 
-    public void setAnnouncementToPo(AnnouncementPo announcementToPo) {
-        this.announcementToPo = announcementToPo;
+    public void setOrderToPo(OrderPo orderToPo) {
+        this.orderToPo = orderToPo;
     }
 }

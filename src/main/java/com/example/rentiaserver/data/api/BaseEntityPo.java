@@ -1,6 +1,13 @@
 package com.example.rentiaserver.data.api;
 
-import javax.persistence.*;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.Version;
+import javax.persistence.PrePersist;
+
 import java.util.Date;
 
 @MappedSuperclass

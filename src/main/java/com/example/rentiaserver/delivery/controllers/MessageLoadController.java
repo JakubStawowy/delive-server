@@ -6,7 +6,12 @@ import com.example.rentiaserver.delivery.helpers.MessageToCreateHelper;
 import com.example.rentiaserver.delivery.to.MessageTo;
 import com.example.rentiaserver.security.helpers.JsonWebTokenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -31,13 +36,15 @@ public class MessageLoadController {
     public List<MessageTo> loadMessagesSent(HttpServletRequest request) {
         return messageDao.findAllBySender(JsonWebTokenHelper.getRequesterId(request))
                 .stream()
-                .map(MessageToCreateHelper::create).collect(Collectors.toList());
+                .map(MessageToCreateHelper::create)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/received")
     public List<MessageTo> loadMessagesReceived(HttpServletRequest request) {
         return messageDao.findAllByReceiver(JsonWebTokenHelper.getRequesterId(request))
                 .stream()
-                .map(MessageToCreateHelper::create).collect(Collectors.toList());
+                .map(MessageToCreateHelper::create)
+                .collect(Collectors.toList());
     }
 }

@@ -12,6 +12,8 @@ public class UserTo extends BaseEntityTo {
     private final String phone;
     private final String balance;
     private final UserRoles role;
+    private String oldPassword;
+    private String newPassword;
 
     public UserTo(Long id, String createdAt, String name, String surname, String email, String phone, String balance, UserRoles role) {
         super(id, createdAt);
@@ -72,5 +74,21 @@ public class UserTo extends BaseEntityTo {
 
     public String getBalance() {
         return balance;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }

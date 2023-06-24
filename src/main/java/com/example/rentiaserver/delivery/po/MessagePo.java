@@ -1,14 +1,21 @@
 package com.example.rentiaserver.delivery.po;
 
 import com.example.rentiaserver.data.api.BaseEntityPo;
-import com.example.rentiaserver.data.po.AnnouncementPo;
+import com.example.rentiaserver.data.po.OrderPo;
 import com.example.rentiaserver.data.po.UserPo;
 import com.example.rentiaserver.delivery.enums.MessageType;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.FetchType;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 
 @Entity
-@Table(name = "MESSAGES")
+@Table(name = "TB_MESSAGE")
 public class MessagePo extends BaseEntityPo {
 
     private String message;
@@ -20,8 +27,8 @@ public class MessagePo extends BaseEntityPo {
     private String phoneNumber;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ANNOUNCEMENT_ID")
-    private AnnouncementPo announcementPo;
+    @JoinColumn(name = "ORDER_ID")
+    private OrderPo orderPo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SENDER_ID")
@@ -37,9 +44,9 @@ public class MessagePo extends BaseEntityPo {
 
     private boolean replied;
 
-    public MessagePo(String message, AnnouncementPo announcementPo, UserPo senderPo, UserPo receiverPo, MessageType messageType) {
+    public MessagePo(String message, OrderPo orderPo, UserPo senderPo, UserPo receiverPo, MessageType messageType) {
         this.message = message;
-        this.announcementPo = announcementPo;
+        this.orderPo = orderPo;
         this.senderPo = senderPo;
         this.receiverPo = receiverPo;
         this.messageType = messageType;
@@ -61,12 +68,12 @@ public class MessagePo extends BaseEntityPo {
         this.message = message;
     }
 
-    public AnnouncementPo getAnnouncementPo() {
-        return announcementPo;
+    public OrderPo getOrderPo() {
+        return orderPo;
     }
 
-    public void setAnnouncementPo(AnnouncementPo announcementPo) {
-        this.announcementPo = announcementPo;
+    public void setOrderPo(OrderPo orderPo) {
+        this.orderPo = orderPo;
     }
 
     public UserPo getSenderPo() {

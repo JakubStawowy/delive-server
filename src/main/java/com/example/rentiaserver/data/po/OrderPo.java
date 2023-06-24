@@ -4,13 +4,21 @@ import com.example.rentiaserver.data.api.BaseEntityPo;
 import com.example.rentiaserver.delivery.po.DeliveryPo;
 import com.example.rentiaserver.geolocation.po.LocationPo;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.CascadeType;
+import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
 import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
-@Table(name = "ANNOUNCEMENTS")
-public class AnnouncementPo extends BaseEntityPo {
+@Table(name = "TB_ORDER")
+public class OrderPo extends BaseEntityPo {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "INITIAL_LOCATION_ID", nullable = false)
@@ -24,34 +32,36 @@ public class AnnouncementPo extends BaseEntityPo {
     @JoinColumn(name = "AUTHOR_ID", nullable = false)
     private UserPo authorPo;
 
-    @OneToMany(mappedBy = "announcementPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orderPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<DeliveryPo> deliveryPos;
 
-    @OneToMany(mappedBy = "announcementPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orderPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<PackagePo> packagesPos;
 
     @Column(name = "WEIGHT_UNIT", nullable = false)
     private String weightUnit;
 
     @Column(nullable = false)
-    private BigDecimal amount;
+    private BigDecimal salary;
 
     @Column(nullable = false)
-    private boolean requireTransportWithClient;
+    private Boolean requireTransportWithClient;
 
-    @OneToMany(mappedBy = "announcementPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orderPo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<FeedbackPo> feedbackPos;
 
-    public AnnouncementPo(LocationPo initialLocationPo, LocationPo finalLocationPo, UserPo authorPo, BigDecimal amount, boolean requireTransportWithClient, String weightUnit) {
+    public OrderPo(LocationPo initialLocationPo, LocationPo finalLocationPo, UserPo authorPo, BigDecimal salary, Boolean requireTransportWithClient, String weightUnit) {
         this.initialLocationPo = initialLocationPo;
         this.finalLocationPo = finalLocationPo;
         this.authorPo = authorPo;
-        this.amount = amount;
+        this.salary = salary;
         this.requireTransportWithClient = requireTransportWithClient;
         this.weightUnit = weightUnit;
     }
 
-    public AnnouncementPo() {}
+    public OrderPo() {
+        //
+    }
 
     public LocationPo getInitialLocationPo() {
         return initialLocationPo;
@@ -93,15 +103,15 @@ public class AnnouncementPo extends BaseEntityPo {
         this.packagesPos = packagesPos;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public BigDecimal getSalary() {
+        return salary;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setSalary(BigDecimal salary) {
+        this.salary = salary;
     }
 
-    public boolean isRequireTransportWithClient() {
+    public Boolean isRequireTransportWithClient() {
         return requireTransportWithClient;
     }
 

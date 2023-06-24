@@ -4,25 +4,25 @@ import com.example.rentiaserver.geolocation.to.LocationTo;
 
 import java.util.Set;
 
-public class AnnouncementTo extends BaseEntityTo {
+public class OrderTo extends BaseEntityTo {
 
     private final LocationTo destinationFrom;
     private final LocationTo destinationTo;
     private final Set<PackageTo> packages;
     private final Long authorId;
-    private final String amount;
+    private final String salary;
     private final String weight;
     private final String weightUnit;
     private final boolean requireTransportWithClient;
 
-    public AnnouncementTo(Long id, String createdAt, LocationTo destinationFrom, LocationTo destinationTo, Set<PackageTo> packages,
-                          Long authorId, String amount, boolean requireTransportWithClient, String weight, String weightUnit) {
+    public OrderTo(Long id, String createdAt, LocationTo destinationFrom, LocationTo destinationTo, Set<PackageTo> packages,
+                   Long authorId, String salary, boolean requireTransportWithClient, String weight, String weightUnit) {
         super(id, createdAt);
         this.destinationFrom = destinationFrom;
         this.destinationTo = destinationTo;
         this.packages = packages;
         this.authorId = authorId;
-        this.amount = amount;
+        this.salary = salary;
         this.requireTransportWithClient = requireTransportWithClient;
         this.weight = weight;
         this.weightUnit = weightUnit;
@@ -44,8 +44,8 @@ public class AnnouncementTo extends BaseEntityTo {
         return authorId;
     }
 
-    public String getAmount() {
-        return amount;
+    public String getSalary() {
+        return salary;
     }
 
     public boolean isRequireTransportWithClient() {

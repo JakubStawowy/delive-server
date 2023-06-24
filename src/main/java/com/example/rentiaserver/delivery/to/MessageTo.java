@@ -4,16 +4,16 @@ import com.example.rentiaserver.data.api.BaseEntityTo;
 
 public abstract class MessageTo extends BaseEntityTo {
 
-    private final Long announcementId;
+    private final Long orderId;
     private final Long senderId;
     private final Long receiverId;
     private final String message;
     private final String vehicleRegistrationNumber;
     private final String phoneNumber;
 
-    public MessageTo(Long id, String createdAt, Long announcementId, Long senderId, Long receiverId, String message, String vehicleRegistrationNumber, String phoneNumber) {
+    public MessageTo(Long id, String createdAt, Long orderId, Long senderId, Long receiverId, String message, String vehicleRegistrationNumber, String phoneNumber) {
         super(id, createdAt);
-        this.announcementId = announcementId;
+        this.orderId = orderId;
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.message = message;
@@ -21,8 +21,8 @@ public abstract class MessageTo extends BaseEntityTo {
         this.phoneNumber = phoneNumber;
     }
 
-    public Long getAnnouncementId() {
-        return announcementId;
+    public Long getOrderId() {
+        return orderId;
     }
 
     public Long getSenderId() {

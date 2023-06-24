@@ -7,12 +7,14 @@ import com.example.rentiaserver.security.to.ResponseTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import java.math.BigDecimal;
 
-//@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
-@CrossOrigin
+@CrossOrigin(origins = ApplicationConstants.Origins.LOCALHOST_ORIGIN)
 @RestController
 @RequestMapping(value = RegisterController.BASE_ENDPOINT)
 public final class RegisterController {
