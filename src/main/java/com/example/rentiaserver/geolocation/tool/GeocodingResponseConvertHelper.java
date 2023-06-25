@@ -1,7 +1,7 @@
 package com.example.rentiaserver.geolocation.tool;
 
 import com.example.rentiaserver.geolocation.api.LocationType;
-import com.example.rentiaserver.geolocation.to.LocationTo;
+import com.example.rentiaserver.geolocation.model.to.LocationTo;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 

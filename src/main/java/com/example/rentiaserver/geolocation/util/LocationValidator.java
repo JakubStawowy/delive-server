@@ -1,6 +1,6 @@
 package com.example.rentiaserver.geolocation.util;
 
-import com.example.rentiaserver.geolocation.to.LocationTo;
+import com.example.rentiaserver.geolocation.model.to.LocationTo;
 
 public class LocationValidator {
 

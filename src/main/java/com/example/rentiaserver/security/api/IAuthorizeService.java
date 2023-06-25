@@ -1,8 +1,12 @@
 package com.example.rentiaserver.security.api;
 
-import com.example.rentiaserver.data.po.UserPo;
+import com.example.rentiaserver.user.model.to.UserTo;
+import com.example.rentiaserver.base.exception.AuthenticationException;
+import com.example.rentiaserver.base.exception.EntityNotFoundException;
 
 public interface IAuthorizeService {
-    boolean authorizeUserWithIdAndPassword(Long id, String password);
-    UserPo authorizeUserWithEmailAndPassword(String email, String password);
+
+    boolean checkIfUserPasswordMatch(Long id, String password) throws EntityNotFoundException;
+
+    UserTo authorizeUserWithEmailAndPassword(String email, String password) throws EntityNotFoundException, AuthenticationException;
 }

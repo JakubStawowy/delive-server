@@ -1,6 +1,6 @@
 package com.example.rentiaserver.geolocation.api;
 
-import com.example.rentiaserver.data.util.UnsupportedArgumentException;
+import com.example.rentiaserver.base.exception.UnsupportedArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
