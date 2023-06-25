@@ -1,7 +1,6 @@
 package com.example.rentiaserver.geolocation.api;
 
-import com.example.rentiaserver.geolocation.api.LocationType;
-import com.example.rentiaserver.geolocation.to.LocationTo;
+import com.example.rentiaserver.geolocation.model.to.LocationTo;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;

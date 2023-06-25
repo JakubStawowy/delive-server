@@ -1,6 +1,6 @@
 package com.example.rentiaserver.geolocation.tool;
 
-import com.example.rentiaserver.geolocation.to.LocationTo;
+import com.example.rentiaserver.geolocation.model.to.LocationTo;
 import com.example.rentiaserver.geolocation.util.GeoConstants;
 
 public class MapGeolocationHelper {
