@@ -16,21 +16,20 @@ import java.util.Optional;
 
 abstract class MapQuestGeocodingService extends BaseGeocodingService {
 
-    private static final String BASE_URI = "http://open.mapquestapi.com/geocoding/v1/";
+//    private static final String BASE_URI = "http://open.mapquestapi.com/geocoding/v1/";
 
     private final String apiKey;
+
+    private final String baseUri;
 
     public MapQuestGeocodingService(
             IHttpClientService httpClientService,
             IHttpResponseJsonConverter converter,
-            String apiKey) {
+            String apiKey,
+            String baseUri) {
         super(httpClientService, converter);
         this.apiKey = apiKey;
-    }
-
-    @Override
-    public final boolean isEmergencyService() {
-        return true;
+        this.baseUri = baseUri;
     }
 
     @Override
@@ -58,7 +57,7 @@ abstract class MapQuestGeocodingService extends BaseGeocodingService {
         paramsMap.put("key", apiKey);
         paramsMap.put("location", prepareQuery(locationTo));
         HttpResponse<String> httpResponse = httpClientService.getHttpResponse(
-                BASE_URI + getGeocodingType().getValue(),
+                baseUri + getGeocodingType().getValue(),
                 paramsMap);
 
         return converter.convertResponseToJSONArray(

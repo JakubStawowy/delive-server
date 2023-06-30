@@ -51,9 +51,6 @@ public class OrderSaveController {
         Long userId = AuthenticationHelper.getUserId(request);
         UserPo user = userService.getUserPoById(userId);
 
-        // TODO move to locationService
-        markLocationTypes(orderTo);
-
         Long orderId = orderTo.getId();
 
         try {
@@ -77,15 +74,6 @@ public class OrderSaveController {
                     .message(ex.getMessage())
                     .build();
         }
-
-    }
-
-    private void markLocationTypes(OrderTo orderTo) {
-
-        Optional.ofNullable(orderTo.getDestinationTo())
-                .ifPresent(LocationTo::markLocationType);
-        Optional.ofNullable(orderTo.getDestinationFrom())
-                .ifPresent(LocationTo::markLocationType);
 
     }
 }

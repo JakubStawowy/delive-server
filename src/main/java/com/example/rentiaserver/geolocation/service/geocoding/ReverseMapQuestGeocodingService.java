@@ -6,11 +6,12 @@ import com.example.rentiaserver.geolocation.model.to.LocationTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Service;
 
-import static com.example.rentiaserver.base.ApplicationConstants.Paths.*;
+import static com.example.rentiaserver.base.ApplicationConstants.Properties.APPLICATION_PROPERTIES;
+import static com.example.rentiaserver.base.ApplicationConstants.Properties.PROPERTY_MAPQUEST_API_KEY;
+import static com.example.rentiaserver.base.ApplicationConstants.Properties.PROPERTY_MAPQUEST_API_URI;
 
-@Service
+@GeocodingService(GeocodingServiceLayer.SECOND)
 @PropertySource(APPLICATION_PROPERTIES)
 final class ReverseMapQuestGeocodingService
         extends MapQuestGeocodingService
@@ -20,9 +21,13 @@ final class ReverseMapQuestGeocodingService
     public ReverseMapQuestGeocodingService(
             IHttpClientService httpClientService,
             IHttpResponseJsonConverter converter,
-            @Value(PROPERTY_MAPQUEST_API_KEY) String apiKey) {
+            @Value(PROPERTY_MAPQUEST_API_KEY) String apiKey,
+            @Value(PROPERTY_MAPQUEST_API_URI) String baseUri) {
 
-        super(httpClientService, converter, apiKey);
+        super(httpClientService,
+                converter,
+                apiKey,
+                baseUri);
     }
 
     @Override

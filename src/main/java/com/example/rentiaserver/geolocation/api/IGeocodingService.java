@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public interface IGeocodingService {
 
-    boolean isEmergencyService();
-
     LocationType getAcceptedLocationType();
 
     List<LocationTo> getConvertedLocations(LocationTo locationTo) throws IOException, InterruptedException, ParseException;
