@@ -1,5 +1,6 @@
 package com.example.rentiaserver.user.service;
 
+import com.example.rentiaserver.security.api.IAuthorizeService;
 import com.example.rentiaserver.user.model.mappers.UserMapper;
 import com.example.rentiaserver.user.model.po.UserPo;
 import com.example.rentiaserver.user.api.IUserService;
@@ -7,19 +8,28 @@ import com.example.rentiaserver.user.repository.UserDao;
 import com.example.rentiaserver.user.model.to.UserTo;
 import com.example.rentiaserver.base.exception.AuthenticationException;
 import com.example.rentiaserver.base.exception.EntityNotFoundException;
-import com.example.rentiaserver.security.service.AuthorizeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-
-import java.util.ServiceLoader;
 
 @Service
 public class UserService implements IUserService {
 
     private final UserDao userRepository;
 
+    private IAuthorizeService authorizeService;
+
+    @Autowired
     public UserService(UserDao userRepository) {
         this.userRepository = userRepository;
+    }
+
+    /**
+     * Workaround for a circular dependency between UserService and AuthorizeService.
+     * */
+    @Autowired
+    public void setAuthorizeService(IAuthorizeService authorizeService) {
+        this.authorizeService = authorizeService;
     }
 
     @Override
@@ -36,7 +46,7 @@ public class UserService implements IUserService {
                 .orElseThrow(() -> new EntityNotFoundException(UserPo.class, userId));
 
         String oldPassword = userData.getOldPassword();
-        if (oldPassword != null && !checkUserPasswordEquals(user, oldPassword)) {
+        if (oldPassword != null && !authorizeService.checkIfUserPasswordMatch(userId, oldPassword)) {
             throw new AuthenticationException("Wrong old password value");
         }
 
@@ -99,16 +109,5 @@ public class UserService implements IUserService {
     @Override
     public void save(UserPo user) {
         userRepository.save(user);
-    }
-
-
-    /**
-     * Taken from @see com.example.rentiaserver.security.service.AuthorizeService
-     * because of cycle.
-     * <p>
-     * TODO use provider for @see com.example.rentiaserver.security.api.IAuthorizeService
-     * */
-    private boolean checkUserPasswordEquals(UserPo user, String password) {
-        return BCrypt.hashpw(password, user.getSalt()).equals(user.getPassword());
     }
 }
