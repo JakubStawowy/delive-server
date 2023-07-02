@@ -56,14 +56,6 @@ public class DeliveryService {
         return deliveryDao.findByOrderPoAndUserPo(orderPo, userPo);
     }
 
-//    public void save(DeliveryPo deliveryPo) {
-//        deliveryDao.save(deliveryPo);
-//    }
-
-//    public double getDistance(LocationTo initialLocation, LocationTo finalLocation) {
-//        return HaversineDistanceCalculator.getDistance(initialLocation, finalLocation);
-//    }
-
     public DeliveryPo getById(Long deliveryId) throws EntityNotFoundException {
         return deliveryDao.findById(deliveryId)
                 .orElseThrow(() -> new EntityNotFoundException(DeliveryPo.class, deliveryId));

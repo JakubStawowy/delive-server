@@ -7,6 +7,11 @@ import com.example.rentiaserver.order.model.mappers.OrderMapper;
 public class DeliveryMapper {
 
     public static DeliveryTo mapDeliveryPoToTo(DeliveryPo deliveryPo) {
+
+        if (deliveryPo == null) {
+            return null;
+        }
+
         return DeliveryTo.builder()
                 .id(deliveryPo.getId())
                 .createdAt(deliveryPo.getCreatedAt())

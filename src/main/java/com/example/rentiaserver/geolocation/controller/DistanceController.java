@@ -20,7 +20,6 @@ public class DistanceController {
 
     private final IGeolocationService geolocationService;
 
-
     @Autowired
     public DistanceController(GeolocationService geolocationService) {
         this.geolocationService = geolocationService;

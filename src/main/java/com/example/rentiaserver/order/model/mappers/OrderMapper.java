@@ -13,6 +13,11 @@ import java.util.stream.Collectors;
 public class OrderMapper {
 
     public static OrderTo mapOrderPoToTo(OrderPo orderPo) {
+
+        if (orderPo == null) {
+            return null;
+        }
+
         LocationPo destinationFrom = orderPo.getInitialLocationPo();
         LocationPo destinationTo = orderPo.getFinalLocationPo();
 

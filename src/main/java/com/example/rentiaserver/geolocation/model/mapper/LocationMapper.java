@@ -5,10 +5,6 @@ import com.example.rentiaserver.geolocation.model.to.LocationTo;
 
 public class LocationMapper {
 
-    public static LocationPo mapLocationToToPo(LocationTo location) {
-        return null;
-    }
-
     public static LocationTo mapLocationPoToTo(LocationPo location) {
         return LocationTo.getBuilder()
                 .setAddress(location.getAddress())
