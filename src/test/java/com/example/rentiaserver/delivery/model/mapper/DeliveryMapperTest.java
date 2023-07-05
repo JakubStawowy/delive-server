@@ -8,12 +8,26 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DeliveryMapperTest {
 
     @Test
-    void testMapDeliveryPoToTo() {
+    void shouldReturnNullWhenNullProvided() {
+
+        // Given
+        DeliveryPo user = null;
+
+        // When
+        DeliveryTo mappedDelivery = DeliveryMapper.mapDeliveryPoToTo(user);
+
+        // Then
+        assertNull(mappedDelivery);
+    }
+
+    @Test
+    void shouldReturnMappedDeliveryToWhenPoProvided() {
 
         // Given
         UserPo user = new UserPo();

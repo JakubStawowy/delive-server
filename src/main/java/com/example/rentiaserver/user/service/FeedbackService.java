@@ -1,23 +1,18 @@
 package com.example.rentiaserver.user.service;
 
 import com.example.rentiaserver.delivery.api.IMessageService;
-import com.example.rentiaserver.order.model.mappers.OrderMapper;
 import com.example.rentiaserver.order.model.po.OrderPo;
-import com.example.rentiaserver.order.model.to.OrderTo;
 import com.example.rentiaserver.user.model.bc.FeedbackRate;
 import com.example.rentiaserver.user.model.mappers.FeedbackMapper;
 import com.example.rentiaserver.user.model.po.FeedbackPo;
 import com.example.rentiaserver.user.model.po.UserPo;
 import com.example.rentiaserver.user.repository.FeedbackDao;
 import com.example.rentiaserver.user.model.to.FeedbackTo;
-import com.example.rentiaserver.user.model.to.UserTo;
 import com.example.rentiaserver.base.exception.EntityNotFoundException;
-import com.example.rentiaserver.delivery.repository.MessageRepository;
 import com.example.rentiaserver.delivery.model.po.MessagePo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -77,7 +72,7 @@ public class FeedbackService {
 
         if (message != null) {
             message.setReplied(true);
-            messageService.saveMessage(message);
+            messageService.save(message);
         }
     }
 

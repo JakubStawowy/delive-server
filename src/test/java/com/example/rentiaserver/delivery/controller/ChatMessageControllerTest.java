@@ -30,11 +30,12 @@ class ChatMessageControllerTest {
                 .value("Hello, world!")
                 .build();
 
+        String expectedDestination = "/topic/" + chatMessage.getUser();
+
         // When
         chatMessageController.get(chatMessage);
 
         // Then
-        String expectedDestination = "/topic/" + chatMessage.getUser();
         verify(simpMessagingTemplate).convertAndSend(expectedDestination, chatMessage);
     }
 }

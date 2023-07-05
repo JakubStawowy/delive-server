@@ -173,7 +173,7 @@ public class DeliveryService {
         toContractorMessage.setReceiverPo(receiver);
         toContractorMessage.setMessageType(MessageType.INFO);
 
-        messageService.saveMessage(toContractorMessage);
+        messageService.save(toContractorMessage);
     }
 
     private void saveDeliveryState(DeliveryPo deliveryPo, DeliveryState deliveryState) {

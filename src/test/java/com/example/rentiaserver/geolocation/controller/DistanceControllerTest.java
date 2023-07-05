@@ -1,15 +1,12 @@
 package com.example.rentiaserver.geolocation.controller;
 
 import com.example.rentiaserver.base.exception.EntityNotFoundException;
-import com.example.rentiaserver.delivery.controller.ChangeDeliveryStateController;
-import com.example.rentiaserver.delivery.service.DeliveryService;
 import com.example.rentiaserver.geolocation.service.GeolocationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
 class DistanceControllerTest {

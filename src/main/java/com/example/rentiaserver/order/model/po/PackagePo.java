@@ -35,8 +35,13 @@ public class PackagePo extends BaseEntityPo {
     @JoinColumn(name = "ORDER_ID", nullable = false)
     private OrderPo orderPo;
 
-    public PackagePo(BigDecimal packageLength, String lengthUnit, BigDecimal packageWidth, String widthUnit,
-                     BigDecimal packageHeight, String heightUnit, BigDecimal weight,
+    public PackagePo(BigDecimal packageLength,
+                     String lengthUnit,
+                     BigDecimal packageWidth,
+                     String widthUnit,
+                     BigDecimal packageHeight,
+                     String heightUnit,
+                     BigDecimal weight,
                      OrderPo orderPo) {
         this.length = packageLength;
         this.lengthUnit = lengthUnit;

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public final class OrderDeleteController {
 
     public static final String BASE_ENDPOINT = ApplicationConstants.Urls.BASE_ENDPOINT_PREFIX + "/orders";
+
     private final OrderService orderService;
 
     @Autowired

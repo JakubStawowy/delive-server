@@ -16,7 +16,8 @@ import com.example.rentiaserver.order.model.to.OrderTo;
 import com.example.rentiaserver.order.repository.OrderDao;
 import com.example.rentiaserver.order.repository.OrderRepository;
 import com.example.rentiaserver.order.repository.PackageRepository;
-import com.example.rentiaserver.order.tool.PackagesWeightCounterHelper;
+import com.example.rentiaserver.order.tool.PackagesHelper;
+import com.example.rentiaserver.user.api.IUserService;
 import com.example.rentiaserver.user.model.po.UserPo;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,17 +42,21 @@ public final class OrderService {
 
     private final PackageRepository packageDao;
 
+    private final IUserService userService;
+
     @Autowired
     public OrderService(
             GeocodingServiceResolver geocodingServiceResolver,
             OrderRepository orderDao,
             OrderDao filteredOrdersDao,
-            PackageRepository packageDao) {
+            PackageRepository packageDao,
+            IUserService userService) {
 
         this.geocodingServiceResolver = geocodingServiceResolver;
         this.orderDao = orderDao;
         this.filteredOrdersDao = filteredOrdersDao;
         this.packageDao = packageDao;
+        this.userService = userService;
     }
 
 
@@ -70,6 +75,7 @@ public final class OrderService {
         save(order);
     }
 
+    // TODO to remove
     public OrderTo getOrderToById(Long orderId) throws EntityNotFoundException {
         return OrderMapper.mapOrderPoToTo(getOrderById(orderId));
     }
@@ -119,7 +125,25 @@ public final class OrderService {
 
     }
 
-    public void editOrder(OrderPo orderPo, OrderTo orderTo)
+    public void saveOrder(OrderTo order)
+            throws EntityNotFoundException,
+            UnsupportedArgumentException,
+            ParseException,
+            IOException,
+            LocationNotFoundException,
+            InterruptedException {
+
+        Long orderId = order.getId();
+
+        if (orderId != null) {
+            OrderPo currentStateOrder = getOrderById(orderId);
+            editOrder(currentStateOrder, order);
+        } else {
+            addOrder(order);
+        }
+    }
+
+    private void editOrder(OrderPo currentStateOrder, OrderTo orderTo)
             throws LocationNotFoundException, ParseException,
             IOException, InterruptedException, UnsupportedArgumentException {
 
@@ -128,34 +152,36 @@ public final class OrderService {
         LocationTo initialLocationTo = locations.getFirst();
         LocationTo finalLocationTo = locations.getSecond();
 
-        LocationPo initialLocationPo = orderPo.getInitialLocationPo();
+        LocationPo initialLocationPo = currentStateOrder.getInitialLocationPo();
 
         initialLocationPo.setLatitude(initialLocationTo.getLatitude());
         initialLocationPo.setLongitude(initialLocationTo.getLongitude());
         initialLocationPo.setAddress(initialLocationTo.getAddress());
 
-        LocationPo finalLocationPo = orderPo.getFinalLocationPo();
+        LocationPo finalLocationPo = currentStateOrder.getFinalLocationPo();
 
         finalLocationPo.setLatitude(finalLocationTo.getLatitude());
         finalLocationPo.setLongitude(finalLocationTo.getLongitude());
         finalLocationPo.setAddress(finalLocationTo.getAddress());
 
-        orderPo.setRequireTransportWithClient(orderTo.getRequireTransportWithClient());
-        orderPo.setSalary(new BigDecimal(orderTo.getSalary()));
-        orderPo.setWeightUnit(orderTo.getWeightUnit());
+        currentStateOrder.setRequireTransportWithClient(orderTo.getRequireTransportWithClient());
+        currentStateOrder.setSalary(new BigDecimal(orderTo.getSalary()));
+        currentStateOrder.setWeightUnit(orderTo.getWeightUnit());
 
-        deleteAllPackagesByOrder(orderPo);
+        deleteAllPackagesByOrder(currentStateOrder);
 
-        savePackages(orderTo, orderPo);
+        savePackages(orderTo, currentStateOrder);
     }
 
-    public void addOrder(UserPo author, OrderTo orderTo)
+    private void addOrder(OrderTo order)
             throws InterruptedException, ParseException, IOException,
-            LocationNotFoundException, UnsupportedArgumentException {
+            LocationNotFoundException, UnsupportedArgumentException, EntityNotFoundException {
 
-        Pair<LocationTo, LocationTo> locations = getLocationData(orderTo);
+        Pair<LocationTo, LocationTo> locations = getLocationData(order);
         LocationTo initialLocationTo = locations.getFirst();
         LocationTo finalLocationTo = locations.getSecond();
+
+        UserPo author = userService.getUserPoById(order.getAuthorId());
 
         OrderPo orderPo = new OrderPo(
                 new LocationPo(initialLocationTo.getLatitude(),
@@ -165,17 +191,17 @@ public final class OrderService {
                         finalLocationTo.getLongitude(),
                         finalLocationTo.getAddress()),
                 author,
-                new BigDecimal(orderTo.getSalary()),
-                orderTo.getRequireTransportWithClient(),
-                orderTo.getWeightUnit());
+                new BigDecimal(order.getSalary()),
+                order.getRequireTransportWithClient(),
+                order.getWeightUnit());
 
-        Long orderId = orderTo.getId();
+        Long orderId = order.getId();
         if (orderId != null) {
             orderPo.setId(orderId);
         }
 
         save(orderPo);
-        savePackages(orderTo, orderPo);
+        savePackages(order, orderPo);
     }
 
     private Pair<LocationTo, LocationTo> getLocationData(OrderTo orderTo)
@@ -231,7 +257,7 @@ public final class OrderService {
 
     private boolean isBelowMaxWeight(OrderTo order, String maxWeight) {
         return !(maxWeight != null && !maxWeight.isEmpty())
-                || PackagesWeightCounterHelper.sumPackagesWeights(order.getPackages())
+                || PackagesHelper.sumPackagesWeights(order.getPackages())
                 .compareTo(new BigDecimal(maxWeight)) < 0;
     }
 }

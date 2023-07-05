@@ -4,12 +4,14 @@ import com.example.rentiaserver.geolocation.model.to.LocationTo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
 
 @SuperBuilder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderTo extends BaseEntityTo {

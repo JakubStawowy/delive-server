@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface IMessageService {
 
-    void saveMessage(MessagePo messagePo);
-    void saveAllMessages(Iterable<MessagePo> messagePos);
+    void save(MessagePo messagePo);
+    void save(List<MessagePo> messagePos);
 
     MessageTo getById(Long id) throws EntityNotFoundException;
 
@@ -20,4 +20,6 @@ public interface IMessageService {
     List<MessageTo> getUserSentMessages(Long userId);
 
     List<MessageTo> getUserReceivedMessages(Long userId);
+
+    void register(MessageTo message) throws EntityNotFoundException;
 }

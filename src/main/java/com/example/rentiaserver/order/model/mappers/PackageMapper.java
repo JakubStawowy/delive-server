@@ -9,6 +9,11 @@ import java.math.BigDecimal;
 public class PackageMapper {
 
     public static PackagePo mapPackageToToPo(PackageTo packageTo, OrderPo orderPo) {
+
+        if (packageTo == null) {
+            return null;
+        }
+
         return new PackagePo(
                 new BigDecimal(packageTo.getLength()),
                 packageTo.getLengthUnit(),
@@ -22,6 +27,10 @@ public class PackageMapper {
     }
 
     public static PackageTo mapPackagePoToTo(PackagePo packagePo) {
+
+        if (packagePo == null) {
+            return null;
+        }
 
         return PackageTo.builder()
                 .height(String.valueOf(packagePo.getHeight()))

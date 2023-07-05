@@ -10,11 +10,25 @@ import org.junit.jupiter.api.Test;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class MessageMapperTest {
 
     @Test
-    void testMapMessagePoToOutgoingMessageTo() {
+    void shouldReturnNullWhenNullProvided() {
+
+        // Given
+        MessagePo messagePo = null;
+
+        // When
+        OutgoingMessageTo mappedMessage = MessageMapper.mapMessagePoToOutgoingMessageTo(messagePo);
+
+        // Then
+        assertNull(mappedMessage);
+    }
+
+    @Test
+    void shouldReturnMappedMessageToWhenPoProvided() {
 
         // Given
         MessagePo messagePo = new MessagePo();
