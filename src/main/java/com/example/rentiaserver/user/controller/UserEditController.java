@@ -6,9 +6,7 @@ import com.example.rentiaserver.user.model.to.UserTo;
 import com.example.rentiaserver.base.exception.AuthenticationException;
 import com.example.rentiaserver.base.exception.EntityNotFoundException;
 import com.example.rentiaserver.security.helpers.AuthenticationHelper;
-import com.example.rentiaserver.base.model.to.ResponseTo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,23 +30,11 @@ public final class UserEditController {
     }
 
     @PutMapping(value = "/edit")
-    public ResponseTo editUser(@RequestBody UserTo userData, HttpServletRequest request)
-            throws EntityNotFoundException {
-        try {
+    public void editUser(@RequestBody UserTo userData, HttpServletRequest request)
+            throws EntityNotFoundException, AuthenticationException {
 
-            Long userId = AuthenticationHelper.getUserId(request);
-            userService.edit(userId, userData);
-            return ResponseTo.builder()
-                    .operationSuccess(true)
-                    .status(HttpStatus.OK)
-                    .build();
+        Long userId = AuthenticationHelper.getUserId(request);
+        userService.edit(userId, userData);
 
-        } catch (AuthenticationException ex) {
-            return ResponseTo.builder()
-                    .operationSuccess(false)
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .message(ex.getMessage())
-                    .build();
-        }
     }
 }

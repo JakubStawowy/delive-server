@@ -2,6 +2,7 @@ package com.example.rentiaserver.security.config;
 
 import com.example.rentiaserver.security.jwt.JsonWebTokenFilter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -19,17 +20,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         new JsonWebTokenFilter(authenticationManager()),
                         UsernamePasswordAuthenticationFilter.class
                 )
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
-//                .antMatchers(HttpMethod.POST, "/api/logout").permitAll()
-//                .antMatchers(HttpMethod.POST, "/api/register").permitAll()
-//                .antMatchers(HttpMethod.GET, "/swagger*").permitAll()
-//                .antMatchers(HttpMethod.GET, "/test").permitAll()
-//                .antMatchers(HttpMethod.GET, "/api/validate/**").permitAll()
-//                .antMatchers(HttpMethod.GET, "/v2/*").permitAll()
-//                .antMatchers("/ws/**").permitAll()
-//                .anyRequest()
-//                .authenticated()
-        .authorizeRequests().anyRequest().permitAll();
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/logout").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/register").permitAll()
+                .antMatchers(HttpMethod.GET, "/swagger*").permitAll()
+                .antMatchers(HttpMethod.GET, "/test").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/validate/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/v2/*").permitAll()
+                .antMatchers("/ws/**").permitAll()
+                .anyRequest()
+                .authenticated();
     }
 }

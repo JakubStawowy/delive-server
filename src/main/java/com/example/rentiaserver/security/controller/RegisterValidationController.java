@@ -2,11 +2,9 @@ package com.example.rentiaserver.security.controller;
 
 import com.example.rentiaserver.base.ApplicationConstants;
 import com.example.rentiaserver.base.exception.EntityNotFoundException;
-import com.example.rentiaserver.base.model.to.ObjectResponseTo;
 import com.example.rentiaserver.user.model.to.UserTo;
 import com.example.rentiaserver.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,23 +25,15 @@ public final class RegisterValidationController {
     }
 
     @GetMapping("/email")
-    public ObjectResponseTo checkIfEmailExists(@RequestParam("email") String email) {
+    public boolean checkIfEmailExists(@RequestParam("email") String email) {
         try {
             UserTo user = userService.getUserByEmail(email, true);
 
-            return ObjectResponseTo.builder()
-                    .operationSuccess(true)
-                    .status(HttpStatus.OK)
-                    .object(user == null)
-                    .build();
+            return user != null;
 
-        } catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException ignored) {
             // This should never happen
-            return ObjectResponseTo.builder()
-                    .operationSuccess(true)
-                    .status(HttpStatus.OK)
-                    .object(Boolean.TRUE)
-                    .build();
+            return false;
         }
     }
 }

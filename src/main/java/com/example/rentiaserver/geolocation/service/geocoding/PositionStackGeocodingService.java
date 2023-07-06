@@ -16,22 +16,19 @@ import java.util.Optional;
 
 abstract class PositionStackGeocodingService extends BaseGeocodingService {
 
-    private static final String BASE_URI = "http://api.positionstack.com/v1/";
-
     private final String apiKey;
+
+    private final String baseUri;
 
     public PositionStackGeocodingService(
             IHttpClientService httpClientService,
             IHttpResponseJsonConverter converter,
-            String apiKey) {
+            String apiKey,
+            String baseUri) {
 
         super(httpClientService, converter);
         this.apiKey = apiKey;
-    }
-
-    @Override
-    public final boolean isEmergencyService() {
-        return false;
+        this.baseUri = baseUri;
     }
 
     public List<LocationTo> getConvertedLocations(LocationTo locationTo)
@@ -54,7 +51,7 @@ abstract class PositionStackGeocodingService extends BaseGeocodingService {
         paramsMap.put("access_key", apiKey);
         paramsMap.put("query", prepareQuery(locationTo));
         HttpResponse<String> httpResponse = httpClientService.getHttpResponse(
-                BASE_URI + getGeocodingType().getValue(),
+                baseUri + getGeocodingType().getValue(),
                 paramsMap);
 
         return converter.convertResponseToJSONArray(

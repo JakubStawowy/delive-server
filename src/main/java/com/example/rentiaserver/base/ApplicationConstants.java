@@ -44,15 +44,21 @@ public class ApplicationConstants {
         }
     }
 
-    public static class Paths {
+    public static class Properties {
 
         public static final String APPLICATION_PROPERTIES = "classpath:application.properties";
 
         public static final String PROPERTY_POSITION_STACK_API_KEY = "${positionStack.api.key}";
 
-        public static final String PROPERTY_MAPQUEST_API_KEY = "${positionStack.api.key}";
+        public static final String PROPERTY_MAPQUEST_API_KEY = "${mapquest.api.key}";
 
-        private Paths() {
+        public static final String PROPERTY_MAPQUEST_API_URI = "${mapquest.api.uri}";
+
+        public static final String PROPERTY_POSITION_STACK_API_URI = "${positionStack.api.uri}";
+
+        public static final String PROPERTY_GEOCODING_SERVICE_LAYER = "${geocoding.layer}";
+
+        private Properties() {
             throw new IllegalStateException();
         }
     }

@@ -1,6 +1,5 @@
 package com.example.rentiaserver.user.controller;
 
-import com.example.rentiaserver.base.model.to.ResponseTo;
 import com.example.rentiaserver.base.ApplicationConstants;
 import com.example.rentiaserver.user.service.FeedbackService;
 import com.example.rentiaserver.user.model.to.FeedbackTo;
@@ -40,31 +39,19 @@ public final class FeedbackCrudController {
     }
 
     @PostMapping(path = "/add")
-    public ResponseTo addFeedback(@RequestBody FeedbackTo feedback)
+    public void addFeedback(@RequestBody FeedbackTo feedback)
             throws EntityNotFoundException {
         feedbackService.add(feedback);
-        return ResponseTo.builder()
-                .operationSuccess(true)
-                .status(HttpStatus.OK)
-                .build();
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseTo deleteFeedback(@PathVariable("id") Long id) {
+    public void deleteFeedback(@PathVariable("id") Long id) {
         feedbackService.deleteFeedbackById(id);
-        return ResponseTo.builder()
-                .operationSuccess(true)
-                .status(HttpStatus.OK)
-                .build();
     }
 
     @PutMapping(value = "/edit")
-    public ResponseTo editFeedback(@RequestBody FeedbackTo feedback)
+    public void editFeedback(@RequestBody FeedbackTo feedback)
             throws EntityNotFoundException {
         feedbackService.save(feedback);
-        return ResponseTo.builder()
-                .operationSuccess(true)
-                .status(HttpStatus.OK)
-                .build();
     }
 }

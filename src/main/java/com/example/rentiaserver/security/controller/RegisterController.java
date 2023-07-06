@@ -1,9 +1,9 @@
 package com.example.rentiaserver.security.controller;
 
+import com.example.rentiaserver.base.exception.RegisterConflictException;
 import com.example.rentiaserver.user.model.po.UserPo;
 import com.example.rentiaserver.base.ApplicationConstants;
 import com.example.rentiaserver.user.service.UserService;
-import com.example.rentiaserver.base.model.to.ResponseTo;
 import com.example.rentiaserver.user.model.to.UserTo;
 import com.example.rentiaserver.base.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,22 +30,15 @@ public final class RegisterController {
     }
 
     @PostMapping(value = "/register")
-    public ResponseTo registerUser(@RequestBody UserPo user) throws EntityNotFoundException {
+    public void registerUser(@RequestBody UserPo user) throws EntityNotFoundException, RegisterConflictException {
 
+        // TODO RegisterService
         UserTo userTo = userService.getUserByEmail(user.getEmail(), false);
 
         if (userTo != null) {
-            return ResponseTo.builder()
-                    .operationSuccess(false)
-                    .status(HttpStatus.CONFLICT)
-                    .message("User with this email already exists")
-                    .build();
+            throw new RegisterConflictException("User with email: " + user.getEmail() + " already exists.");
         }
 
         userService.register(user);
-        return ResponseTo.builder()
-                .operationSuccess(true)
-                .status(HttpStatus.OK)
-                .build();
     }
 }

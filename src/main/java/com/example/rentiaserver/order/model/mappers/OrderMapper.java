@@ -5,7 +5,7 @@ import com.example.rentiaserver.geolocation.model.po.LocationPo;
 import com.example.rentiaserver.order.model.po.OrderPo;
 import com.example.rentiaserver.order.model.to.OrderTo;
 import com.example.rentiaserver.order.model.to.PackageTo;
-import com.example.rentiaserver.order.tool.PackagesWeightCounterHelper;
+import com.example.rentiaserver.order.tool.PackagesHelper;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,6 +13,11 @@ import java.util.stream.Collectors;
 public class OrderMapper {
 
     public static OrderTo mapOrderPoToTo(OrderPo orderPo) {
+
+        if (orderPo == null) {
+            return null;
+        }
+
         LocationPo destinationFrom = orderPo.getInitialLocationPo();
         LocationPo destinationTo = orderPo.getFinalLocationPo();
 
@@ -28,7 +33,7 @@ public class OrderMapper {
                 .packages(packageTos)
                 .salary(orderPo.getSalary() != null ? orderPo.getSalary().toString() : null)
                 .requireTransportWithClient(orderPo.isRequireTransportWithClient())
-                .weight(PackagesWeightCounterHelper.sumPackagesWeights(packageTos).toString())
+                .weight(PackagesHelper.sumPackagesWeights(packageTos).toString())
                 .weightUnit(orderPo.getWeightUnit())
                 .build();
 

@@ -6,6 +6,11 @@ import com.example.rentiaserver.delivery.model.to.OutgoingMessageTo;
 public class MessageMapper {
 
     public static OutgoingMessageTo mapMessagePoToOutgoingMessageTo(MessagePo messagePo) {
+
+        if (messagePo == null) {
+            return null;
+        }
+
         return OutgoingMessageTo.builder()
                 .id(messagePo.getId())
                 .createdAt(messagePo.getCreatedAt())

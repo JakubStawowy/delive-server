@@ -5,8 +5,6 @@ import com.example.rentiaserver.base.exception.EntityNotFoundException;
 import com.example.rentiaserver.order.model.to.OrderTo;
 import com.example.rentiaserver.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,9 +29,8 @@ public final class OrderLoadController {
     }
 
     @GetMapping("/order")
-    public ResponseEntity<OrderTo> getOrderById(@RequestParam Long orderId) throws EntityNotFoundException {
-        OrderTo order = orderService.getOrderToById(orderId);
-        return new ResponseEntity<>(order, HttpStatus.OK);
+    public OrderTo getOrderById(@RequestParam Long orderId) throws EntityNotFoundException {
+        return orderService.getOrderToById(orderId);
     }
 
     @GetMapping("/filtered")
