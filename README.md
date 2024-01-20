@@ -8,6 +8,7 @@ Project uses such features as geocoding (forward and reverse) for address lookup
 ## Technologies used
 
 - Java 8
+- Spring Boot
 - MySql database
 - Hibernate
 - JWT authorization
@@ -57,6 +58,13 @@ positionStack.api.uri=http://api.positionstack.com/v1/
 mapquest.api.key=<your_api_key>
 mapquest.api.uri=http://open.mapquestapi.com/geocoding/v1/
 ```
+
+4. Run the project using the command:
+```bash
+
+mvn spring-boot:run
+```
+
 ## Endpoints
 - **User registration**
   - **Endpoint:** `/api/register`
