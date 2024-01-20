@@ -64,39 +64,39 @@ mapquest.api.uri=http://open.mapquestapi.com/geocoding/v1/
 ```
 ## Features
 - **User registration**
-- **Endpoint:** `/api/register`
-- **Method:** `POST`
-- **Body:**
-  ```json
-  {
-    "name": "example_username",
-    "phone": "example_phone",
-    "email": "example@email.com",
-    "password": "example_password"
-  }
-  ```
+  - **Endpoint:** `/api/register`
+  - **Method:** `POST`
+  - **Body:**
+    ```json
+    {
+      "name": "example_username",
+      "phone": "example_phone",
+      "email": "example@email.com",
+      "password": "example_password"
+    }
+    ```
 - **Login**
-- **Endpoint:** `/api/login`
-- **Method:** `POST`
-- **Body:**
-  ```json
-  {
-    "email": "example@email.com",
-    "password": "example_password"
-  }
-  ```
+  - **Endpoint:** `/api/login`
+  - **Method:** `POST`
+  - **Body:**
+    ```json
+    {
+      "email": "example@email.com",
+      "password": "example_password"
+    }
+    ```
 - **Get user details**
-- **Endpoint:** `/api/users/details`
-- **Method:** `GET`
-- **Body:**
-  ```json
-  {
-    "userId": example_user_id
-  }
-  ```
+  - **Endpoint:** `/api/users/details`
+  - **Method:** `GET`
+  - **Body:**
+    ```json
+    {
+      "userId": example_user_id
+    }
+    ```
 - **Get logged user details**
-- **Endpoint:** `/api/users/details/loggedUser`
-- **Method:** `GET`
+  - **Endpoint:** `/api/users/details/loggedUser`
+  - **Method:** `GET`
 
 - **Edit User:**
   - **Endpoint:** `/api/edit-user`
