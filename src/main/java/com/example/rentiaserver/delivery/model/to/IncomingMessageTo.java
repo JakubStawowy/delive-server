@@ -13,4 +13,5 @@ import lombok.experimental.SuperBuilder;
 public class IncomingMessageTo extends MessageTo {
     private boolean consent;
     private Long replyMessageId;
+
 }
