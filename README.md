@@ -40,10 +40,15 @@ cd delive-server
 # database
 spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL5Dialect
 spring.jpa.properties.hibernate.hbm2ddl.auto=update
+#spring.jpa.properties.hibernate.hbm2ddl.auto=create
 spring.jpa.database=mysql
 spring.datasource.url=jdbc:mysql://localhost:3306/delive
 spring.datasource.username=root
 spring.datasource.password=
+
+# Show SQL
+#spring.jpa.show-sql=true
+#spring.jpa.properties.hibernate.format_sql=true
 
 # Geocoding layer order number
 # In case of first layer geocoding api failure, set geocoding layer to second, and so on
@@ -57,7 +62,7 @@ positionStack.api.uri=http://api.positionstack.com/v1/
 mapquest.api.key=<your_api_key>
 mapquest.api.uri=http://open.mapquestapi.com/geocoding/v1/
 ```
-## Endpoints
+## Features
 - **User registration**
   - **Endpoint:** `/api/register`
   - **Method:** `POST`
@@ -65,7 +70,7 @@ mapquest.api.uri=http://open.mapquestapi.com/geocoding/v1/
     ```json
     {
       "name": "example_username",
-      "phone": "example_phone_number",
+      "phone": "example_phone",
       "email": "example@email.com",
       "password": "example_password"
     }
@@ -86,45 +91,39 @@ mapquest.api.uri=http://open.mapquestapi.com/geocoding/v1/
   - **Body:**
     ```json
     {
-      "userId": 1
+      "userId": example_user_id
     }
     ```
 - **Get logged user details**
   - **Endpoint:** `/api/users/details/loggedUser`
   - **Method:** `GET`
-  - **Request parameters:**
-    - *empty*
 
 - **Edit User:**
-  - **Endpoint:** `/api/users/edit`
+  - **Endpoint:** `/api/edit-user`
   - **Method:** `PUT`
   - **Body:**
     ```json
     {
-      "name": "new_username",
-      "phone": "new_phone_number",
+      "username": "new_username",
       "password": "new_password",
       "email": "new_email@example.com"
     }
     ```
 
 - **Get User Feedback:**
-  - **Endpoint:** `/api/feedback/user`
+  - **Endpoint:** `/api/get-user-feedback`
   - **Method:** `GET`
-  - **Request parameters:**
-    - `userId` 
+  - **Body:** *Brak*
 
 - **Add Feedback:**
-  - **Endpoint:** `/api/feedback/add`
+  - **Endpoint:** `/api/add-feedback`
   - **Method:** `POST`
   - **Body:**
     ```json
     {
       "userId": "user_id",
-      "content": "Feedback content",
-      "rate": 5,
-      "userId":  1,
-      "authorId": 2
+      "comment": "Feedback comment",
+      "rating": 5
     }
     ```
 
@@ -141,148 +140,160 @@ mapquest.api.uri=http://open.mapquestapi.com/geocoding/v1/
     ```
 
 - **Save Order:**
-  - **Endpoint:** `/api/orders/save`
+  - **Endpoint:** `/api/save-order`
   - **Method:** `POST`
   - **Body:**
     ```json
     {
-      "destinationFrom": {
-        "latitude": 2.312431,
-        "longitude": 2.3145132,
-        "address": "address"
-      },
-      "destinationTo": {
-        "latitude": 2.312431,
-        "longitude": 2.3145132,
-        "address": "address"
-      },
-      "packages": [
-        {
-          "length": 10,
-          "width": 20,
-          "height": 30,
-          "lengthUnit": "cm",
-          "widthUnit": "cm",
-          "heightUnit" : "cm"
-        }
-      ],
-      "authorId": 1,
-      "salary": 340.00,
-      "weightUnit": "weight_unit",
-      "requireTransportWithClient": false
+      "clientId": "client_id",
+      "destination": "Delivery destination",
+      "packageDetails": "Package details"
     }
     ```
 
 - **Get All Orders:**
-  - **Endpoint:** `/api/orders`
+  - **Endpoint:** `/api/get-all-orders`
   - **Method:** `GET`
-  - **Request parameters:**
-    - *empty*
+  - **Body:** *Brak*
 
 - **Filter Orders:**
-  - **Endpoint:** `/api/orders/filter`
-  - **Method:** `GET`
-  - **Request parameters:**
-    - `initialAddress`
-    - `finalAddress`
-    - `minimalSalary`
-    - `maxWeight`
-    - `requireTransportWithClient`
-    - `sortBySalary`
-    - `sortByWeight`
+  - **Endpoint:** `/api/filter-orders`
+  - **Method:** `POST`
+  - **Body:**
+    ```json
+    {
+      "filterCriteria": "Filter criteria"
+    }
+    ```
 
 - **Get Order Details:**
-  - **Endpoint:** `/api/orders/order`
+  - **Endpoint:** `/api/get-order-details`
   - **Method:** `GET`
-  - **Request parameters:**
-    - `orderId`
+  - **Body:**
+    ```json
+    {
+      "orderId": "order_id"
+    }
+    ```
 
 - **Delete Order:**
-  - **Endpoint:** `/api/orders/delete`
+  - **Endpoint:** `/api/delete-order`
   - **Method:** `DELETE`
-  - **Request parameters:**
-    - `orderId`
+  - **Body:**
+    ```json
+    {
+      "orderId": "order_id"
+    }
+    ```
 
 - **Get Client Distance from Order Destination:**
-  - **Endpoint:** `/api/distance/get`
+  - **Endpoint:** `/api/get-client-distance`
   - **Method:** `GET`
-  - **Request parameters:**
-    - `orderId`
-    - `clientLongitude`
-    - `clientLatitude`
+  - **Body:** *Brak*
 
 - **Is Client in Required Destination Area:**
-  - **Endpoint:** `/api/distance/isInArea`
+  - **Endpoint:** `/api/is-client-in-destination`
   - **Method:** `POST`
-  - **Request parameters:**
-    - `orderId`
-    - `clientLongitude`
-    - `clientLatitude`
+  - **Body:**
+    ```json
+    {
+      "clientId": "client_id",
+      "destinationArea": "required_destination_area"
+    }
+    ```
 
 - **Pick Package:**
-  - **Endpoint:** `/api/delivery/pick`
+  - **Endpoint:** `/api/pick-package`
   - **Method:** `PUT`
-  - **Request parameters:**
-    - `deliveryId`
+  - **Body:**
+    ```json
+    {
+      "orderId": "order_id",
+      "courierId": "courier_id"
+    }
+    ```
 
 - **Start Delivery:**
-  - **Endpoint:** `/api/delivery/start`
+  - **Endpoint:** `/api/start-delivery`
   - **Method:** `PUT`
-  - **Request parameters:**
-    - `deliveryId`
+  - **Body:**
+    ```json
+    {
+      "orderId": "order_id"
+    }
+    ```
 
 - **Finish Delivery:**
-  - **Endpoint:** `/api/delivery/finish`
+  - **Endpoint:** `/api/finish-delivery`
   - **Method:** `PUT`
-  - **Request parameters:**
-    - `deliveryId`
-    - `clientLatitude`
-    - `clientLongitude`
+  - **Body:**
+    ```json
+    {
+      "orderId": "order_id"
+    }
+    ```
 
 - **Accept Delivery:**
-  - **Endpoint:** `/api/delivery/accept`
+  - **Endpoint:** `/api/accept-delivery`
   - **Method:** `PUT`
-  - **Request parameters:**
-    - `deliveryId`
+  - **Body:**
+    ```json
+    {
+      "orderId": "order_id"
+    }
+    ```
 
 - **Discard Delivery:**
-  - **Endpoint:** `/api/delivery/discard`
+  - **Endpoint:** `/api/discard-delivery`
   - **Method:** `PUT`
-  - **Request parameters:**
-    - `deliveryId`
+  - **Body:**
+    ```json
+    {
+      "orderId": "order_id"
+    }
+    ```
 
 - **Close Delivery:**
-  - **Endpoint:** `/api/delivery/close`
+  - **Endpoint:** `/api/close-delivery`
   - **Method:** `PUT`
-  - **Request parameters:**
-    - `deliveryId`
+  - **Body:**
+    ```json
+    {
+      "orderId": "order_id"
+    }
+    ```
 
 - **Get Sent Messages:**
-  - **Endpoint:** `/api/messages/sent`
+  - **Endpoint:** `/api/get-sent-messages`
   - **Method:** `GET`
-  - **Request parameters:**
-    - *empty*
+  - **Body:** *Brak*
 
 - **Get Received Messages:**
-  - **Endpoint:** `/api/messages/received`
+  - **Endpoint:** `/api/get-received-messages`
   - **Method:** `GET`
-  - **Request parameters:**
-    - *empty*
+  - **Body:** *Brak*
 
 - **Send Message:**
-  - **Endpoint:** `/api/message/send`
+  - **Endpoint:** `/api/send-message`
   - **Method:** `POST`
   - **Body:**
     ```json
     {
       "senderId": "sender_id",
       "receiverId": "receiver_id",
-      "message": "message",
-      "orderId": "order_id",
-      "vehicleRegistrationNumber": "vehicleRegistrationNumber",
-      "phoneNumber": "phoneNumber"
+      "message": "Hello, how are you?"
     }
     ```
 
-## Authors
-- **Jakub Stawowy** (stawowykuba@gmail.com)
+- **Reply on Message:**
+  - **Endpoint:** `/api/reply-on-message`
+  - **Method:** `POST`
+  - **Body:**
+    ```json
+    {
+      "senderId": "sender_id",
+      "receiverId": "receiver_id",
+      "message": "I'm good, thank you!"
+    }
+    ```
+
